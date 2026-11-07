@@ -17,7 +17,7 @@ Website for Bacari Austin, served by GitHub Pages.
 - `build_site.py.txt` the script that writes each page's head; reuse it for new pages
 
 ## Architect brief (bacariatx.com/brief)
-- The brief's text lives in a Google Sheet (Drive folder "Bacari", sheet "Bacari Austin – Architect Brief"), one row per paragraph or bullet.
+- The brief's text lives in a Google Sheet (Drive folder "Bacari", sheet "Bacari Austin – Architect Brief"), one row per paragraph or bullet. Headings, subtitles and the spec strip are rows named `title:<key>` (e.g. `title:siteTitle`); deleting one brings back its default.
 - `brief/edit.js` loads the latest text from the Sheet through a Google Apps Script web app ("Bacari brief API", bound to the Sheet) and draws it with `brief/render.js`.
 - To edit: open https://bacariatx.com/brief/#edit, enter the edit passcode, change text, Save. Everyone sees the change on their next load.
 - The passcode is checked by the Apps Script (it stores only a SHA-256 hash). 15 wrong tries locks editing for 15 minutes.
