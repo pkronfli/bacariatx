@@ -30,112 +30,22 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
-<style>body{margin:0}img{max-width:100%}
-/* Layout: slim navy top bar, parchment intro with serif headline, full-width patio photo, spec strip, two-column scope, photo strip, sand proposal panel, contact footer. One committed light brand look, matching bacariatx.com. */
-:root {
-  --bg: #f3efe5;        /* parchment */
-  --band: #08223b;      /* bacari navy */
-  --band-ink: #f3efe5;
-  --band-muted: #b2c6d8;
-  --ink: #08223b;
-  --muted: #475366;
-  --rule: #d3c29a;      /* sand */
-  --panel: #e9e0ca;     /* light sand */
-  --accent: #8b6755;    /* brown */
-  --link: #384d62;
-  --logo-filter: brightness(0) invert(0.95) sepia(0.15);
-  --display: "Gloock", "Bodoni 72", Didot, Georgia, serif;
-  --sans: "Public Sans", "Helvetica Neue", Arial, sans-serif;
-  --mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, monospace;
-  color-scheme: light;
-}
-* { box-sizing: border-box; }
-body {
-  background: var(--bg); color: var(--ink);
-  font-family: var(--sans); font-size: 15px; line-height: 1.55;
-}
-.wrap {
-  max-width: 920px; margin: 0 auto;
-  padding-left: max(16px, env(safe-area-inset-left, 0px));
-  padding-right: max(16px, env(safe-area-inset-right, 0px));
-}
-a { color: var(--link); text-decoration-color: var(--accent); text-underline-offset: 3px; }
-a:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-
-.top { background: var(--band); color: var(--band-ink); }
-.top .wrap { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px 20px; padding-block: 18px; }
-.logo { width: 132px; height: auto; filter: var(--logo-filter); display: block; }
-.links { display: flex; gap: 18px; flex-wrap: wrap; font-family: var(--mono); font-size: 13px; }
-.links a { color: var(--band-ink); text-decoration-color: var(--band-muted); }
-.intro .wrap { padding-block: clamp(32px, 5vw, 56px) 4px; display: grid; gap: 18px; }
-.eyebrow { margin: 0; font-family: var(--mono); font-size: 12.5px; letter-spacing: .16em; text-transform: uppercase; color: var(--accent); display: flex; align-items: center; gap: 12px; }
-.eyebrow::before { content: ""; width: 28px; height: 1px; background: var(--accent); flex: none; }
-h1 { margin: 0; font-family: var(--display); font-weight: 400; font-size: clamp(36px, 6.2vw, 66px); line-height: 1.02; letter-spacing: -0.02em; text-wrap: balance; max-width: 18ch; }
-h1 span { color: var(--accent); }
-.lede { margin: 0; max-width: 62ch; color: var(--muted); font-size: 17px; }
-
-.body { display: grid; gap: 34px; padding-block: 28px 56px; }
-
-figure { margin: 0; min-width: 0; }
-figure img { display: block; width: 100%; height: auto; max-width: 100%; border-radius: 6px; object-fit: cover; }
-figcaption { font-family: var(--mono); font-size: 11.5px; letter-spacing: .03em; color: var(--muted); margin-top: 7px; }
-.hero img { aspect-ratio: 2.2 / 1; }
-
-.specs { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); border-top: 2px solid var(--ink); border-bottom: 1px solid var(--rule); }
-.spec { padding: 14px 16px 14px 0; min-width: 0; }
-.spec + .spec { padding-left: 16px; border-left: 1px solid var(--rule); }
-.spec dt { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
-.spec dd { margin: 4px 0 0; font-weight: 600; font-size: 17px; font-variant-numeric: tabular-nums; }
-.spec dd small { display: block; font-weight: 400; font-size: 12.5px; color: var(--muted); }
-
-h2 { font-size: 12.5px; font-family: var(--mono); font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin: 0 0 10px; padding-bottom: 8px; border-bottom: 1px solid var(--rule); }
-.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 30px 44px; }
-section { min-width: 0; }
-section > p { margin: 0 0 12px; max-width: 70ch; }
-ul { margin: 0; padding-left: 18px; display: grid; gap: 6px; }
-li::marker { color: var(--accent); }
-strong { font-weight: 600; }
-
-.strip { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
-.strip img { aspect-ratio: 1 / 1; }
-.feel { display: grid; gap: 22px; }
-h3 { font-family: var(--mono); font-size: 11.5px; font-weight: 500; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 0 10px; }
-.strip.four { grid-template-columns: repeat(4, minmax(0, 1fr)); }
-.strip.four img { aspect-ratio: 4 / 3; }
-
-.ask { background: var(--panel); border-radius: 8px; padding: 24px 26px; display: grid; gap: 4px; }
-.ask h2 { border-bottom-color: var(--rule); }
-.ask ol { margin: 6px 0 0; padding-left: 22px; display: grid; gap: 7px; }
-.ask li::marker { font-family: var(--mono); font-size: 13px; color: var(--accent); }
-
-footer { border-top: 2px solid var(--ink); padding-top: 18px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 40px; }
-.contact { display: grid; gap: 2px; min-width: 0; }
-.contact .role { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--accent); }
-.contact .name { font-weight: 600; }
-.contact .detail { font-family: var(--mono); font-size: 13px; user-select: all; overflow-wrap: anywhere; }
-.follow { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 12px; margin-top: 4px; }
-.btn { display: inline-flex; align-items: center; gap: 10px; padding: 11px 18px 11px 14px; border-radius: 999px; background: var(--band); color: var(--band-ink); text-decoration: none; font-weight: 600; font-size: 14.5px; transition: transform .15s ease, background .15s ease; }
-.btn svg { width: 22px; height: 22px; flex: none; }
-.btn small { font-family: var(--mono); font-weight: 400; font-size: 12px; color: var(--band-muted); }
-.btn:hover { transform: translateY(-1px); background: var(--link); }
-.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
-@media (prefers-reduced-motion: reduce) { .btn { transition: none; } .btn:hover { transform: none; } }
-.date { grid-column: 1 / -1; font-family: var(--mono); font-size: 12px; color: var(--muted); margin: 0; }
-
-@media (max-width: 760px) {
-  .specs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .spec, .spec + .spec { padding: 12px 12px 12px 0; border-left: 0; border-bottom: 1px solid var(--rule); }
-  .spec:nth-child(even) { padding-left: 12px; border-left: 1px solid var(--rule); }
-  .spec:last-child { grid-column: 1 / -1; border-bottom: 0; }
-  .grid, footer { grid-template-columns: 1fr; }
-  .strip, .strip.four { grid-template-columns: 1fr 1fr; }
-  .strip:not(.four) figure:last-child { grid-column: 1 / -1; }
-  .strip:not(.four) figure:last-child img { aspect-ratio: 2 / 1; }
-  .hero img { aspect-ratio: 3 / 2; }
-}
-</style>
+<style>body{margin:0}img{max-width:100%}</style>
+<link rel="stylesheet" href="brief.css">
 </head>
 <body>
 <div id="page"><header class="top"><div class="wrap"><img class="logo" src="img/logo.png" alt="bacari"><nav class="links" aria-label="Bacari links"><a href="https://www.eatwithbacari.com" target="_blank" rel="noopener">eatwithbacari.com</a><a href="https://www.instagram.com/eatwithbacari" target="_blank" rel="noopener">@eatwithbacari</a></nav></div></header><div class="intro"><div class="wrap"><p class="eyebrow">Architect brief · Bacari Austin</p><h1>Rebuilding a fire-damaged restaurant on <span>West 6th Street.</span></h1><p class="lede">Bacari is a Venetian-inspired small plates restaurant with Mediterranean-influenced dishes by Chef Lior Hillel. Owned by brothers Danny and Robert Kronfli, the group has grown to ten locations across Los Angeles and San Diego since opening in West Adams in 2008, and is now expanding to Texas. We're looking for a local architect to take this site from existing conditions to permit and through construction.</p></div></div><div class="wrap body"><figure class="hero"><img src="img/deck.jpg" alt="Bacari Silver Lake patio: tiered decks and dining built around large trees, with string lights and a fire pit"><figcaption>Bacari Silver Lake. Tiered decks and a patio built around the trees, the kind of outdoor room we want in Austin.</figcaption></figure><dl class="specs"><div class="spec"><dt>Site</dt><dd>West 6th St<small>Former Bar Peached</small></dd></div><div class="spec"><dt>Interior</dt><dd>~3,400 sf<small>Two floors</small></dd></div><div class="spec"><dt>Exterior</dt><dd>~5,000 sf<small>Decks, patio, lot</small></dd></div><div class="spec"><dt>Hot line</dt><dd>18 ft<small>No wood oven</small></dd></div><div class="spec"><dt>Condition</dt><dd>Fire damage<small>Foundation intact</small></dd></div></dl><div class="grid"><section><h2>The site today</h2><ul><li>Lease is in final negotiation.</li><li>Ground floor: prep kitchen and a speakeasy.</li><li>Upper floor: hot line kitchen, interior bar and a wraparound deck.</li><li>Parking-lot level: existing patio and outdoor dining under large oak trees.</li><li>The fire left a large hole through the middle. The second floor and roof are heavily damaged; the foundation is sound.</li><li>We've asked the landlord for the forensic structural assessment and will share it.</li></ul></section><section><h2>What we want to build</h2><ul><li><strong>Ground floor:</strong> the entire kitchen, prep, storage and restrooms.</li><li><strong>Upper floor:</strong> a much larger bar and dining room.</li><li><strong>Outdoors:</strong> reconfigure the existing deck, add new decks, add seating at lot level and build an outdoor bar. Some of it weatherized, and the oaks kept as a feature.</li><li>New kitchen, new bars and all-new finishes throughout.</li><li>The outdoor layout and flow is where we need the most design thinking.</li></ul></section></div><section><h2>The Bacari feel</h2><p>Each location has its own personality, but they share a backyard warmth: bars that open to the patio, mature trees and string lights outside; wood beams, white plaster, vintage art, warm lighting and checkered tile inside.</p><div class="feel"><div><h3>Inside</h3><div class="strip four"><figure><img src="img/in_bar.jpg" alt="Bacari Sherman Oaks bar with dark wood counter, green stools and checkered tile floor"><figcaption>Sherman Oaks · main bar</figcaption></figure><figure><img src="img/in_banquette.jpg" alt="Bacari West 3rd dining room with wood beams, white walls, framed portraits and a leather banquette"><figcaption>West 3rd · beams and banquette</figcaption></figure><figure><img src="img/in_fireplace.jpg" alt="Bacari Sherman Oaks fireplace nook with velvet chairs and candlelit table"><figcaption>Sherman Oaks · fireplace nook</figcaption></figure><figure><img src="img/in_herbbar.jpg" alt="Bacari Sherman Oaks bar with copper stools, hanging herbs and a suspended bottle shelf"><figcaption>Sherman Oaks · herb-hung bar</figcaption></figure></div></div><div><h3>Outside</h3><div class="strip"><figure><img src="img/treebar.jpg" alt="Bacari Silver Lake bar opening onto a patio with a large tree growing through it"><figcaption>Silver Lake · bar open to the patio</figcaption></figure><figure><img src="img/garden.jpg" alt="Bacari West 3rd garden patio at night with tables under a large tree"><figcaption>West 3rd · garden patio</figcaption></figure><figure><img src="img/food_d.jpg" alt="A wooden table filled with Bacari small plates: sliders, salads, crab cakes and grilled meats"><figcaption>A table of small plates to share</figcaption></figure></div></div></div></section><div class="grid"><section><h2>Services we need</h2><ul><li>Full permit set to the City of Austin, building and health.</li><li>Structural and MEP engineering. We prefer one contract with you as the single point of contact.</li><li>Permit expediting.</li><li>Health code layout (hand, three-compartment and floor sinks, drains). Chef Lior designs the kitchen and specs the equipment, so no kitchen consultant is needed.</li><li>3D renderings and walkthroughs tied to the plans, plus a Matterport scan of existing conditions.</li><li>Construction administration, with someone on site two to three times a week.</li></ul></section><section><h2>How we work</h2><ul><li>Robert leads design with our in-house team. We want a collaborator, not a hand-off.</li><li>We don't pick finishes before permit submission. The set covers structure, walls, layout and MEP; finishes are decided during the build.</li><li>Layout, structural and MEP changes get locked before construction starts.</li><li>The owners are in LA, and Robert can't visit the site for about the first two months. We'd start with the existing structure and deck, design the new decks remotely, and finalize after his visit.</li><li>Our past openings were cosmetic refreshes of existing restaurants, so this is our first major rebuild. We have kitchen plans to share, but no prior full plan sets.</li></ul></section></div><section class="ask"><h2>Please bring to our first call</h2><ol><li>Restaurant and bar projects you've completed in Austin, ideally with commercial kitchens or fire restoration.</li><li>An all-in fee from start to finish, with architecture, structural, MEP, expediting and construction administration broken out, plus your estimate of city review and permit fees.</li><li>Your timeline from kickoff to permit submission, and how you'd phase around Robert's delayed site visit.</li><li>Who would be on site during construction, and how often.</li><li>Two or three client references.</li></ol></section><footer><div class="contact"><span class="role">Owner</span><span class="name">Danny Kronfli</span><span class="detail">danny@bacari.us</span></div><div class="contact"><span class="role">Austin contact</span><span class="name">Patrick Kronfli</span><span class="detail">(213) 359-9191</span></div><div class="follow"><a class="btn" href="https://www.eatwithbacari.com" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19"/><path d="M12 2.5c2.6 2.6 4 6 4 9.5s-1.4 6.9-4 9.5c-2.6-2.6-4-6-4-9.5s1.4-6.9 4-9.5z"/></svg><span>Visit our website <small>eatwithbacari.com</small></span></a><a class="btn" href="https://www.instagram.com/eatwithbacari" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="0.6" fill="currentColor" stroke="none"/></svg><span>Follow on Instagram <small>@eatwithbacari</small></span></a></div><p class="date">November 2026</p></footer></div></div>
+<script src="render.js"></script>
+<script>
+(function () {
+  if (location.hash === "#edit") { location.replace("https://claude.ai/artifact/MRYsKbi8ToiFG86LvPrg89"); return; }
+  if (!window.renderBrief || !window.fetch) return;
+  fetch("state.json", { cache: "no-store" }).then(function (r) { return r.ok ? r.json() : null; }).then(function (st) {
+    if (!st) return;
+    var html = window.renderBrief(st), page = document.getElementById("page");
+    if (page && page.innerHTML !== html) page.innerHTML = html;
+  }).catch(function () {});
+})();
+</script>
 </body>
 </html>
