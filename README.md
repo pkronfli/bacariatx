@@ -17,10 +17,12 @@ Website for Bacari Austin, served by GitHub Pages.
 - `build_site.py.txt` the script that writes each page's head; reuse it for new pages
 
 ## Architect brief (bacariatx.com/brief)
-- The editable master is the Claude version of the brief. This folder is a read-only copy.
-- `brief/index.html` draws the brief from `brief/state.json` using `brief/render.js`, so text edits only need `state.json` updated.
-- `_tools/sync_brief.js saved-claude-page.html` updates `state.json`; add `--full` to also rebuild the layout files after a design change (`brief/design.txt` fingerprints the layout).
-- A Claude scheduled task checks the Claude version every hour and pushes changes here automatically.
-- `bacariatx.com/brief#edit` jumps to the editable Claude version (owner only).
+- The brief's text lives in a Google Sheet (Drive folder "Bacari", sheet "Bacari Austin – Architect Brief"), one row per paragraph or bullet.
+- `brief/edit.js` loads the latest text from the Sheet through a Google Apps Script web app ("Bacari brief API", bound to the Sheet) and draws it with `brief/render.js`.
+- To edit: open https://bacariatx.com/brief/#edit, enter the edit passcode, change text, Save. Everyone sees the change on their next load.
+- The passcode is checked by the Apps Script (it stores only a SHA-256 hash). 15 wrong tries locks editing for 15 minutes.
+- To change the passcode: put the SHA-256 hex of the new passcode in `PASS_HASH` in the Apps Script, then Deploy → Manage deployments → edit → New version.
+- `brief/state.json` is a fallback copy, used only if the Sheet can't be reached.
 - The brief is marked `noindex` and is left out of the sitemap, so search engines skip it.
+- `_tools/sync_brief.js` is retired (it copied from the old Claude version of the brief). Don't run it with `--full`: it would rebuild `index.html` without edit mode.
 - Folders starting with `_` are not published by GitHub Pages.
