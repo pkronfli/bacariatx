@@ -18,7 +18,9 @@ Website for Bacari Austin, served by GitHub Pages.
 
 ## Architect brief (bacariatx.com/brief)
 - The editable master is the Claude version of the brief. This folder is a read-only copy.
-- `_tools/sync_brief.js` rebuilds `brief/` from a saved copy of the Claude page:
-  `node _tools/sync_brief.js saved-brief.html` (exits 3 when nothing changed).
+- `brief/index.html` draws the brief from `brief/state.json` using `brief/render.js`, so text edits only need `state.json` updated.
+- `_tools/sync_brief.js saved-claude-page.html` updates `state.json`; add `--full` to also rebuild the layout files after a design change (`brief/design.txt` fingerprints the layout).
+- A Claude scheduled task checks the Claude version every hour and pushes changes here automatically.
+- `bacariatx.com/brief#edit` jumps to the editable Claude version (owner only).
 - The brief is marked `noindex` and is left out of the sitemap, so search engines skip it.
 - Folders starting with `_` are not published by GitHub Pages.
