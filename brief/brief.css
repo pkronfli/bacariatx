@@ -166,3 +166,18 @@ body.editing .body { padding-bottom: 140px; }
 .eb-pass input::placeholder { color: var(--muted); font-family: var(--sans); font-weight: 400; }
 .eb-pass input:focus { outline: 2px solid var(--sand); outline-offset: 1px; }
 .eb-x { width: 36px; height: 36px; padding: 0; font-size: 18px; line-height: 1; flex: none; }
+
+/* Editable titles and subtitles */
+.ed-title {
+  font: inherit; color: inherit; letter-spacing: inherit; text-transform: inherit;
+  background: var(--field); border: 1px dashed var(--rule); border-radius: 5px;
+  padding: 1px 6px; margin: 0 -7px; width: calc(100% + 14px); max-width: calc(100% + 14px); min-width: 0; display: block;
+}
+textarea.ed-title { resize: none; overflow: hidden; line-height: inherit; }
+.ed-title:focus { outline: 2px solid var(--accent); outline-offset: 1px; border-color: transparent; }
+.ed-title::placeholder { color: var(--muted); opacity: .6; }
+.eyebrow .ed-title { width: auto; flex: 1 1 auto; margin: 0; }
+h1.ed-h1 { max-width: none; display: grid; gap: 6px; }
+h1.ed-h1 span { display: block; }
+.spec dd small .ed-title { margin-top: 3px; }
+.top .ed-title { color: var(--ink); }

@@ -10,7 +10,16 @@
   var STATE = null, draft = null, pass = null, busy = false, storeTimer = null;
 
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
-  function same(a, b) { return JSON.stringify(a) === JSON.stringify(b); }
+  function canon(v) {
+    if (Array.isArray(v)) return "[" + v.map(canon).join(",") + "]";
+    if (v && typeof v === "object") return "{" + Object.keys(v).sort().map(function (k) { return JSON.stringify(k) + ":" + canon(v[k]); }).join(",") + "}";
+    return JSON.stringify(v);
+  }
+  function same(a, b) {
+    var x = clone(a), y = clone(b);
+    x.titles = x.titles || {}; y.titles = y.titles || {};
+    return canon(x) === canon(y);
+  }
   function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
   function set(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   function del(k) { try { localStorage.removeItem(k); } catch (e) {} }
@@ -22,6 +31,12 @@
     var out = clone(d);
     out.lede = String(out.lede).trim();
     out.feel = String(out.feel).trim();
+    var ti = {}, src = out.titles || {};
+    Object.keys(window.BRIEF_TITLES || {}).forEach(function (k) {
+      var v = String(src[k] == null ? "" : src[k]).replace(/\s+/g, " ").trim();
+      if (v) ti[k] = v;
+    });
+    out.titles = ti;
     LIST_KEYS.forEach(function (k) {
       out[k] = out[k].map(function (t) { return String(t).replace(/\s*\n\s*/g, " ").trim(); }).filter(Boolean);
     });
@@ -125,6 +140,11 @@
   function enterEdit(from) {
     if (!STATE) return;
     draft = clone(from || STATE);
+    var full = {};
+    Object.keys(window.BRIEF_TITLES || {}).forEach(function (k) {
+      full[k] = (draft.titles && draft.titles[k]) || window.BRIEF_TITLES[k];
+    });
+    draft.titles = full;
     only(["eb-cancel", "eb-save"]);
     status("");
     document.body.classList.add("editing");
@@ -143,7 +163,9 @@
 
   page.addEventListener("input", function (e) {
     var t = e.target;
-    if (!draft || t.tagName !== "TEXTAREA") return;
+    if (!draft) return;
+    if (t.dataset && t.dataset.title) { draft.titles[t.dataset.title] = t.value; if (t.tagName === "TEXTAREA") size(t); scheduleStore(); return; }
+    if (t.tagName !== "TEXTAREA") return;
     if (t.dataset.list) draft[t.dataset.list][+t.dataset.i] = t.value;
     else if (t.dataset.field) draft[t.dataset.field] = t.value;
     size(t);
@@ -151,6 +173,7 @@
   });
   page.addEventListener("keydown", function (e) {
     var t = e.target;
+    if (draft && t.dataset && t.dataset.title && e.key === "Enter") { e.preventDefault(); return; }
     if (!draft || !t.dataset || !t.dataset.list) return;
     var key = t.dataset.list, i = +t.dataset.i;
     if (e.key === "Enter" && !e.shiftKey && !e.isComposing) {
