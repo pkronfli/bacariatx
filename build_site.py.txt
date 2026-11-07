@@ -1,0 +1,112 @@
+"""Builds every page on bacariatx.com with the same, complete <head>.
+
+Add a page by calling page(...) at the bottom with its own path, title,
+description and body. Each page gets: title, description, canonical URL,
+robots, theme colour, favicons, web manifest, Open Graph and Twitter cards,
+and (on the homepage) Restaurant structured data.
+"""
+import base64, html, json, os
+
+SITE = "https://bacariatx.com"
+OUT = "/home/claude/bacariatx-site/"
+ASSETS = "/home/claude/bacari-assets/"
+SRC = "/home/claude/landing-src/"
+
+FONTS = ('<link rel="preconnect" href="https://fonts.googleapis.com">\n'
+         '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n'
+         '<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gloock&family=IBM+Plex+Mono:wght@400;500&family=Public+Sans:wght@400;600&display=swap">\n')
+
+RESTAURANT = {
+    "@context": "https://schema.org",
+    "@type": "Restaurant",
+    "name": "Bacari Austin",
+    "url": SITE + "/",
+    "image": SITE + "/og-image.jpg",
+    "logo": SITE + "/icon-512.png",
+    "description": "Venetian-inspired small plates, cocktails and wine. Bacari is opening its first Texas restaurant in Austin.",
+    "servesCuisine": ["Mediterranean", "Small plates"],
+    "address": {"@type": "PostalAddress", "addressLocality": "Austin", "addressRegion": "TX", "addressCountry": "US"},
+    "sameAs": ["https://www.instagram.com/eatwithbacari", "https://www.eatwithbacari.com"],
+    "parentOrganization": {"@type": "Organization", "name": "Bacari", "url": "https://www.eatwithbacari.com"},
+}
+
+
+def head(path, title, description, share_title=None, image_alt=None, noindex=False, structured=None):
+    e = lambda s: html.escape(s, quote=True)
+    url = SITE + path
+    share_title = share_title or title
+    image_alt = image_alt or "Bacari patio at dusk with string lights, and the words Coming soon to Austin, Texas"
+    tags = [
+        '<meta charset="utf-8">',
+        '<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">',
+        f"<title>{e(title)}</title>",
+        f'<meta name="description" content="{e(description)}">',
+        f'<link rel="canonical" href="{url}">',
+        f'<meta name="robots" content="{"noindex, follow" if noindex else "index, follow, max-image-preview:large"}">',
+        '<meta name="theme-color" content="#08223b">',
+        '<link rel="icon" href="/favicon.ico" sizes="any">',
+        '<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">',
+        '<link rel="apple-touch-icon" href="/apple-touch-icon.png">',
+        '<link rel="manifest" href="/site.webmanifest">',
+        '<meta property="og:type" content="website">',
+        '<meta property="og:site_name" content="Bacari Austin">',
+        '<meta property="og:locale" content="en_US">',
+        f'<meta property="og:url" content="{url}">',
+        f'<meta property="og:title" content="{e(share_title)}">',
+        f'<meta property="og:description" content="{e(description)}">',
+        f'<meta property="og:image" content="{SITE}/og-image.jpg">',
+        '<meta property="og:image:type" content="image/jpeg">',
+        '<meta property="og:image:width" content="1200">',
+        '<meta property="og:image:height" content="630">',
+        f'<meta property="og:image:alt" content="{e(image_alt)}">',
+        '<meta name="twitter:card" content="summary_large_image">',
+        f'<meta name="twitter:title" content="{e(share_title)}">',
+        f'<meta name="twitter:description" content="{e(description)}">',
+        f'<meta name="twitter:image" content="{SITE}/og-image.jpg">',
+        f'<meta name="twitter:image:alt" content="{e(image_alt)}">',
+    ]
+    if structured:
+        tags.append('<script type="application/ld+json">' + json.dumps(structured, ensure_ascii=False).replace("</", "<\\/") + "</script>")
+    return "\n".join(tags) + "\n" + FONTS
+
+
+def page(filename, body, **meta):
+    doc = '<!doctype html>\n<html lang="en">\n<head>\n' + head(**meta) + "</head>\n<body>\n" + body + "\n</body>\n</html>\n"
+    with open(OUT + filename, "w") as f:
+        f.write(doc)
+    print(filename, len(doc))
+
+
+def data_uri(name, mime):
+    return f"data:{mime};base64," + base64.b64encode(open(ASSETS + name, "rb").read()).decode()
+
+
+# Homepage: coming soon
+home = open(SRC + "page.html").read()
+for key, val in {
+    "{{LOGO}}": data_uri("logo.png", "image/png"),
+    "{{DECK}}": data_uri("deck.jpg", "image/jpeg"),
+    "{{FOOD}}": data_uri("food_d.jpg", "image/jpeg"),
+    "{{BAR}}": data_uri("in_herbbar.jpg", "image/jpeg"),
+    "{{GARDEN}}": data_uri("garden.jpg", "image/jpeg"),
+}.items():
+    home = home.replace(key, val)
+assert "{{" not in home
+page("index.html", home,
+     path="/",
+     title="Bacari Austin · Venetian-Inspired Small Plates, Coming Soon",
+     description="Venetian-inspired small plates, cocktails and wine from the Kronfli brothers and Chef Lior Hillel. Bacari is opening its first Texas restaurant in Austin.",
+     share_title="Bacari is coming to Austin",
+     structured=RESTAURANT)
+
+# Any wrong address: send people to the homepage
+redirect_body = ('<style>body{margin:0;background:#f3efe5;color:#08223b;font:16px "Helvetica Neue",Arial,sans-serif;'
+                 'display:grid;place-items:center;min-height:100vh}a{color:#08223b}</style>\n'
+                 '<p>Taking you to <a href="/">bacariatx.com</a>…</p>\n'
+                 '<script>location.replace("/");</script>')
+page("404.html", redirect_body,
+     path="/",
+     title="Bacari Austin",
+     description="Venetian-inspired small plates, cocktails and wine. Bacari is opening its first Texas restaurant in Austin.",
+     share_title="Bacari is coming to Austin",
+     noindex=True)
