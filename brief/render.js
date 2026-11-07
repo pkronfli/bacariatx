@@ -115,7 +115,6 @@ function esc(s) {
   '<section class="ask"><h2>' + tt(st, "askTitle", edit) + '</h2>' + list(st, "ask", edit, true) + '</section>' +
   '<footer>' +
     '<div class="contact"><span class="role">Owner</span><span class="name">Danny Kronfli</span><span class="detail">danny@bacari.us</span></div>' +
-    '<div class="contact"><span class="role">Austin contact</span><span class="name">Patrick Kronfli</span><span class="detail">(213) 359-9191</span></div>' +
     '<div class="follow">' +
       '<a class="btn" href="https://www.eatwithbacari.com" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9.5"/><path d="M2.5 12h19"/><path d="M12 2.5c2.6 2.6 4 6 4 9.5s-1.4 6.9-4 9.5c-2.6-2.6-4-6-4-9.5s1.4-6.9 4-9.5z"/></svg><span>Visit our website <small>eatwithbacari.com</small></span></a>' +
       '<a class="btn" href="https://www.instagram.com/eatwithbacari" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.3" cy="6.7" r="0.6" fill="currentColor" stroke="none"/></svg><span>Follow on Instagram <small>@eatwithbacari</small></span></a>' +

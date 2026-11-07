@@ -279,7 +279,7 @@
   loadLatest().then(function (st) {
     if (!valid(st)) {
       if (location.hash === "#edit") status("Couldn't load the brief. Refresh to try again.");
-      if (!page.innerHTML) page.innerHTML = '<p class="wrap" style="padding-block:40px">The brief couldn\'t load. Refresh to try again, or call Patrick Kronfli at (213) 359-9191.</p>';
+      if (!page.innerHTML) page.innerHTML = '<p class="wrap" style="padding-block:40px">The brief couldn\'t load. Refresh to try again, or email Danny Kronfli at danny@bacari.us.</p>';
       page.removeAttribute("aria-busy");
       return;
     }
