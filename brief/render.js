@@ -93,5 +93,6 @@ function esc(s) {
   }
 
   
+  window.renderBriefPage = renderPage;
   window.renderBrief = function (st) { return renderPage(st, false); };
 })();

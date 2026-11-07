@@ -154,3 +154,15 @@ body.editing .body { padding-bottom: 140px; }
 .eb-btn:focus-visible { outline: 2px solid var(--sand); outline-offset: 2px; }
 .editbar[hidden] { display: none; }
 .body > section > .ed-para { margin-bottom: 14px; }
+
+/* Passcode form in the edit bar (bacariatx.com/brief#edit) */
+.eb-pass { display: flex; align-items: center; gap: 8px; flex: 1 1 16em; min-width: 0; }
+.eb-pass[hidden] { display: none; }
+.eb-pass input {
+  flex: 1 1 auto; width: 10em; min-width: 0;
+  font: 500 15px var(--mono); color: var(--ink); background: var(--bg);
+  border: 1px solid var(--band-muted); border-radius: 999px; padding: 7px 14px;
+}
+.eb-pass input::placeholder { color: var(--muted); font-family: var(--sans); font-weight: 400; }
+.eb-pass input:focus { outline: 2px solid var(--sand); outline-offset: 1px; }
+.eb-x { width: 36px; height: 36px; padding: 0; font-size: 18px; line-height: 1; flex: none; }
