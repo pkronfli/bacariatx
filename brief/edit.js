@@ -1,13 +1,15 @@
-// bacariatx.com/brief: shows the latest brief from the Google Sheet and lets
-// anyone with the edit passcode change it right on the page (open /brief/#edit).
+// bacariatx.com/brief: asks visitors for their email (logged to the Sheet's
+// Visitors tab), shows the latest brief from the Google Sheet, and lets anyone
+// with the edit passcode change it right on the page (open /brief/#edit).
 (function () {
   var API = "https://script.google.com/macros/s/AKfycbyVvdti3yKezbq1lsZQT1v9mtqs0MGhXeTRaTwxCKhdnLOub9u9mARI_8mumLeANcbA/exec";
   var LIST_KEYS = ["site", "build", "services", "how", "ask"];
-  var PASS_KEY = "bacari-brief-pass", DRAFT_KEY = "bacari-brief-draft";
+  var PASS_KEY = "bacari-brief-pass", DRAFT_KEY = "bacari-brief-draft", EMAIL_KEY = "bacari-brief-email";
   var page = document.getElementById("page");
   if (!page || !window.renderBriefPage || !window.fetch) return;
 
   var STATE = null, draft = null, pass = null, busy = false, storeTimer = null;
+  var gated = false, waiting = null, isEditor = false;
 
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
   function canon(v) {
@@ -43,6 +45,7 @@
     return out;
   }
   function show(st) {
+    if (gated) { waiting = st; return; }
     var html = window.renderBriefPage(st, false);
     if (page.innerHTML !== html) page.innerHTML = html;
   }
@@ -68,6 +71,62 @@
       if (r && r.ok && valid(r.state)) { live = true; return r.state; }
       throw new Error("bad_state");
     }).catch(function () { return backup; });
+  }
+
+  // ---------- Email gate ----------
+  var EMAIL_RE = /^[a-z0-9][a-z0-9._%+-]*@[a-z0-9-]+(\.[a-z0-9-]+)*\.[a-z]{2,}$/;
+  function logVisit(email) {
+    return api({ action: "visit", email: email, ref: document.referrer.slice(0, 200) }).then(function (r) {
+      if (r && r.ok && r.editor) { isEditor = true; if (!draft && bar.hidden) offerEdit(); }
+      return r;
+    });
+  }
+  function gate() {
+    gated = true;
+    var T = window.BRIEF_TITLES || {};
+    page.innerHTML =
+      '<header class="top"><div class="wrap"><img class="logo" src="img/logo.png" alt="bacari"></div></header>' +
+      '<main class="gate"><div class="wrap"><form class="gate-card" id="gate-form" novalidate>' +
+        '<p class="eyebrow">' + esc(T.eyebrow || "Architect brief") + '</p>' +
+        '<h1>' + esc(T.headline || "") + ' <span>' + esc(T.headlineAccent || "") + '</span></h1>' +
+        '<p class="lede">Enter your email to read the brief.</p>' +
+        '<div class="gate-row">' +
+          '<label class="sr" for="gate-email">Email</label>' +
+          '<input id="gate-email" type="email" inputmode="email" autocomplete="email" autocapitalize="off" spellcheck="false" placeholder="you@yourfirm.com" required>' +
+          '<button class="btn" type="submit" id="gate-go">View the brief</button>' +
+        '</div>' +
+        '<p class="gate-msg" id="gate-msg" role="status" aria-live="polite"></p>' +
+        '<p class="gate-note">We only use it to follow up about this project.</p>' +
+      '</form></div></main>';
+    page.removeAttribute("aria-busy");
+    document.getElementById("gate-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      var input = document.getElementById("gate-email"), msg = document.getElementById("gate-msg"), go = document.getElementById("gate-go");
+      var email = input.value.trim().toLowerCase();
+      if (!EMAIL_RE.test(email) || email.length > 254) { msg.textContent = "Please enter a valid email address."; input.focus(); return; }
+      go.disabled = true;
+      msg.textContent = "Opening the brief…";
+      var done = false;
+      function open() {
+        if (done) return;
+        done = true;
+        set(EMAIL_KEY, email);
+        gated = false;
+        page.innerHTML = "";
+        page.setAttribute("aria-busy", "true");
+        if (waiting) { show(waiting); page.removeAttribute("aria-busy"); }
+        window.scrollTo(0, 0);
+      }
+      // Let them in even if logging is slow or fails; the next visit logs again.
+      logVisit(email).then(open, open);
+      setTimeout(open, 4000);
+    });
+  }
+  function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+  function offerEdit() {
+    bar.hidden = false;
+    only(["eb-edit", "eb-close"]);
+    status("");
   }
 
   // ---------- Bottom bar ----------
@@ -256,7 +315,10 @@
       status("Couldn't reach the server. Try again in a moment.");
     });
   });
-  $("eb-edit").addEventListener("click", function () { enterEdit(); });
+  $("eb-edit").addEventListener("click", function () {
+    pass = pass || get(PASS_KEY);
+    if (pass) enterEdit(); else askPasscode("");
+  });
   $("eb-cancel").addEventListener("click", leaveEdit);
   $("eb-save").addEventListener("click", save);
   $("eb-restore").addEventListener("click", function () { var d = readDraft(); if (d) enterEdit(d); });
@@ -275,6 +337,11 @@
     if (draft && STATE && !same(cleaned(draft), STATE)) { e.preventDefault(); e.returnValue = ""; }
   });
 
+  if (location.hash !== "#edit") {
+    var known = get(EMAIL_KEY);
+    if (known && EMAIL_RE.test(known)) logVisit(known).catch(function () {});
+    else gate();
+  }
   route();
   loadLatest().then(function (st) {
     if (!valid(st)) {
@@ -285,6 +352,7 @@
     }
     STATE = st;
     if (!draft) show(st);
+    if (gated) return;
     page.removeAttribute("aria-busy");
     route();
   });
