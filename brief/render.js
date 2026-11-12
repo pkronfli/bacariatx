@@ -14,7 +14,12 @@ var IMG = {
 function esc(s) {
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
-  function rich(s) { return esc(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>"); }
+  // **bold** and [label](https://link) in brief text
+  function rich(s) {
+    return esc(s)
+      .replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>")
+      .replace(/\[([^\]]+)\]\((https:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  }
 
   var TITLES = {
     eyebrow: "Architect brief \u00b7 Bacari Austin",
@@ -83,7 +88,7 @@ function esc(s) {
   para(st, "lede", "lede", edit, "Introduction") +
 '</div></div>' +
 '<div class="wrap body">' +
-  (edit ? '<p class="ed-note">You\'re editing. Titles, subtitles and the numbers up top can be changed too. Press Enter in a bullet to start a new one. Wrap words in <code>**double asterisks**</code> to make them bold. Nothing changes for anyone else until you tap Save changes.</p>' : '') +
+  (edit ? '<p class="ed-note">You\'re editing. Titles, subtitles and the numbers up top can be changed too. Press Enter in a bullet to start a new one. Wrap words in <code>**double asterisks**</code> to make them bold, and add a link as <code>[label](https://…)</code>. Nothing changes for anyone else until you tap Save changes.</p>' : '') +
   fig(IMG.deck, "Bacari Silver Lake patio: tiered decks and dining built around large trees, with string lights and a fire pit", "Bacari Silver Lake. Tiered decks and a patio built around the trees, the kind of outdoor room we want in Austin.", "hero") +
   '<dl class="specs">' +
     spec(st, 1, edit) +
