@@ -29,3 +29,10 @@ Website for Bacari Austin, served by GitHub Pages.
 - The brief is marked `noindex` and is left out of the sitemap, so search engines skip it.
 - `_tools/sync_brief.js` is retired (it copied from the old Claude version of the brief). Don't run it with `--full`: it would rebuild `index.html` without edit mode.
 - Folders starting with `_` are not published by GitHub Pages.
+
+## Location pages (bacariatx.com/locations)
+- `locations/index.html` lists all ten Bacari restaurants; `locations/<slug>/index.html` is one page per location with a hero photo, "The look", "Worth noting for Austin", and Inside / Outside galleries.
+- Photos load from Bacari's own image CDN (static.wixstatic.com, behind eatwithbacari.com), resized through the URL (`/v1/fit/w_900,h_900/`). If Bacari replaces a photo on its site, the matching image here can break; swap the media ID in the page.
+- `locations/zoom.js` opens any photo larger on tap; `locations/locations.css` uses the same colors and fonts as the brief.
+- Pages are static HTML with the standard head (title, description, canonical, favicons, Open Graph). They're marked `noindex` and left out of the sitemap, like the brief, and they aren't behind the email gate.
+- The brief links to every location from "The Bacari feel" section (list in `brief/render.js`, styles in `brief/locs.css`).
