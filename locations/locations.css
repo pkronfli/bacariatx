@@ -39,6 +39,9 @@ h2 { font-size: 12.5px; font-family: var(--mono); font-weight: 500; letter-spaci
 section { min-width: 0; }
 section > p { margin: 0; max-width: 68ch; }
 .grid { display: grid; grid-template-columns: 3fr 2fr; gap: 28px 44px; align-items: start; }
+/* "The look" text is no longer shown; only the Austin note remains under the hero */
+.grid { display: block; }
+.grid > section:not(.note) { display: none; }
 .note { background: var(--panel); border-radius: 8px; padding: 18px 20px 20px; }
 
 .gallery { columns: 3 260px; column-gap: 14px; }
