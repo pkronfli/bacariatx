@@ -1,0 +1,7 @@
+/* Links from the brief's "Bacari feel" section to each location page */
+.locs { border-top: 1px solid var(--rule); padding-top: 14px; }
+.locs ul { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+.locs a { display: inline-block; padding: 7px 14px; border-radius: 999px; border: 1px solid var(--rule); font-size: 14px; text-decoration: none; color: var(--ink); background: transparent; }
+.locs a:hover { border-color: var(--accent); color: var(--accent); }
+.locs a.all { background: var(--band); border-color: var(--band); color: var(--band-ink); }
+.locs a.all:hover { background: var(--link); color: var(--band-ink); }

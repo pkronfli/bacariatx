@@ -11,6 +11,10 @@ var IMG = {
     inHerbbar: "img/in_herbbar.jpg"
   };
   
+var LOCS = [["west-adams", "West Adams"], ["silver-lake", "Silver Lake"], ["west-3rd", "West 3rd"], ["sherman-oaks", "Sherman Oaks"],
+    ["beverly-hills", "Beverly Hills"], ["culver-city", "Culver City"], ["glendale", "Glendale"], ["long-beach", "Long Beach"],
+    ["playa-del-rey", "Playa del Rey"], ["north-park", "North Park"]];
+
 function esc(s) {
     return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
   }
@@ -22,7 +26,7 @@ function esc(s) {
   }
 
   var TITLES = {
-    eyebrow: "Architect brief \u00b7 Bacari Austin",
+    eyebrow: "Architect brief · Bacari Austin",
     headline: "Rebuilding a fire-damaged restaurant on",
     headlineAccent: "West 6th Street.",
     spec1Label: "Site", spec1Value: "West 6th St", spec1Note: "Former Bar Peached",
@@ -111,7 +115,11 @@ function esc(s) {
       fig(IMG.treebar, "Bacari Silver Lake bar opening onto a patio with a large tree growing through it", "Silver Lake · bar open to the patio") +
       fig(IMG.garden, "Bacari West 3rd garden patio at night with tables under a large tree", "West 3rd · garden patio") +
       fig(IMG.food, "A wooden table filled with Bacari small plates: sliders, salads, crab cakes and grilled meats", "A table of small plates to share") +
-    '</div></div></div>' +
+    '</div></div>' +
+    '<div class="locs"><h3>Each location, inside and out</h3><ul>' + LOCS.map(function (l) {
+      return '<li><a href="/locations/' + l[0] + '/">' + l[1] + '</a></li>';
+    }).join("") + '<li><a href="/locations/" class="all">All ten →</a></li></ul></div>' +
+    '</div>' +
   '</section>' +
   '<div class="grid">' +
     '<section><h2>' + tt(st, "servicesTitle", edit) + '</h2>' + list(st, "services", edit) + '</section>' +
