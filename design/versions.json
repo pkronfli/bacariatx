@@ -1,6 +1,6 @@
 {
- "live": 10,
- "stamp": "10",
+ "live": 11,
+ "stamp": "11",
  "versions": [
   {
    "n": 1,
@@ -61,6 +61,12 @@
    "date": "Nov 23, 2026",
    "by": "Robert",
    "summary": "The planters are now big corten boxes, about 3½ ft square and 3 ft tall, each with a small tree (olive or Texas mountain laurel) and boxwood around the trunk."
+  },
+  {
+   "n": 11,
+   "date": "Nov 23, 2026",
+   "by": "Patrick",
+   "summary": "The north-east corner bank becomes a terraced limestone garden with the leaning trees up-lit at night, Texas natives, a flagstone path up to a stone bench, a runnel and bubbling basin by the deck, and an open iron fence so it shows from W 6th."
   }
  ]
 }
