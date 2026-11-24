@@ -1,6 +1,6 @@
 {
- "live": 16,
- "stamp": "16",
+ "live": 17,
+ "stamp": "17",
  "versions": [
   {
    "n": 1,
@@ -97,6 +97,12 @@
    "date": "Nov 24, 2026",
    "by": "Patrick",
    "summary": "The streets look like streets: dark asphalt with lane markings, curbs, sidewalks, crosswalks at Pressler, street lights and parked cars, on top of version 15's tree up-lights."
+  },
+  {
+   "n": 17,
+   "date": "Nov 24, 2026",
+   "by": "Patrick",
+   "summary": "Streets corrected from map data and aerial imagery: W 6th one-way westbound with three lanes and north-curb parking, Pressler one-way north below W 6th, real curb cuts and driveways, and the north side of W 6th filled in."
   }
  ]
 }
