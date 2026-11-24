@@ -1,0 +1,18 @@
+{
+ "live": 2,
+ "stamp": "2",
+ "versions": [
+  {
+   "n": 1,
+   "date": "Nov 23, 2026",
+   "by": "Patrick",
+   "summary": "Layout corrected from Google Earth. Wooden fence, back alley, neighboring buildings and the billboard added."
+  },
+  {
+   "n": 2,
+   "date": "Nov 23, 2026",
+   "by": "Patrick",
+   "summary": "Building and neighbors reshaped from Google Earth and the videos. Kitchen double door, hidden service corridor and restroom route placed as Robert describes. Existing landscaping added. Billboard removed."
+  }
+ ]
+}
