@@ -1,9 +1,10 @@
 /* Bacari Austin design concept: model version 8.
    One file per version. The page (../index.html) loads the live version and calls build().
-   CHANGES FROM VERSION 7 (Robert's suggestion S008): 11 of the two-tops become four-tops (two 30-in squares pushed together,
-   two chairs a side): 4 on the high deck, 2 on the medium deck, 2 on the front terrace lawn, 2 on the low deck front row, and the
-   one on the south-east garden paving. Picked so aisles of about 3½ ft or more stay clear and none hit the oak on the high deck.
-   Banquette two-tops and the narrow upper deck stay two-tops. About 22 more seats.
+   CHANGES FROM VERSION 7 (Robert's suggestions S008-S009): some two-tops are now four-tops (the front row on the high deck is four
+   four-tops instead of five two-tops, the two west tables on the front terrace lawn are four-tops, and two pairs of two-tops on the
+   low deck's front row are merged into four-tops); more planters throughout: glazed and terracotta pots with flowering shrubs at the
+   street gate, the front door, the steps down to the high deck, on every deck and at the garden stairs, plus corten planter boxes
+   along the high deck's back rail and the medium deck's east-side rail, keeping the staff aisles clear.
    EARLIER, FROM VERSION 6 (Robert's suggestions S006-S007): every deck (upper, high, medium, low) and its stairs is now drawn as
    wood: individual deck boards with gaps, butt joints, grain and color variation, laid along each deck's length, with horizontal
    fascia boards on the deck edges; the W 6th street gate is more ornate: two pillars with lanterns, an iron arch with a scroll
@@ -59,9 +60,10 @@ notes:[
  {p:[137.4,12,84],t:'Wooden fence around the property',d:'A wooden fence about 6½ ft tall follows the whole property line: 137 ft along W 6th, 130 ft down each side, and along the back alley. It has a guest gate on W 6th and a wider service gate on the alley. On the east side it stands on the retaining edge of the neighbor\'s higher parking lot.',f:'Check: Austin\'s fence height limits, and whether a solid fence on W 6th should have openings so the patio shows from the street.'},
  {p:[73,3.5,79],t:'Existing landscaping, kept',d:'Landscaping that shows in the site videos, worked into the garden: the turf lawn, the teal block walls with terracotta pots on top, steel planters with agaves and yuccas, cedar slat screens, the stamped concrete patio, mulch beds, bamboo along the west edge, and the lawn under the front oak.',f:'Check: which of these Robert wants to keep. They are placed where they fit the concept, not exactly where they stand today.'}
 ,
-{p:[102,3,97],t:'Tables and chairs like Bacari LA',d:'Furniture follows Bacari\'s Los Angeles patios: 30-inch square walnut tables on black iron bases, pushed together for four or six; French rattan bistro chairs with woven seats; navy built-in banquettes with striped cushions and bright pillows along the east fence and the back wall; rattan bistro bar stools with woven seats, footrest rings and hoop backs at the bar. Version 4 adds two-tops on the front terrace lawn, a front row on the low deck, and more on the medium deck and the garden paving, keeping aisles of about 3½ ft or more so staff can get through. Version 8 turns eleven of the two-tops into four-tops (on the high deck, medium deck, front terrace lawn, low deck and garden paving), for about 160 seats with the bar. Two-tops stay along the banquettes and on the narrow upper deck.',f:'Check: which areas should get more four-tops or stay two-tops, seat count per deck against the occupant load, and the exact bar stool, chair and table models used at the other restaurants.'},
+{p:[102,3,97],t:'Tables and chairs like Bacari LA',d:'Furniture follows Bacari\'s Los Angeles patios: 30-inch square walnut tables on black iron bases, pushed together for four or six; French rattan bistro chairs with woven seats; navy built-in banquettes with striped cushions and bright pillows along the east fence and the back wall; rattan bistro bar stools with woven seats, footrest rings and hoop backs at the bar. Version 4 adds two-tops on the front terrace lawn, a front row on the low deck, and more on the medium deck and the garden paving. Version 8 turns some two-tops into four-tops: the front row on the high deck, the two west tables on the front terrace lawn, and two on the low deck front row. That makes about 150 seats with the bar, keeping aisles of about 3½ ft or more so staff can get through.',f:'Check: seat count per deck against the occupant load, and the exact bar stool, chair and table models used at the other restaurants.'},
 {p:[100,6,30],t:'Wooden decks',d:'Version 7 draws every deck as real wood: separate deck boards about 6 in wide with small gaps, staggered joints and natural color variation, running along each deck\'s length, with wood fascia boards on the edges and wooden stair treads. Each level keeps its own tone, darker up high and lighter toward the garden.',f:'Check: wood species or composite, board color, and which way the boards should run.'},
 {p:[44,19.5,0],t:'Ornate street gate',d:'Version 7 dresses up the W 6th gate: two pillars with lanterns, an iron arch with a scroll ring over the opening, and gate leaves with a wood lower panel, iron pickets with finials and a center ring, rising toward the middle.',f:'Check: send a photo of the Silver Lake door so the gate can match it.'},
+{p:[96,5,45],t:'More planters',d:'Version 8 adds planters all through the patio: glazed blue, cream and terracotta pots with leafy shrubs and flowers at the street gate, the front door, the steps down to the high deck, the corners of the upper, medium and low decks and the foot of the garden stairs, and corten planter boxes along the high deck\'s back rail and the medium deck\'s east rail. They sit at the edges and corners so the staff aisles stay clear.',f:'Check: which plants (flowering, herbs, citrus), pot styles and colors to use, and who waters them.'},
 {p:[56.5,19,69],t:'Upper-floor door to the deck',d:'Version 5 adds a glass double door on the east wall of the upper (street-level) floor. It opens onto the upper deck right beside the opened railing and the stairs down to the high deck, so guests upstairs can walk straight out and down into the patio.',f:'Check: whether this is the spot Robert has in mind, and whether the existing boarded doors on the back wall should open up too.'}
 ],
 tags:[{p:[124,9.5,-6],t:'486 ft · sidewalk',h:1},{p:[22,9.2,8],t:'486 ft · front terrace',h:1},{p:[104,1,62],t:'477.5 ft · patio',h:1},{p:[104,-.8,141],t:'476 ft · alley',h:1},{p:[164,7,80],t:'483 ft · neighbor parking',h:1},{p:[92,7,3],t:'Retaining wall + bank',h:1},{p:[70,9.5,-26],t:'W 6th St'},{p:[-88,3,70],t:'Pressler St'},{p:[30,60,170],t:'Pressler Apartments'},{p:[160,42,196],t:'Parking garage'},{p:[-30,31,32],t:'Title company'},{p:[8,-.8,141],t:'Back alley'},{p:[226,35,66],t:'Salon + print shop'},{p:[33,26,58],t:'Bar Peached building'}],
@@ -317,14 +319,13 @@ build(kit){
     im.castShadow=true;im.receiveShadow=true;scene.add(im);});};
   planter(96,102,53,55.5);planter(80,86,61.5,64);planter(100,106,86,88.5);planter(106,112,65,67.5);planter(58,64,97,99.5);
   [[68,100],[116,98],[111,44],[87,46.5],[98,100],[106,78.5],[68,61.5]].forEach(([x,z])=>{const sh=put(new T.SphereGeometry(1.6,10,8),C.shrub,x,1.1,z);sh.scale.y=.7;});
-  // version 8: some two-tops become four-tops (Robert, S008), keeping 3½ ft+ aisles and clear of the high-deck oak at (100,14)
-  const FOUR8=new Set(['70,11','86,11','70,29','102,29']);
-  for(let x=70;x<=102;x+=8){table(x,5,11,FOUR8.has(x+',11')?4:2);if(x<88||x>96)table(x,5,29,FOUR8.has(x+',29')?4:2);}
-  [[115,12,4],[128,12,2],[115,31,4],[128,31,2],[133,22,2]].forEach(([x,z,n])=>table(x,3,z,n));
+  [70,80,90,100].forEach(x=>table(x,5,11,4));                                       // version 8: front row of four-tops on the high deck
+  [70,78,102].forEach(x=>table(x,5,29,2));
+  [[115,12],[128,12],[115,31],[128,31],[133,22]].forEach(([x,z])=>table(x,3,z,2));
   // version 4: more two-tops, keeping staff aisles of about 3½ ft or more
-  [[16,12,4],[16,27,4],[54,10,2],[54,30,2]].forEach(([x,z,n])=>table(x,8.58,z,n));            // front terrace lawn
-  [68,76,84,100,108,116].forEach(x=>table(x,1.5,108,x===76||x===108?4:2));                              // front row on the low deck, clear of both stairs
-  table(110,.2,99,4);                                                                  // garden paving, south-east
+  [[16,12],[16,27]].forEach(([x,z])=>table(x,8.58,z,4));[[54,10],[54,30]].forEach(([x,z])=>table(x,8.58,z,2)); // front terrace lawn (version 8: west two are four-tops)
+  [72,104].forEach(x=>table(x,1.5,108,4));[84,116].forEach(x=>table(x,1.5,108,2));   // front row on the low deck, clear of both stairs (version 8: two four-tops)
+  table(110,.2,99,2);                                                                  // garden paving, south-east
   for(let z=48;z<=96;z+=8)two(129.6,3,z,-Math.PI/2,true);banq(132.4,45,132.4,99,3,-Math.PI/2);
   for(let x=64;x<=120;x+=8)two(x,1.5,117.4,Math.PI,true);banq(61,120.2,123,120.2,1.5,Math.PI);
   [[30,89.5,Math.PI/2],[38,89.5,Math.PI/2],[50,89.5,Math.PI/2],[60,82,0],[60,72,0]].forEach(([x,z,r])=>table(x,10,z,2,false,r));
@@ -362,6 +363,30 @@ build(kit){
     const s=put(new T.IcosahedronGeometry(2.6,1),leafM,x,y+12,z);s.scale.set(1,2.2,1);};
   for(let z=6;z<=36;z+=6)bamboo(3.5,z,8.5);
 
+  // version 8: MORE PLANTERS (S009). Tapered pots (glazed blue, cream, terracotta) with a leafy shrub and flowers, and corten
+  // planter boxes, placed at edges, corners and stair landings so the staff aisles stay clear. Instanced with the furniture.
+  G.pot=new T.CylinderGeometry(.5,.36,1,14);G.pot.translate(0,.5,0);G.ball=new T.SphereGeometry(.5,10,8);
+  const potMs=[mat(0x2f5d7c),mat(0xe8e1d2),terra],leaf2=mat(0x5c8a45),bloomMs=[mat(0xd94f7a),mat(0xf2c14e),mat(0xf7f3ea),mat(0xa865cf)];
+  let pk=0;const potP=(x,y,z,s)=>{s=s||1;const k=pk++;add('pp'+k%3,G.pot,potMs[k%3],x,y,z,0,1.9*s,1.8*s,1.9*s);
+    add(k%2?'pgA':'pgB',G.ball,k%2?leafM:leaf2,x,y+2.1*s,z,k,1.9*s,1.5*s,1.9*s);
+    for(let i=0;i<6;i++){const a=i*1.05+k;add('pf'+((k%2)*2+i%2),G.ball,bloomMs[(k%2)*2+i%2],x+Math.cos(a)*.62*s,y+(2.45+(i%3)*.18)*s,z+Math.sin(a)*.62*s,0,.3*s,.3*s,.3*s);}};
+  const boxP=(x0,x1,z0,z1,y)=>{box(x0,x1,y,y+1.8,z0,z1,C.corten);box(x0+.15,x1-.15,y+1.8,y+1.85,z0+.15,z1-.15,mulch);
+    const ax=x1-x0>=z1-z0,L=ax?x1-x0:z1-z0,n=Math.max(2,Math.round(L/1.6));
+    for(let i=0;i<n;i++){const t=(i+.5)/n,x=ax?x0+L*t:(x0+x1)/2,z=ax?(z0+z1)/2:z0+L*t;
+      add(i%2?'pgA':'pgB',G.ball,i%2?leafM:leaf2,x,y+2.2,z,i,1.3,1.1,1.3);if(i%2===0)add('pf'+i%4,G.ball,bloomMs[i%4],x,y+2.85,z,0,.34,.34,.34);}};
+  // front terrace: either side of the street gate, the front door, and the steps down to the high deck
+  [[38.4,4],[49.6,4],[33.8,38.4],[40.2,38.4],[60,14.6],[60,23.4]].forEach(([x,z])=>potP(x,8.5,z));
+  // upper deck: the open south-east corner
+  [[62.6,92.6],[57.6,92.6]].forEach(([x,z])=>potP(x,10,z,.9));
+  // high deck: pots at the west end, corten boxes along the back rail either side of the garden stairs
+  potP(64.6,5,8,.9);potP(106.4,5,8,.9);boxP(66,74,37.6,39.4,5);boxP(97,105,37.6,39.4,5);
+  // medium deck: corner pots, and boxes along the inside of the east-side rail
+  [[135,6.8],[135,37.5],[111,37.5]].forEach(([x,z])=>potP(x,3,z,.9));boxP(119.3,120.9,45,55,3);boxP(119.3,120.9,86,97,3);
+  // low deck: pots at both ends
+  [[58.6,107],[58.6,124.8],[135,110],[135,124.8]].forEach(([x,z])=>potP(x,1.5,z));
+  // garden: either side of the high-deck stairs, by the low-deck stairs, and two pots just outside the bar's rock ring
+  [[88.4,45.2],[95.6,45.2],[96.2,101.6],[100.8,80.8],[100.8,63.2]].forEach(([x,z])=>potP(x,.2,z,1.1));
+
   // tall back wall, and a screen wall hiding the service yard behind the building
   const walls=new T.Group();scene.add(walls);
   box(55.5,137,-2,10,127.3,128.3,C.wall,walls);box(55.5,56.5,-1.5,9,93.4,128.3,C.wall,walls);
@@ -389,3 +414,4 @@ build(kit){
   return {fences,walls,trees,treeMats:[treeMat,fallMat],bulbMat,lamps};
 }
 };
+
