@@ -150,7 +150,7 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
 
 <section aria-label="3D model">
   <div id="vbar" class="vbar" hidden></div>
-  <div id="model" class="fig"><div id="pins"></div><p class="hint">Drag to turn · + and − to zoom (pinch on a phone) · tap a number</p><div class="mapmic" id="mapmic" hidden><button type="button" id="mm-rec" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 15a3.5 3.5 0 0 0 3.5-3.5v-6a3.5 3.5 0 1 0-7 0v6A3.5 3.5 0 0 0 12 15Z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5"/></svg><span id="mm-lab">Record a suggestion</span></button><button type="button" id="mm-cancel" hidden>Cancel</button></div><div class="zoom"><button class="zb" id="z-in" type="button" aria-label="Zoom in">+</button><button class="zb" id="z-out" type="button" aria-label="Zoom out">−</button></div></div>
+  <div id="model" class="fig"><div id="pins" style="display:none"></div><p class="hint">Drag to turn · + and − to zoom (pinch on a phone) · Numbers shows the notes</p><div class="mapmic" id="mapmic" hidden><button type="button" id="mm-rec" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 15a3.5 3.5 0 0 0 3.5-3.5v-6a3.5 3.5 0 1 0-7 0v6A3.5 3.5 0 0 0 12 15Z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5"/></svg><span id="mm-lab">Record a suggestion</span></button><button type="button" id="mm-cancel" hidden>Cancel</button></div><div class="zoom"><button class="zb" id="z-in" type="button" aria-label="Zoom in">+</button><button class="zb" id="z-out" type="button" aria-label="Zoom out">−</button></div></div>
   <h2 class="vohead" id="vo-h">View options</h2>
   <div class="controls" role="group" aria-labelledby="vo-h">
     <div class="seg" role="group" aria-label="Camera views">
@@ -165,7 +165,7 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
       <button class="b" id="night" aria-pressed="false">Night</button>
       <button class="b" id="trees" aria-pressed="false">Trees: see-through</button>
       <button class="b" id="fence" aria-pressed="true">Fence</button>
-      <button class="b" id="labels" aria-pressed="true">Numbers</button>
+      <button class="b" id="labels" aria-pressed="false">Numbers</button>
     </div>
   </div>
 </section>
