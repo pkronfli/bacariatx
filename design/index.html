@@ -156,7 +156,7 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
 
 <section aria-label="3D model">
   <div id="vbar" class="vbar" hidden></div>
-  <div id="model" class="fig"><div id="pins"></div><p class="hint">Drag to turn · + and − to zoom · tap a number</p><div class="zoom"><button class="zb" id="z-in" type="button" aria-label="Zoom in">+</button><button class="zb" id="z-out" type="button" aria-label="Zoom out">−</button></div></div>
+  <div id="model" class="fig"><div id="pins"></div><p class="hint">Drag to turn · + and − to zoom (pinch on a phone) · tap a number</p><div class="zoom"><button class="zb" id="z-in" type="button" aria-label="Zoom in">+</button><button class="zb" id="z-out" type="button" aria-label="Zoom out">−</button></div></div>
   <p class="keynote">Heights are measured from the existing patio, about 477.5 ft above sea level. Dark tags show ground heights from USGS lidar (2017, 1 m grid).</p>
   <ul class="levels" id="levels" aria-label="Level key"></ul>
   <div class="controls">
@@ -222,7 +222,7 @@ const start=M=>{
   const scene=new T.Scene();
   const cam=new T.PerspectiveCamera(45,wrap.clientWidth/wrap.clientHeight,1,1200);
   const ctl=new T.OrbitControls(cam,renderer.domElement);
-  ctl.enableDamping=true;ctl.dampingFactor=.08;ctl.maxPolarAngle=Math.PI/2-.03;ctl.minDistance=8;ctl.maxDistance=460;ctl.enableZoom=false;
+  ctl.enableDamping=true;ctl.dampingFactor=.08;ctl.maxPolarAngle=Math.PI/2-.03;ctl.minDistance=8;ctl.maxDistance=460;
   const fit=(pos,tgt)=>{const k=wrap.clientWidth/wrap.clientHeight<1?1.6:1;return pos.map((q,i)=>tgt[i]+(q-tgt[i])*k);};
   cam.position.set(...fit(...VIEWS.overview));ctl.target.set(...VIEWS.overview[1]);
   // after an automatic update, come back to the same camera view
@@ -288,11 +288,12 @@ const start=M=>{
   // zoom only with the + and − buttons (wheel and pinch zoom are off)
   const zoom=f=>{const tgt=tw?tw.d:ctl.target,d=(tw?tw.b:cam.position).clone().sub(tgt),L=Math.min(ctl.maxDistance,Math.max(ctl.minDistance,d.length()*f));
     go(tgt.clone().add(d.setLength(L)).toArray(),tgt.toArray(),250);};
-  // block every other way of zooming over the model: trackpad pinch and ctrl/cmd + wheel (browser page zoom), Safari gestures, two-finger pinch on phones
-  wrap.addEventListener('wheel',e=>{if(e.ctrlKey||e.metaKey)e.preventDefault();},{passive:false,capture:true});
+  // desktop: zoom only with + and −. The mouse wheel and trackpad never reach the model (ctrl/cmd + wheel page zoom is blocked too).
+  // phones and tablets: two-finger pinch zooms the model; the browser's own page zoom is blocked over it.
+  wrap.addEventListener('wheel',e=>{e.stopPropagation();if(e.ctrlKey||e.metaKey)e.preventDefault();},{passive:false,capture:true});
   ['gesturestart','gesturechange','gestureend'].forEach(t=>wrap.addEventListener(t,e=>e.preventDefault(),{passive:false}));
   wrap.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault();},{passive:false});
-  ctl.touches={ONE:T.TOUCH.ROTATE,TWO:T.TOUCH.PAN};ctl.mouseButtons={LEFT:T.MOUSE.ROTATE,MIDDLE:null,RIGHT:T.MOUSE.PAN};
+  ctl.touches={ONE:T.TOUCH.ROTATE,TWO:T.TOUCH.DOLLY_PAN};ctl.mouseButtons={LEFT:T.MOUSE.ROTATE,MIDDLE:null,RIGHT:T.MOUSE.PAN};
   $('#z-in').addEventListener('click',()=>zoom(.72));$('#z-out').addEventListener('click',()=>zoom(1/.72));
   const viewBtns=[...document.querySelectorAll('[data-view]')];
   const pressView=k=>viewBtns.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===k)));
