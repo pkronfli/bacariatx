@@ -1,6 +1,6 @@
 {
- "live": 15,
- "stamp": "15",
+ "live": 16,
+ "stamp": "16",
  "versions": [
   {
    "n": 1,
@@ -91,6 +91,12 @@
    "date": "Nov 24, 2026",
    "by": "Patrick",
    "summary": "Up-lights for the trees at night: in-grade well lights washing each big live oak and a small spike light in every planter tree, on top of version 14's night lighting."
+  },
+  {
+   "n": 16,
+   "date": "Nov 24, 2026",
+   "by": "Patrick",
+   "summary": "The streets look like streets: dark asphalt with lane markings, curbs, sidewalks, crosswalks at Pressler, street lights and parked cars, on top of version 15's tree up-lights."
   }
  ]
 }
