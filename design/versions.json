@@ -1,6 +1,6 @@
 {
- "live": 6,
- "stamp": "6",
+ "live": 7,
+ "stamp": "7",
  "versions": [
   {
    "n": 1,
@@ -37,6 +37,12 @@
    "date": "Nov 23, 2026",
    "by": "Patrick",
    "summary": "Front gate on W 6th drawn partly open so it reads as a door, and banquette back cushions in Bacari LA style bright prints over grey-striped seats."
+  },
+  {
+   "n": 7,
+   "date": "Nov 23, 2026",
+   "by": "Robert",
+   "summary": "Ornate front gate on W 6th like Bacari Silver Lake: capped timber piers, arched header with a BACARI sign, iron lanterns, arched gate leaves with iron scrollwork, and bougainvillea over the arch."
   }
  ]
 }
