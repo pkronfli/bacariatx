@@ -1,8 +1,9 @@
 /* Bacari Austin design concept: model version 7.
    One file per version. The page (../index.html) loads the live version and calls build().
-   CHANGES FROM VERSION 6 (Robert's suggestion S006): the W 6th street gate is now an ornate gateway like Bacari Silver Lake:
-   tall capped timber piers, an arched header with a BACARI name board, iron lanterns, arched-top gate leaves with a wrought-iron
-   scroll grille, studs and strap hinges, and bougainvillea climbing over the arch.
+   CHANGES FROM VERSION 6 (Robert's suggestions S006-S007): every deck (upper, high, medium, low) and its stairs is now drawn as
+   wood: individual deck boards with gaps, butt joints, grain and color variation, laid along each deck's length, with horizontal
+   fascia boards on the deck edges; the W 6th street gate is more ornate: two pillars with lanterns, an iron arch with a scroll
+   ring over the opening, and leaves with a wood lower panel, iron pickets with finials, a center ring and a rising top rail.
    EARLIER, FROM VERSION 5 (Patrick): the W 6th street gate is drawn as a double gate standing partly open, so it reads as a
    door; banquette back cushions restyled like Bacari LA: full-length back cushions in bright patterned prints over grey-striped
    seat cushions.
@@ -55,14 +56,45 @@ notes:[
  {p:[73,3.5,79],t:'Existing landscaping, kept',d:'Landscaping that shows in the site videos, worked into the garden: the turf lawn, the teal block walls with terracotta pots on top, steel planters with agaves and yuccas, cedar slat screens, the stamped concrete patio, mulch beds, bamboo along the west edge, and the lawn under the front oak.',f:'Check: which of these Robert wants to keep. They are placed where they fit the concept, not exactly where they stand today.'}
 ,
 {p:[102,3,97],t:'Tables and chairs like Bacari LA',d:'Furniture follows Bacari\'s Los Angeles patios: 30-inch square walnut tables on black iron bases, pushed together for four or six; French rattan bistro chairs with woven seats; navy built-in banquettes with striped cushions and bright pillows along the east fence and the back wall; rattan bistro bar stools with woven seats, footrest rings and hoop backs at the bar. Version 4 adds two-tops on the front terrace lawn, a front row on the low deck, and more on the medium deck and the garden paving, about 140 seats with the bar, keeping aisles of about 3½ ft or more so staff can get through.',f:'Check: seat count per deck against the occupant load, and the exact bar stool, chair and table models used at the other restaurants.'},
-{p:[56.5,19,69],t:'Upper-floor door to the deck',d:'Version 5 adds a glass double door on the east wall of the upper (street-level) floor. It opens onto the upper deck right beside the opened railing and the stairs down to the high deck, so guests upstairs can walk straight out and down into the patio.',f:'Check: whether this is the spot Robert has in mind, and whether the existing boarded doors on the back wall should open up too.'},
-{p:[44,19.5,-1],t:'Ornate street gate',d:'Version 7 makes the W 6th guest gate a proper entrance, in the spirit of the Silver Lake gate: tall timber piers with pyramid caps, an arched header carrying a BACARI name board, an iron lantern on each pier, and arched-top double leaves with a wrought-iron scroll window, studs and strap hinges. Bougainvillea climbs the west pier and spills over the arch.',f:'Check: a photo of the Silver Lake gate, so the details, wood tone and iron work can be matched exactly.'}
+{p:[100,6,30],t:'Wooden decks',d:'Version 7 draws every deck as real wood: separate deck boards about 6 in wide with small gaps, staggered joints and natural color variation, running along each deck\'s length, with wood fascia boards on the edges and wooden stair treads. Each level keeps its own tone, darker up high and lighter toward the garden.',f:'Check: wood species or composite, board color, and which way the boards should run.'},
+{p:[44,19.5,0],t:'Ornate street gate',d:'Version 7 dresses up the W 6th gate: two pillars with lanterns, an iron arch with a scroll ring over the opening, and gate leaves with a wood lower panel, iron pickets with finials and a center ring, rising toward the middle.',f:'Check: send a photo of the Silver Lake door so the gate can match it.'},
+{p:[56.5,19,69],t:'Upper-floor door to the deck',d:'Version 5 adds a glass double door on the east wall of the upper (street-level) floor. It opens onto the upper deck right beside the opened railing and the stairs down to the high deck, so guests upstairs can walk straight out and down into the patio.',f:'Check: whether this is the spot Robert has in mind, and whether the existing boarded doors on the back wall should open up too.'}
 ],
 tags:[{p:[124,9.5,-6],t:'486 ft · sidewalk',h:1},{p:[22,9.2,8],t:'486 ft · front terrace',h:1},{p:[104,1,62],t:'477.5 ft · patio',h:1},{p:[104,-.8,141],t:'476 ft · alley',h:1},{p:[164,7,80],t:'483 ft · neighbor parking',h:1},{p:[92,7,3],t:'Retaining wall + bank',h:1},{p:[70,9.5,-26],t:'W 6th St'},{p:[-88,3,70],t:'Pressler St'},{p:[30,60,170],t:'Pressler Apartments'},{p:[160,42,196],t:'Parking garage'},{p:[-30,31,32],t:'Title company'},{p:[8,-.8,141],t:'Back alley'},{p:[226,35,66],t:'Salon + print shop'},{p:[33,26,58],t:'Bar Peached building'}],
 views:{overview:[[250,125,165],[72,0,66]],deck:[[61,16,90],[102,2,58]],bar:[[80,5.4,96],[110,5,44]],street:[[64,24,-32],[92,0,72]],up:[[104,5.5,98],[74,7,8]],plan:[[70,240,65.5],[70,0,65]]},
 build(kit){
   const {T,scene,C,mat,put,box,cyl,deckMats,stairs}=kit;
   const BX=92,BZ=72;  // center of the bar
+  // version 7: WOOD DECKS. Deck boards drawn in code on a canvas (6 in boards with gaps, staggered butt joints, grain),
+  // mapped in world feet so boards keep their size on every box. along='z' turns the boards to run north-south.
+  const woodTex=(hex,vertical)=>{const c=document.createElement('canvas');c.width=c.height=256;const g=c.getContext('2d');
+    const r0=hex>>16&255,g0=hex>>8&255,b0=hex&255,sh=(k)=>`rgb(${Math.min(255,r0*k)|0},${Math.min(255,g0*k)|0},${Math.min(255,b0*k)|0})`;
+    let seed=hex%97+3;const rnd=()=>{seed=(seed*16807)%2147483647;return seed/2147483647;};
+    const n=8,h=256/n;g.fillStyle=sh(.45);g.fillRect(0,0,256,256);
+    for(let i=0;i<n;i++){const y=i*h;let x=-rnd()*256;
+      while(x<256){const L=96+rnd()*160,k=.82+rnd()*.32;g.fillStyle=sh(k);g.fillRect(x+1.5,y+1.5,L-3,h-3);
+        for(let j=0;j<5;j++){g.strokeStyle=sh(k*(.84+rnd()*.1));g.lineWidth=.8+rnd();g.beginPath();const yy=y+3+rnd()*(h-6);g.moveTo(x+2,yy);
+          g.bezierCurveTo(x+L*.3,yy+(rnd()-.5)*4,x+L*.6,yy+(rnd()-.5)*4,x+L-2,yy+(rnd()-.5)*3);g.stroke();}
+        if(rnd()<.35){g.fillStyle=sh(k*.7);g.beginPath();g.ellipse(x+L*rnd(),y+h/2,3,1.6,0,0,Math.PI*2);g.fill();}
+        g.fillStyle=sh(.6);[x+5,x+L-6].forEach(px=>{g.fillRect(px,y+6,1.6,1.6);g.fillRect(px,y+h-8,1.6,1.6);});
+        x+=L;}}
+    const t=new T.CanvasTexture(c);t.wrapS=t.wrapT=T.RepeatWrapping;return t;};
+  const woodM={};const wood=(m,along)=>{const key=m.uuid+(along||'x');if(!woodM[key]){
+      woodM[key]=new T.MeshLambertMaterial({color:0xffffff,map:woodTex(m.color.getHex())});woodM[key].userData.along=along||'x';}return woodM[key];};
+  const fasciaM=new T.MeshLambertMaterial({color:0xffffff,map:woodTex(0x6f4d33)});fasciaM.userData.along='x';
+  const TILE=4; // one texture tile = 4 ft = eight 6-in boards
+  const woodGeo=(x0,x1,y0,y1,z0,z1,along)=>{const geo=new T.BoxGeometry(x1-x0,y1-y0,z1-z0),p=geo.attributes.position,nm=geo.attributes.normal,uv=geo.attributes.uv,
+      cx=(x0+x1)/2,cy=(y0+y1)/2,cz=(z0+z1)/2;
+    for(let i=0;i<p.count;i++){const x=p.getX(i)+cx,y=p.getY(i)+cy,z=p.getZ(i)+cz,ax=Math.abs(nm.getX(i)),ay=Math.abs(nm.getY(i));
+      let u,v;if(ay>.5){u=along==='z'?z:x;v=along==='z'?x:z;}else if(ax>.5){u=z;v=y;}else{u=x;v=y;}uv.setXY(i,u/TILE,v/TILE);}
+    uv.needsUpdate=true;return geo;};
+  // a deck slab: plank top, fascia-board sides
+  const wbox=(x0,x1,y0,y1,z0,z1,m,along)=>{const tm=wood(m,along);
+    return put(woodGeo(x0,x1,y0,y1,z0,z1,along),[fasciaM,fasciaM,tm,fasciaM,fasciaM,fasciaM],(x0+x1)/2,(y0+y1)/2,(z0+z1)/2);};
+  // wooden stairs, same layout as the page's stairs() helper, treads laid across the run
+  const wstairs=(x,z,yTop,yBot,dx,dz,w,m)=>{const n=Math.max(2,Math.round((yTop-yBot)/.6)),r=(yTop-yBot)/n,al=dx?'z':'x';
+    for(let i=1;i<n;i++){const top=yTop-r*i,cx=x+dx*(i-.5),cz=z+dz*(i-.5),hx=dx?.5:w/2,hz=dz?.5:w/2;
+      wbox(cx-hx,cx+hx,yBot,top,cz-hz,cz+hz,m,al);}};
   const treeMat=mat(0x4d6a3b,{transparent:true,opacity:.35,depthWrite:false});
   // terrain. Heights are feet relative to the existing patio (about 477.5 ft above sea level, USGS lidar 2017).
   const wedge=(x0,x1,z0,z1,yF,yB,m,base)=>{base=base==null?-3:base;const sh=new T.Shape();sh.moveTo(z0,base);sh.lineTo(z1,base);sh.lineTo(z1,yB);sh.lineTo(z0,yF);sh.lineTo(z0,base);
@@ -113,26 +145,38 @@ build(kit){
     for(let i=0;i<=n;i++){const a=i/n,b=Math.min(1,(i+1)/n),xa=x0+(x1-x0)*a,xb=x0+(x1-x0)*b,za=z0+(z1-z0)*a,zb=z0+(z1-z0)*b,y=gy((za+zb)/2);
       if(i<n){ax?box(xa-.15,xa+.15,y-.6,y+6.5,za,zb,m||fenceM,fences):box(xa,xb,y-.6,y+6.5,za-.15,za+.15,m||fenceM,fences);}
       box(xa-.3,xa+.3,gy(za)-.6,gy(za)+7,za-.3,za+.3,fenceP,fences);}};
-  fence(0,.3,40.2,.3,()=>8.5);// W 6th street gate (v7: ornate): two 3 ft leaves with arched tops, a wrought-iron scroll grille
-  // and studded frames, hung on tall capped piers under an arched timber header with lanterns and bougainvillea
-  const gateFrame=mat(0x5a3d26),iron=mat(0x1f1a17);
+  fence(0,.3,41,.3,()=>8.5);// W 6th street gate: two 3 ft leaves hinged on the posts, swung partly open into the front terrace
+  // version 7: ornate gate. Two pillars with lanterns, an iron arch with a scroll ring, and two leaves (wood lower panel,
+  // iron pickets with finials, a center ring, top rail rising toward the middle), hinged on the pillars and standing partly open.
+  const gateFrame=mat(0x5a3d26),ironM=mat(0x1f1d1c),pillarM=mat(0xd9d1c2),capM=mat(0x9a948a),lanternM=new T.MeshBasicMaterial({color:0xffe1a3});
+  [[39.6,41],[47,48.4]].forEach(([a,b])=>{box(a,b,8.4,16,-.5,1.1,pillarM,fences);box(a-.2,b+.2,16,16.4,-.7,1.3,capM,fences);box(a-.2,b+.2,8.4,9,-.7,1.3,capM,fences);
+    const m=(a+b)/2;box(m-.35,m+.35,16.4,16.55,-.05,.65,ironM,fences);box(m-.28,m+.28,16.55,17.5,.02,.58,lanternM,fences);
+    [[-.3,-.3],[.3,-.3],[-.3,.3],[.3,.3]].forEach(([dx,dz])=>box(m+dx-.04,m+dx+.04,16.55,17.5,.3+dz-.04,.3+dz+.04,ironM,fences));
+    const roof=put(new T.ConeGeometry(.5,.55,4),ironM,m,17.78,.3,fences);roof.rotation.y=Math.PI/4;});
+  {const arch=put(new T.TorusGeometry(3,.09,6,40,Math.PI),ironM,44,16,.3,fences);
+   const arch2=put(new T.TorusGeometry(2.6,.06,6,40,Math.PI),ironM,44,16,.3,fences);
+   put(new T.TorusGeometry(.6,.06,6,24),ironM,44,17.7,.3,fences);
+   [-1,1].forEach(k=>{const sc=put(new T.TorusGeometry(.35,.05,6,16,Math.PI*1.5),ironM,44+k*1.4,16.65,.3,fences);sc.rotation.z=k>0?0:Math.PI/2;});
+   for(let i=1;i<8;i++){const a=i/8*Math.PI;box(44+Math.cos(a)*2.6-.03,44+Math.cos(a)*2.6+.03,16+Math.sin(a)*2.6,16+Math.sin(a)*3,.25,.35,ironM,fences);}}
   [[41,1],[47,-1]].forEach(([hx,dir])=>{const leaf=new T.Group();leaf.position.set(hx,0,.3);leaf.rotation.y=-dir*.55;fences.add(leaf);
-    const L=2.95,y0=8.1;// leaf tops rise toward the meeting edge, forming an arch with the partner leaf
-    for(let i=0;i<6;i++){const a=.05+i*L/6,p=dir*a,q=dir*(a+L/6-.06),yt=14.3+1.1*Math.sin(Math.PI/2*((a+L/12)/L));
-      box(Math.min(p,q),Math.max(p,q),y0,yt,-.08,.08,gateM,leaf);}
-    // window opening in the upper panel filled with an iron grille of scrolls
-    [y0+.6,11.4,13.5].forEach(y=>box(dir>0?0:-L,dir>0?L:0,y-.15,y+.15,-.14,.14,gateFrame,leaf));
-    for(let k=0;k<3;k++){const cx=dir*(.62+k*.86),ring=put(new T.TorusGeometry(.33,.045,6,18),iron,cx,12.45,.16,leaf);
-      put(new T.TorusGeometry(.14,.035,6,14),iron,cx,12.45,.16,leaf);put(new T.TorusGeometry(.33,.045,6,18),iron,cx,12.45,-.16,leaf);}
-    for(let k=0;k<=6;k++){const x=dir*(.2+k*(L-.4)/6);box(x-.03,x+.03,11.55,13.35,-.17,.17,iron,leaf);}
-    // studded lower panel and long iron strap hinges
-    for(let r=0;r<3;r++)for(let k=0;k<5;k++)put(new T.SphereGeometry(.06,6,5),iron,dir*(.35+k*(L-.7)/4),9.2+r*.75,.13,leaf);
-    [9.1,13.9].forEach(y=>box(dir>0?.05:-1.6,dir>0?1.6:-.05,y-.09,y+.09,.1,.17,iron,leaf));
-    box(dir>0?.05:-.35,dir>0?.35:-.05,y0,15.4,-.14,.14,gateFrame,leaf);
-    // curved top rail and a ring pull
-    for(let k=0;k<8;k++){const a=k*L/8,b=(k+1)*L/8,ya=14.3+1.1*Math.sin(Math.PI/2*a/L),yb=14.3+1.1*Math.sin(Math.PI/2*b/L);
-      box(dir>0?a:-b,dir>0?b:-a,Math.min(ya,yb)-.12,Math.max(ya,yb)+.12,-.14,.14,gateFrame,leaf);}
-    put(new T.TorusGeometry(.18,.04,6,14),C.rail,dir*(L-.4),11,.3,leaf);});fence(47.8,.3,137,.3,()=>8.5);
+    const L=2.95,y0=8.1,y1=14.2,rise=.9,mid=y0+3.1,topAt=a=>y1+rise*a/L,X=(a,b)=>[Math.min(dir*a,dir*b),Math.max(dir*a,dir*b)];
+    // lower wood panel: vertical boards between the bottom rail and the mid rail
+    for(let i=0;i<6;i++){const a=.05+i*L/6,[p,q]=X(a,a+L/6-.06);box(p,q,y0,mid,-.08,.08,gateM,leaf);}
+    // frame: bottom and mid rails, hinge and latch stiles
+    [y0+.3,mid].forEach(y=>{const [p,q]=X(0,L);box(p,q,y-.18,y+.18,-.14,.14,gateFrame,leaf);});
+    {const [p,q]=X(0,.3);box(p,q,y0,topAt(0),-.14,.14,gateFrame,leaf);}
+    {const [p,q]=X(L-.3,L);box(p,q,y0,topAt(L),-.14,.14,gateFrame,leaf);}
+    // sloped top rail rising toward the middle of the double gate
+    {const tr=new T.Mesh(new T.BoxGeometry(Math.hypot(L,rise),.3,.26),gateFrame);tr.position.set(dir*L/2,y1+rise/2,0);tr.rotation.z=dir*Math.atan2(rise,L);tr.castShadow=true;leaf.add(tr);}
+    // iron pickets with ball finials poking above the top rail
+    for(let i=1;i<=6;i++){const a=i*L/7,t=topAt(a);box(dir*a-.04,dir*a+.04,mid+.18,t+.45,-.04,.04,ironM,leaf);
+      put(new T.SphereGeometry(.09,8,6),ironM,dir*a,t+.5,0,leaf);}
+    // center ring and two small scrolls in the iron panel
+    const ringY=(mid+y1)/2+.1;put(new T.TorusGeometry(.55,.05,6,24),ironM,dir*L/2,ringY,0,leaf);
+    put(new T.TorusGeometry(.25,.04,6,16),ironM,dir*L/2,ringY,0,leaf);
+    [-1,1].forEach(k=>{const sc=put(new T.TorusGeometry(.22,.04,6,14,Math.PI*1.4),ironM,dir*L/2+k*.85,mid+.55,0,leaf);sc.rotation.z=k*.8;});
+    // latch handle
+    box(dir*(L-.45)-.06,dir*(L-.45)+.06,11,11.9,.14,.3,C.rail,leaf);});fence(47,.3,137,.3,()=>8.5);
   fence(.3,.3,.3,130,gW);fence(137.4,.3,137.4,130,gE);
   fence(0,129.7,30,129.7,()=>-1.9);fence(30,129.7,44,129.7,()=>-1.9,gateM);fence(44,129.7,137,129.7,()=>-1.9);
   for(let z=0;z<130;z+=10)box(137,138.2,-3,gE(z+5),z,Math.min(z+10,130),cmu);
@@ -152,7 +196,7 @@ build(kit){
   [[29,32],[48,51]].forEach(([a,b])=>box(a,b,3,6.6,85,85.25,glass));
   box(56,56.3,-.5,21,40,62,darkWood);
   // existing upper deck: wraps the south and east faces on round concrete columns, white steel pergola over its west half
-  box(24,64,9.4,10,85,94,C.upper);box(56,64,9.4,10,62,85,C.upper);
+  wbox(24,64,9.4,10,85,94,C.upper);wbox(56,64,9.4,10,62,85,C.upper,'z');
   [28,40,52,63.2].forEach(x=>cyl(.75,9.9,x,-.5,93.2,conc,14));[64,74].forEach(z=>cyl(.75,9.9,63.2,-.5,z,conc,14));
   const rail=(x0,z0,x1,z1,y)=>{const L=Math.hypot(x1-x0,z1-z0),alongX=z0===z1;
     [1.3,2.5,3.5].forEach(h=>alongX?box(x0,x1,y+h-.1,y+h+.1,z0-.1,z0+.1,C.rail):box(x0-.1,x0+.1,y+h-.1,y+h+.1,z0,z1,C.rail));
@@ -179,18 +223,18 @@ build(kit){
   stairs(62,19,8.5,5,1,0,4,stepM);
 
   // DECKS: high along the W 6th side, medium at the north-east corner and down the east side, low along the back
-  const deckAt=(x0,x1,z0,z1,y,top,base)=>box(x0,x1,base==null?0:base,y,z0,z1,deckMats(top));
-  deckAt(62,108,5,40,5,C.high);deckAt(57,65,40,54.5,5,C.high);
+  const deckAt=(x0,x1,z0,z1,y,top,base,along)=>wbox(x0,x1,base==null?0:base,y,z0,z1,top,along);
+  deckAt(62,108,5,40,5,C.high);deckAt(57,65,40,54.5,5,C.high,null,'z');
   // the upper deck railing opens at its north end: stairs down to the high deck
-  rail(56,62,58.5,62,10);stairs(61,62,10,5,0,-1,5,C.high);
-  deckAt(108,137,5,40,3,C.med);deckAt(119,137,40,104,3,C.med);
-  stairs(108,22,5,3,1,0,5,C.med);
+  rail(56,62,58.5,62,10);wstairs(61,62,10,5,0,-1,5,C.high);
+  deckAt(108,137,5,40,3,C.med);deckAt(119,137,40,104,3,C.med,null,'z');
+  wstairs(108,22,5,3,1,0,5,C.med);
   deckAt(57,137,104,127.3,1.5,C.low,-2);
-  stairs(128,104,3,1.5,0,1,5,C.low);
+  wstairs(128,104,3,1.5,0,1,5,C.low);
   rail(65,40,65,54.5,5);rail(65,40,90,40,5);rail(94,40,108,40,5);rail(108,40,119,40,3);rail(119,40,119,70,3);rail(119,74,119,104,3);
 
   // steps down to the garden, and river-rock paths to the bar
-  stairs(92,40,5,0,0,1,4,C.high);stairs(119,72,3,0,-1,0,4,C.med);stairs(92,104,1.5,0,0,-1,4,C.low);
+  wstairs(92,40,5,0,0,1,4,C.high);wstairs(119,72,3,0,-1,0,4,C.med);wstairs(92,104,1.5,0,0,-1,4,C.low);
   box(90,94,.12,.3,48,60.5,C.rock);box(103.5,114,.12,.3,70,74,C.rock);box(90,94,.12,.3,83.5,102,C.rock);
   box(56.3,82,.12,.3,65,69,C.rock);box(73,77,.12,.3,55,65,C.rock);
   box(64,84.5,.12,.3,87.5,91.5,C.rock);box(80.5,84.5,.12,.3,80,87.5,C.rock);
@@ -336,35 +380,7 @@ build(kit){
   lamps.forEach(l=>scene.add(l));
 
   flush();
-  // v7 ornate street gateway (Robert S006, like Bacari Silver Lake): tall capped piers, arched header with a name board,
-  // iron lanterns and bougainvillea over the arch
-  {const pierM=mat(0x6b4a30),capM=mat(0x4a3322),vine=mat(0x4f7a3f),bloom=mat(0xc2307a),gx=44,gz=.3;
-   [40.6,47.4].forEach(x=>{box(x-.45,x+.45,8.5,17.2,gz-.45,gz+.45,pierM,fences);box(x-.6,x+.6,17.2,17.5,gz-.6,gz+.6,capM,fences);
-     const cap=put(new T.ConeGeometry(.62,.9,4),capM,x,17.95,gz,fences);cap.rotation.y=Math.PI/4;
-     put(new T.SphereGeometry(.16,10,8),C.rail,x,18.5,gz,fences);
-     box(x-.5,x+.5,8.5,9,gz-.55,gz+.55,capM,fences);
-     // lantern on a scrolled bracket, facing the sidewalk
-     box(x-.05,x+.05,14.4,14.5,gz-.95,gz-.45,iron,fences);
-     put(new T.TorusGeometry(.22,.035,6,12,Math.PI),iron,x,14.2,gz-.7,fences).rotation.y=Math.PI/2;
-     box(x-.22,x+.22,13.35,13.95,gz-1.12,gz-.68,bulbMat,fences);
-     const roof=put(new T.ConeGeometry(.34,.35,4),iron,x,14.12,gz-.9,fences);roof.rotation.y=Math.PI/4;
-     [[-1,-1],[1,-1],[-1,1],[1,1]].forEach(([a,b])=>box(x+a*.22-.03,x+a*.22+.03,13.3,14,gz-.9+b*.22-.03,gz-.9+b*.22+.03,iron,fences));});
-   // arched timber header between the piers
-   const arch=put(new T.TorusGeometry(3.4,.22,8,32,Math.PI),pierM,gx,15.9,gz,fences);arch.scale.set(1,.55,1);
-   box(40.1,47.9,17.5,17.85,gz-.35,gz+.35,capM,fences);
-   for(let k=1;k<8;k++){const x=40.6+k*6.8/8,y=15.9+1.87*Math.sqrt(Math.max(0,1-((x-gx)/3.4)**2));box(x-.05,x+.05,y,17.5,gz-.05,gz+.05,iron,fences);}
-   // name board on the header
-   let boardM=mat(0x2e241c);
-   if(typeof document!=='undefined'&&document.createElement){try{const cv=document.createElement('canvas');cv.width=512;cv.height=96;const g=cv.getContext('2d');
-     g.fillStyle='#2e241c';g.fillRect(0,0,512,96);g.strokeStyle='#c9a35a';g.lineWidth=5;g.strokeRect(8,8,496,80);
-     g.fillStyle='#e8c77a';g.font='bold 54px Georgia, serif';g.textAlign='center';g.textBaseline='middle';g.fillText('BACARI',256,50);
-     boardM=new T.MeshLambertMaterial({map:new T.CanvasTexture(cv)});}catch(e){}}
-   const board=put(new T.BoxGeometry(4.2,.8,.12),[mat(0x2e241c),mat(0x2e241c),mat(0x2e241c),mat(0x2e241c),mat(0x2e241c),boardM],gx,18.4,gz-.42,fences);
-   box(gx-2.3,gx-2.2,17.85,18.9,gz-.45,gz-.35,iron,fences);box(gx+2.2,gx+2.3,17.85,18.9,gz-.45,gz-.35,iron,fences);
-   // bougainvillea climbing the west pier and spilling over the arch
-   let seed=7;const rnd=()=>{seed=(seed*9301+49297)%233280;return seed/233280;};
-   for(let i=0;i<70;i++){const t=rnd(),x=i<20?40.6+(rnd()-.5)*1.3:39.8+t*5.2,y=i<20?9+rnd()*8.5:16.6+rnd()*1.6+(x<44?1.2*Math.sin(Math.PI*(x-39.8)/8.4):0),
-     z=gz+(rnd()-.5)*1.4;put(new T.SphereGeometry(.22+rnd()*.18,6,5),rnd()<.55?bloom:vine,x,y,z,fences);}}
   return {fences,walls,trees,treeMats:[treeMat,fallMat],bulbMat,lamps};
 }
 };
+
