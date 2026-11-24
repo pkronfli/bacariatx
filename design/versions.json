@@ -1,6 +1,6 @@
 {
- "live": 11,
- "stamp": "11",
+ "live": 12,
+ "stamp": "12",
  "versions": [
   {
    "n": 1,
@@ -67,6 +67,12 @@
    "date": "Nov 23, 2026",
    "by": "Patrick",
    "summary": "The north-east corner bank becomes a terraced limestone garden with the leaning trees up-lit at night, Texas natives, a flagstone path up to a stone bench, a runnel and bubbling basin by the deck, and an open iron fence so it shows from W 6th."
+  },
+  {
+   "n": 12,
+   "date": "Nov 24, 2026",
+   "by": "Patrick",
+   "summary": "Every tree on the property is now drawn as a Texas live oak: short thick dark trunks forking low into long, twisting limbs under broad, dense, dark-green canopies wider than they are tall."
   }
  ]
 }
