@@ -117,6 +117,24 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
   <p class="lede" id="lede"></p>
 </div></header>
 
+<section class="band sug" id="suggest" hidden><div class="wrap">
+  <h2>Suggest a change</h2>
+  <p class="intro">Describe what you'd like changed, in plain words. Claude starts on it as soon as you send it and updates the model within a few minutes, and saves each update as a new version you can go back from.</p>
+  <form id="s-lock" hidden>
+    <div class="row"><div><label for="s-code">Passcode</label><input id="s-code" type="password" autocomplete="off"></div><button class="b solid" type="submit" id="s-unlock">Unlock</button></div>
+  </form>
+  <form id="s-form" hidden>
+    <div class="row2">
+      <div><label for="s-from">Your name</label><input id="s-from" maxlength="60"></div>
+      <div><label for="s-note">About</label><select id="s-note"></select></div>
+    </div>
+    <div><label for="s-text">What should change?</label><textarea id="s-text" rows="4" maxlength="4000" placeholder="Example: make the bar square and move it 10 feet toward the back wall."></textarea></div>
+    <div class="row"><button class="b solid" type="submit" id="s-send">Send suggestion</button><button class="b" type="button" id="s-relock">Lock this device</button></div>
+  </form>
+  <p id="s-status" role="status" aria-live="polite"></p>
+  <ol id="s-list" class="log" aria-label="Suggestions so far"></ol>
+</div></section>
+
 <section aria-label="3D model">
   <div id="vbar" class="vbar" hidden></div>
   <div id="model" class="fig"><div id="pins"></div><p class="hint">Drag to turn · + and − to zoom · tap a number</p><div class="zoom"><button class="zb" id="z-in" type="button" aria-label="Zoom in">+</button><button class="zb" id="z-out" type="button" aria-label="Zoom out">−</button></div></div>
@@ -146,23 +164,7 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
   <ol id="key"></ol>
 </div></section>
 
-<section class="band sug" id="suggest" hidden><div class="wrap">
-  <h2>Suggest a change</h2>
-  <p class="intro">Describe what you'd like changed, in plain words. Claude updates the model, usually within the hour, and saves each update as a new version you can go back from.</p>
-  <form id="s-lock" hidden>
-    <div class="row"><div><label for="s-code">Passcode</label><input id="s-code" type="password" autocomplete="off"></div><button class="b solid" type="submit" id="s-unlock">Unlock</button></div>
-  </form>
-  <form id="s-form" hidden>
-    <div class="row2">
-      <div><label for="s-from">Your name</label><input id="s-from" maxlength="60"></div>
-      <div><label for="s-note">About</label><select id="s-note"></select></div>
-    </div>
-    <div><label for="s-text">What should change?</label><textarea id="s-text" rows="4" maxlength="4000" placeholder="Example: make the bar square and move it 10 feet toward the back wall."></textarea></div>
-    <div class="row"><button class="b solid" type="submit" id="s-send">Send suggestion</button><button class="b" type="button" id="s-relock">Lock this device</button></div>
-  </form>
-  <p id="s-status" role="status" aria-live="polite"></p>
-  <ol id="s-list" class="log" aria-label="Suggestions so far"></ol>
-</div></section>
+
 
 <section class="band" id="versions" hidden><div class="wrap">
   <h2>Versions</h2>
@@ -262,6 +264,11 @@ const start=M=>{
   // zoom only with the + and − buttons (wheel and pinch zoom are off)
   const zoom=f=>{const tgt=tw?tw.d:ctl.target,d=(tw?tw.b:cam.position).clone().sub(tgt),L=Math.min(ctl.maxDistance,Math.max(ctl.minDistance,d.length()*f));
     go(tgt.clone().add(d.setLength(L)).toArray(),tgt.toArray(),250);};
+  // block every other way of zooming over the model: trackpad pinch and ctrl/cmd + wheel (browser page zoom), Safari gestures, two-finger pinch on phones
+  wrap.addEventListener('wheel',e=>{if(e.ctrlKey||e.metaKey)e.preventDefault();},{passive:false,capture:true});
+  ['gesturestart','gesturechange','gestureend'].forEach(t=>wrap.addEventListener(t,e=>e.preventDefault(),{passive:false}));
+  wrap.addEventListener('touchmove',e=>{if(e.touches.length>1)e.preventDefault();},{passive:false});
+  ctl.touches={ONE:T.TOUCH.ROTATE,TWO:T.TOUCH.PAN};ctl.mouseButtons={LEFT:T.MOUSE.ROTATE,MIDDLE:null,RIGHT:T.MOUSE.PAN};
   $('#z-in').addEventListener('click',()=>zoom(.72));$('#z-out').addEventListener('click',()=>zoom(1/.72));
   const viewBtns=[...document.querySelectorAll('[data-view]')];
   const pressView=k=>viewBtns.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===k)));
@@ -331,7 +338,7 @@ const setupPanels=M=>{drawBar();drawVersions();
   $('#s-form').addEventListener('submit',e=>{e.preventDefault();const text=$('#s-text').value.trim();if(busy)return;if(!text){say('Write what you would like changed first.');$('#s-text').focus();return;}
     const from=$('#s-from').value.trim()||'Robert';store.set(NAME,from);busy=true;$('#s-send').disabled=true;say('Sending…');
     api({action:'suggest',passcode:pass,from:from,note:$('#s-note').value,text:text,version:shown}).then(r=>{busy=false;$('#s-send').disabled=false;
-      if(r&&r.ok){$('#s-text').value='';drawList(r.items);say('Sent. Claude will update the model, usually within the hour.');}
+      if(r&&r.ok){$('#s-text').value='';drawList(r.items);say('Sent. Claude is starting on it now; the model updates in a few minutes.');}
       else if(!locked(r))say('Could not send. Your text is still here; try again.');},()=>{busy=false;$('#s-send').disabled=false;say('Could not reach the server. Your text is still here; try again in a moment.');});});
 };
 
