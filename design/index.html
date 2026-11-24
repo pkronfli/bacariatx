@@ -387,7 +387,9 @@ const makeLive=n=>{if(busy)return;if(!pass){$('#suggest').scrollIntoView();say('
 const locked=r=>{if(r&&r.error==='passcode'){store.del(PASS);pass=null;showLock('That passcode is not right.');return true;}
   if(r&&r.error==='locked'){showLock('Too many wrong tries. Wait 15 minutes and try again.');return true;}return false;};
 const showLock=msg=>{clearMe();$('#s-lock').hidden=false;$('#s-form').hidden=true;$('#s-list').innerHTML='';$('#s-q').innerHTML='';$('#s-hist').hidden=true;$('#s-code').value='';say(msg||'Sign in with your passcode to send suggestions.');};
-const card=s=>`<p class="meta">${when(s.time)} · ${esc(s.from)}${s.note?' · about '+esc(s.note):''}</p><p>${esc(s.text)}</p><span class="chip ${s.status==='new'?'new':''}">${esc(STATUS[s.status]||s.status)}</span>${s.photos?`<span class="chip att-n">${s.photos} attached</span>`:''}${s.voice?'<span class="chip att-n">voice note</span>':''}${s.reply?`<p class="reply"><strong>Claude:</strong> ${esc(s.reply)}</p>`:''}`;
+// voice notes keep the camera position in the sheet for Claude, but the list on the page leaves it out
+const shownText=t=>String(t==null?'':t).replace(/\n*\(Recorded on version \d+ while looking at the model[^)]*\)/g,'').replace('(voice note: listen to the audio link in column I)','(voice note)').trim();
+const card=s=>`<p class="meta">${when(s.time)} · ${esc(s.from)}${s.note?' · about '+esc(s.note):''}</p><p>${esc(shownText(s.text))}</p><span class="chip ${s.status==='new'?'new':''}">${esc(STATUS[s.status]||s.status)}</span>${s.photos?`<span class="chip att-n">${s.photos} attached</span>`:''}${s.voice?'<span class="chip att-n">voice note</span>':''}${s.reply?`<p class="reply"><strong>Claude:</strong> ${esc(s.reply)}</p>`:''}`;
 const drawList=items=>{items=items||[];const qs=items.filter(s=>s.status==='question'),rest=items.filter(s=>s.status!=='question');
   // questions from Claude stay in view with a reply box; don't redraw them while someone is typing an answer
   const typing=[...document.querySelectorAll('#s-q textarea')].some(t=>t.value.trim()||t===document.activeElement);
