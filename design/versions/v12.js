@@ -1,10 +1,7 @@
 /* Bacari Austin design concept: model version 12.
    One file per version. The page (../index.html) loads the live version and calls build().
-   CHANGES FROM VERSION 11 (Patrick): every tree on the property is drawn as what it is, a Texas live oak: a short, thick dark-barked
-   trunk with a flared base, forking low into long, sinuous limbs that reach out more than up (a few big ones sweep out almost level),
-   carrying a broad, dense, dark-green dome canopy much wider than it is tall, built from many leaf clusters in two greens. This
-   covers the front oak, the heritage oak behind the building, the oak on the high deck, the east-side oak, and the five leaning
-   trees in the corner garden (still leaning and up-lit at night). Canopies keep the traced footprints and clear the deck heads.
+   CHANGES FROM VERSION 11 (Robert's suggestion S012): the existing building is painted a light blue (main walls, the band at
+   the upper floor line and the taller south-west block). White trim, roof, cedar cladding, brick chimney, doors and windows stay.
    EARLIER, FROM VERSION 10 (Patrick's suggestion S011): the grassy bank in the north-east corner (x 108..137, z 0..17) becomes a
    terraced feature garden: three curved dry-stacked limestone walls stepping down from sidewalk level to the medium deck, the
    five existing leaning trees kept and up-lit at night, Texas natives (Gulf muhly, Turk's cap, salvia, agaves, sotol, boulders),
@@ -72,7 +69,7 @@ notes:[
  {p:[75,10.5,49.5],t:'Pergola pocket',d:'A pergola over one of the pockets, reached by its own path.'},
  {p:[108,1.5,72],t:'River-rock paths',d:'Solid paths running from each deck, the restroom door and the service door to the bar and the pockets.'},
  {p:[100,11.5,127.8],t:'Tall back wall',d:'Along the back of the lot, about as tall as the existing fence. It blocks the view of the alley and the apartments, so the space feels fully closed in. The model also adds a screen wall to hide the service yard behind the building. Robert didn\'t describe that part.',f:'Check: Austin\'s height limit for walls.'},
- {p:[17,36,108],t:'Heritage oak and the live oaks',d:'Two large live oaks stand on the property: one behind the building, which Patrick pointed out as the heritage tree, and one over the front terrace. Smaller oaks stand on the high deck and along the east side, and five more lean out over the corner garden on W 6th. Version 12 draws all of them as Texas live oaks: short, thick dark trunks that fork low into long, twisting limbs reaching out more than up, under a broad, dense, dark-green canopy much wider than it is tall. Positions and sizes are traced from the satellite view.',f:'Check: an arborist and Austin\'s rules on digging near protected trees.'},
+ {p:[17,36,108],t:'Heritage oak',d:'Two large live oaks stand on the property: one behind the building, which Patrick pointed out as the heritage tree, and one over the front terrace. Smaller trees are along the east side. Positions and sizes are traced from the satellite view.',f:'Check: an arborist and Austin\'s rules on digging near protected trees.'},
  {p:[37,6,129.7],t:'Back alley + service gate',d:'The alley runs from Pressler St past the apartments to the parking garage. The model puts a service gate on it behind the building, leading to the staff end of the service corridor. Robert didn\'t say how deliveries and trash should work.'},
  {p:[66,8,19],t:'Grade change: street down to the garden',d:'The site falls about 9 ft from W 6th to the patio. In the concept, guests come off the sidewalk onto the front terrace under the oak, go down a short flight to the high deck, and on down to the garden.',f:'Check: accessibility. Wheelchair users need a ramp or lift from street level down to the garden and the restrooms.'},
  {p:[137.4,12,84],t:'Wooden fence around the property',d:'A wooden fence about 6½ ft tall follows the whole property line: 137 ft along W 6th, 130 ft down each side, and along the back alley. It has a guest gate on W 6th and a wider service gate on the alley. On the east side it stands on the retaining edge of the neighbor\'s higher parking lot.',f:'Check: Austin\'s fence height limits, and whether a solid fence on W 6th should have openings so the patio shows from the street.'},
@@ -82,8 +79,9 @@ notes:[
 {p:[100,6,30],t:'Wooden decks',d:'Version 7 draws every deck as real wood: separate deck boards about 6 in wide with small gaps, staggered joints and natural color variation, running along each deck\'s length, with wood fascia boards on the edges and wooden stair treads. Each level keeps its own tone, darker up high and lighter toward the garden.',f:'Check: wood species or composite, board color, and which way the boards should run.'},
 {p:[44,19.5,0],t:'Ornate street gate',d:'Version 7 dresses up the W 6th gate: two pillars with lanterns, an iron arch with a scroll ring over the opening, and gate leaves with a wood lower panel, iron pickets with finials and a center ring, rising toward the middle.',f:'Check: send a photo of the Silver Lake door so the gate can match it.'},
 {p:[121,7,43],t:'Big planters with trees',d:'Version 10 makes the deck and terrace planters much bigger: corten boxes about 3½ ft square and 3 ft tall, each with a small tree about 10-12 ft tall (multi-trunk olives and dark-green Texas mountain laurels) and boxwood around the trunk. Version 9 had first added planters throughout, kept to corners, stair landings and edges so the staff aisles stay open: tall corten planters at the corners of the high, medium, low and upper decks; a pair framing the W 6th gate and a pair at the top of the steps from the front terrace down to the high deck; cedar troughs with trailing greenery hung outside the upper deck railing; and a low planted trough along the top of the retaining wall facing W 6th, so the patio reads green from the street.',f:'Check: plant choices (olives, boxwood, rosemary, trailing jasmine are placeholders), watering and drainage on the decks, and whether planters should replace any tables instead. Trees this size in planters need deep soil, irrigation and a check that the decks can carry the weight (a wet 3½ ft planter with a tree is roughly a ton).'},
-{p:[123,13,8],t:'Corner garden on W 6th',d:'Version 11 turns the grassy bank in the north-east corner, where W 6th meets the neighbor\'s driveway, into the garden guests see first from the street. Three curved, dry-stacked limestone walls step it down from sidewalk level to the medium deck. The leaning live oaks from Patrick\'s Nov 23 video stay, with up-lights on their trunks at night (try the Night button). The terraces are planted with Texas natives: pink Gulf muhly, Turk\'s cap with red flowers along the fences, salvia, agaves, sotol and a few big limestone boulders. A winding flagstone path with steps climbs from the medium deck to a stone bench under the trees, and a stone runnel spills into a bubbling basin by the deck. Along the garden the solid wood fence on W 6th becomes an open iron fence on a limestone curb, so people on the sidewalk see in. The medium-deck tables that sat on the bank move down onto the deck.',f:'Check: whether the open fence is wanted there, an arborist on the leaning trees and on building walls near their roots, exact tree positions and kinds, the real grades on the bank, and a water line and pump for the basin.'},
-{p:[56.5,19,69],t:'Upper-floor door to the deck',d:'Version 5 adds a glass double door on the east wall of the upper (street-level) floor. It opens onto the upper deck right beside the opened railing and the stairs down to the high deck, so guests upstairs can walk straight out and down into the patio.',f:'Check: whether this is the spot Robert has in mind, and whether the existing boarded doors on the back wall should open up too.'}
+{p:[123,13,8],t:'Corner garden on W 6th',d:'Version 11 turns the grassy bank in the north-east corner, where W 6th meets the neighbor\'s driveway, into the garden guests see first from the street. Three curved, dry-stacked limestone walls step it down from sidewalk level to the medium deck. The leaning trees from Patrick\'s Nov 23 video stay, with up-lights on their trunks at night (try the Night button). The terraces are planted with Texas natives: pink Gulf muhly, Turk\'s cap with red flowers along the fences, salvia, agaves, sotol and a few big limestone boulders. A winding flagstone path with steps climbs from the medium deck to a stone bench under the trees, and a stone runnel spills into a bubbling basin by the deck. Along the garden the solid wood fence on W 6th becomes an open iron fence on a limestone curb, so people on the sidewalk see in. The medium-deck tables that sat on the bank move down onto the deck.',f:'Check: whether the open fence is wanted there, an arborist on the leaning trees and on building walls near their roots, exact tree positions and kinds, the real grades on the bank, and a water line and pump for the basin.'},
+{p:[56.5,19,69],t:'Upper-floor door to the deck',d:'Version 5 adds a glass double door on the east wall of the upper (street-level) floor. It opens onto the upper deck right beside the opened railing and the stairs down to the high deck, so guests upstairs can walk straight out and down into the patio.',f:'Check: whether this is the spot Robert has in mind, and whether the existing boarded doors on the back wall should open up too.'},
+{p:[33,23,40],t:'Building painted light blue',d:'Version 12 paints the existing building a light blue: the stucco walls on both floors, the band at the upper floor line and the taller block at the south-west corner. The white trim and roof edge, cedar cladding, brick chimney, doors and windows keep their colors.',f:'Check: the exact paint color (the model uses a soft sky blue as a placeholder), whether the trim should stay white, and any landlord or city approval for repainting.'}
 ],
 tags:[{p:[124,9.5,-6],t:'486 ft · sidewalk',h:1},{p:[22,9.2,8],t:'486 ft · front terrace',h:1},{p:[104,1,62],t:'477.5 ft · patio',h:1},{p:[104,-.8,141],t:'476 ft · alley',h:1},{p:[164,7,80],t:'483 ft · neighbor parking',h:1},{p:[92,7,3],t:'Retaining wall + bank',h:1},{p:[70,9.5,-26],t:'W 6th St'},{p:[-88,3,70],t:'Pressler St'},{p:[30,60,170],t:'Pressler Apartments'},{p:[160,42,196],t:'Parking garage'},{p:[-30,31,32],t:'Title company'},{p:[8,-.8,141],t:'Back alley'},{p:[226,35,66],t:'Salon + print shop'},{p:[33,26,58],t:'Bar Peached building'}],
 views:{overview:[[250,125,165],[72,0,66]],deck:[[61,16,90],[102,2,58]],bar:[[80,5.4,96],[110,5,44]],street:[[64,24,-32],[92,0,72]],up:[[104,5.5,98],[74,7,8]],plan:[[70,240,65.5],[70,0,65]]},
@@ -207,11 +205,13 @@ build(kit){
   for(let z=0;z<130;z+=10)box(137,138.2,-3,gE(z+5),z,Math.min(z+10,130),cmu);
 
   // EXISTING BUILDING. Two floors: the upper floor is level with W 6th (one story from the street), the lower floor opens onto the patio.
-  box(10,56,-3,21,40,85,C.stucco);box(9.8,56.2,9.2,9.6,39.8,85.2,mat(0xd8d2c6));
+  // version 12: building painted light blue (its own materials, so the bar's stucco keeps its color)
+  const paintBlue=mat(0xa9cce4),paintBand=mat(0x8fb5d1),paintLap=mat(0xb6d4ea);
+  box(10,56,-3,21,40,85,paintBlue);box(9.8,56.2,9.2,9.6,39.8,85.2,paintBand);
   box(9.6,56.4,21,21.6,39.6,85.4,white);box(11,55,21.6,21.9,41,84,roofG);
   [[21,52],[35,61],[45,72]].forEach(([x,z])=>box(x-2.2,x+2.2,21.9,24.4,z-1.6,z+1.6,unitM));
   // taller block at the south-west corner, with cedar cladding on its lower floor
-  box(10,23,-3,25.5,71,88,lap);box(9.6,23.4,25.5,26.1,70.6,88.4,white);box(9.8,23.2,-1.5,8.4,70.8,88.2,clad);
+  box(10,23,-3,25.5,71,88,paintLap);box(9.6,23.4,25.5,26.1,70.6,88.4,white);box(9.8,23.2,-1.5,8.4,70.8,88.2,clad);
   [12.5,15.5,18.5].forEach(x=>box(x,x+2,12,20.5,88,88.25,glass));box(9.75,10,13,18.5,76,82.5,board);
   // street face: windows, front door and the brick chimney
   [[14,18],[20,24],[44,48],[50,54]].forEach(([a,b])=>box(a,b,10.5,17.5,39.75,40,glass));box(35.5,39,8.5,16.5,39.75,40,C.dark);
@@ -389,47 +389,10 @@ build(kit){
 
   // trees, traced from the satellite view: two large live oaks (front, and the heritage oak behind the building) and smaller trees
   const trees=new T.Group();scene.add(trees);
-  // version 12: TEXAS LIVE OAKS. A short thick trunk with a flared base forks low into long, sinuous limbs that reach out more than
-  // up; side branches and many flattened leaf clusters (two greens) make a broad dense dome much wider than it is tall.
-  // liveOak({x,y,z, F fork height, r trunk radius, R canopy radius, H height to top of canopy, n limbs, low:[azimuths of sweeping
-  // low limbs], avoid:[azimuth,k] shortens limbs that way, lean,dir: trunk lean (radians) and its azimuth (x=cos, z=sin), bark, seed})
-  const treeMat2=mat(0x557040,{transparent:true,opacity:.35,depthWrite:false});
-  treeMat.color.setHex(0x3e5a2f);
-  const barkM=mat(0x4a4038),UPV=new T.Vector3(0,1,0),LEAF=new T.IcosahedronGeometry(1,2);
-  const limb=(p0,p1,r0,r1,m)=>{const dd=p1.clone().sub(p0),L=dd.length(),me=new T.Mesh(new T.CylinderGeometry(r1,r0,L,8),m);
-    me.position.copy(p0).addScaledVector(dd,.5);me.quaternion.setFromUnitVectors(UPV,dd.normalize());me.castShadow=true;me.receiveShadow=true;trees.add(me);};
-  const liveOak=o=>{let sd=o.seed||11;const rn=()=>{sd=(sd*16807)%2147483647;return sd/2147483647;};
-    const m=o.bark||barkM,R=o.R,lean=o.lean||0,dir=o.dir||0,r=o.r;
-    const base=new T.Vector3(o.x,o.y,o.z),td=new T.Vector3(Math.sin(lean)*Math.cos(dir),Math.cos(lean),Math.sin(lean)*Math.sin(dir));
-    const mid=base.clone().addScaledVector(td,o.F*.55).add(new T.Vector3((rn()-.5)*.5*r,0,(rn()-.5)*.5*r)),fork=base.clone().addScaledVector(td,o.F);
-    limb(base.clone().addScaledVector(td,-.6),base.clone().addScaledVector(td,1.4),r*1.5,r*1.05,m);   // root flare
-    limb(base,mid,r*1.08,r*.96,m);limb(mid,fork,r*.96,r*.86,m);
-    const top=o.y+o.H,crownY=top-R*.17;
-    const leaf=(p,s)=>{const c=new T.Mesh(LEAF,rn()<.62?treeMat:treeMat2);c.position.copy(p);c.scale.set(s*(.95+rn()*.3),s*(.42+rn()*.12),s*(.95+rn()*.3));
-      c.rotation.y=rn()*6.3;c.castShadow=true;trees.add(c);};
-    const dirV=(az,h,y)=>new T.Vector3(Math.cos(az)*h,y,Math.sin(az)*h);
-    const reachK=az=>o.avoid?1-o.avoid[1]*Math.max(0,Math.cos(az-o.avoid[0])):1;
-    const grow=(az,low)=>{const reach=R*(.66+rn()*.16)*reachK(az),tipY=low?fork.y+(crownY-fork.y)*.28:fork.y+(crownY-fork.y)*(.5+rn()*.22);
-      const fr=low?[.34,.36,.30]:[.32,.36,.32],ry=low?[.75,.3,-.05]:[.55,.33,.12],rr=[r*.62,r*.42,r*.25,r*.11];
-      let p=fork.clone(),a=az;const pts=[p];
-      for(let k=0;k<3;k++){a+=(rn()-.5)*.45;const q=p.clone().add(dirV(a,reach*fr[k],(tipY-fork.y)*ry[k]+(rn()-.5)*.6));limb(p,q,rr[k],rr[k+1],m);pts.push(q);p=q;
-        if(k<2){const sa=a+(rn()<.5?-1:1)*(.55+rn()*.4),sl=R*(.22+rn()*.12),sq=q.clone().add(dirV(sa,sl,sl*.28));limb(q,sq,rr[k+1]*.7,rr[k+1]*.25,m);
-          leaf(sq.clone().add(new T.Vector3(0,R*.06,0)),R*(.16+rn()*.05));}}
-      // leaf clusters along the outer two-thirds of the limb, scattered sideways and up so the crown reads billowy, not blobby
-      for(let j=0;j<6;j++){const t=.35+j*.13,a2=pts[1+Math.min(2,Math.floor(t*3))],b2=pts[Math.min(3,2+Math.floor(t*3))],q=a2.clone().lerp(b2,(t*3)%1);
-        leaf(q.add(new T.Vector3((rn()-.5)*R*.22,R*(.06+rn()*.1),(rn()-.5)*R*.22)),R*(.15+rn()*.06));}
-      leaf(pts[3].clone().add(new T.Vector3(0,R*.04,0)),R*(.19+rn()*.05));};
-    const n=o.n||6,ph=rn()*6.3;
-    for(let i=0;i<n;i++)grow(ph+i*2*Math.PI/n+(rn()-.5)*.5,false);
-    (o.low||[]).forEach(az=>grow(az,true));
-    // crown fill: the top of the dome
-    const cc=fork.clone();for(let i=0;i<10;i++){const a=rn()*6.3,h=R*(i?.12+rn()*.4:0)*reachK(a);leaf(new T.Vector3(cc.x+Math.cos(a)*h,crownY+R*(.04-h/R*.18+(rn()-.5)*.06),cc.z+Math.sin(a)*h),R*(.2+rn()*.06));}
-    return {fork,crown:new T.Vector3(fork.x,crownY,fork.z)};};
-  const fallMat=treeMat2;
-  liveOak({x:32,y:8.5,z:18,F:8.5,r:1.6,R:25,H:31,n:7,low:[Math.PI*.95],seed:301});                       // front oak over the terrace
-  liveOak({x:17,y:-1.2,z:108,F:9.5,r:2.0,R:29,H:38,n:7,low:[Math.PI*.75],avoid:[-Math.PI/2,.45],seed:577}); // heritage oak behind the building
-  liveOak({x:100,y:0,z:14,F:10,r:1.1,R:16,H:25,n:6,seed:83});                                              // oak on the high deck
-  liveOak({x:133,y:0,z:99,F:8,r:.9,R:13,H:21,n:5,avoid:[0,.5],seed:919});                                   // east-side oak
+  const oak=(x,z,k,leaf,y0)=>{k=k||1;y0=y0||0;const t=put(new T.CylinderGeometry(.9*k,1.3*k,13,10),C.trunk,x,y0+6.5,z,trees);t.rotation.z=.06;
+    [[0,19,0,11],[6,17,3,8],[-6,18,-2,9],[2,21,-6,8],[-3,16,6,8]].forEach(([dx,y,dz,r])=>{const c=put(new T.IcosahedronGeometry(r*k,1),leaf||treeMat,x+dx*k,y0+y*(k>1?1.08:1),z+dz*k,trees);c.scale.y=.55;c.castShadow=true;});};
+  const fallMat=mat(0xb98a3e,{transparent:true,opacity:.35,depthWrite:false});
+  oak(32,18,1.6,null,8.5);oak(17,108,1.8,null,-1.2);oak(100,14,1.1,null,0);oak(133,99,.9,null,0);
 
   // string lights radiating from the bar
   const bulbMat=new T.MeshBasicMaterial({color:0xfff4d6});
@@ -540,12 +503,18 @@ build(kit){
   // trees from the walk-along video: five mature trees with trunks leaning out at angles, kept, each with an up-light
   const TREES=[[111.5,6.8,.38,PI+.4,21,.65,1],[116,2.6,.28,-PI/2-.3,22,.72,1.1],[128.5,2.8,.33,-PI/2+.5,21,.68,1.05],[133.5,8.0,.42,.2,19,.58,.95],[131,11.8,.45,PI/2-.3,18,.55,.9]];
   const BOULD=[[110.6,2.4,1.5],[129.6,6.8,1.3],[112.3,15.8,1.1],[130.6,16.0,1.2],[114.0,11.4,1.0]];
-  const Yv=new T.Vector3(0,1,0),fixM=mat(0x3b3226),lensM=new T.MeshBasicMaterial({color:0xffe6b0}),upTrunk=mat(0x4a4038);
+  const Yv=new T.Vector3(0,1,0),fixM=mat(0x3b3226),lensM=new T.MeshBasicMaterial({color:0xffe6b0}),upTrunk=mat(0x5a4330);
   // the page sets every lamp's intensity for day and night; this one warms the up-lit trunks at night
   lamps.push({set intensity(v){upTrunk.emissive.setHex(v?0x4a2e16:0);}});
-  TREES.forEach(([x,z,lean,dir,L,r,k],i)=>{
-    const o=liveOak({x,y:hG(x,z)-.3,z,F:L*.5,r:r*1.15,R:9.5*k,H:L*.98,n:5,lean:lean*.9,dir,bark:upTrunk,seed:41+i*97});
-    const p2=o.crown;
+  const seg=(p0,p1,r0,r1)=>{const d=p1.clone().sub(p0),L=d.length(),m=new T.Mesh(new T.CylinderGeometry(r1,r0,L,9),upTrunk);
+    m.position.copy(p0).addScaledVector(d,.5);m.quaternion.setFromUnitVectors(Yv,d.normalize());m.castShadow=true;m.receiveShadow=true;trees.add(m);};
+  TREES.forEach(([x,z,lean,dir,L,r,k],i)=>{const dv=a=>new T.Vector3(S(a)*Math.cos(dir),Math.cos(a),S(a)*S(dir));
+    const p0=new T.Vector3(x,hG(x,z)-.3,z),p1=p0.clone().addScaledVector(dv(lean),L*.55),p2=p1.clone().addScaledVector(dv(lean*.45),L*.45);
+    seg(p0,p1,r,r*.78);seg(p1,p2,r*.78,r*.5);
+    const side=dir+(i%2?1.3:-1.3),p3=p1.clone().add(new T.Vector3(Math.cos(side)*3.5*k,3*k,S(side)*3.5*k));seg(p1,p3,r*.42,r*.26);
+    [[0,1.2,0,5.5],[3.5,-.3,1.5,4.2],[-3.5,.2,-1.5,4.2],[1.2,1.8,-3.2,3.8],[-1.5,-.6,3.2,3.8]].forEach(([dx,dy,dz,rr])=>{
+      const c=put(new T.IcosahedronGeometry(rr*k,1),treeMat,p2.x+dx*k,p2.y+dy*k+1,p2.z+dz*k,trees);c.scale.y=.6;});
+    put(new T.IcosahedronGeometry(3.2*k,1),treeMat,p3.x,p3.y+1,p3.z,trees).scale.y=.6;
     // up-light: small bronze fixture on the far side of the lean, aimed up the trunk into the canopy (Night button)
     const fx=x-Math.cos(dir)*1.3,fz=z-S(dir)*1.3,fy=hG(fx,fz);
     box(fx-.25,fx+.25,fy-.1,fy+.35,fz-.25,fz+.25,fixM);put(new T.CircleGeometry(.18,10),lensM,fx,fy+.36,fz).rotation.x=-PI/2;
