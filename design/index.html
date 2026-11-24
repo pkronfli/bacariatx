@@ -104,6 +104,7 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
 .log p{margin:0 0 6px;overflow-wrap:anywhere}
 .chip{display:inline-block;font-size:13px;font-weight:600;border-radius:999px;padding:2px 10px;background:var(--btn);color:var(--btn-ink)}
 .chip.new{background:#d3c29a;color:#08223b}
+.hist{margin:12px 0 0}.hist summary{cursor:pointer;font-weight:600;font-size:15px;color:var(--muted);padding:6px 0}
 .log .reply{font-size:15px;margin:8px 0 0;padding-left:10px;border-left:3px solid var(--accent)}
 .vrow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
 .vrow>div{flex:1 1 260px}.vrow strong{font-weight:700}
@@ -132,7 +133,9 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
     <div class="row"><button class="b solid" type="submit" id="s-send">Send suggestion</button><button class="b" type="button" id="s-relock">Lock this device</button></div>
   </form>
   <p id="s-status" role="status" aria-live="polite"></p>
+  <details id="s-hist" class="hist" hidden><summary id="s-sum">Earlier suggestions</summary>
   <ol id="s-list" class="log" aria-label="Suggestions so far"></ol>
+  </details>
 </div></section>
 
 <section aria-label="3D model">
@@ -321,8 +324,8 @@ const makeLive=n=>{if(busy)return;if(!pass){$('#suggest').scrollIntoView();say('
     else if(!locked(r))say('Could not switch versions. Try again.');},()=>{busy=false;say('Could not reach the server. Try again in a moment.');});};
 const locked=r=>{if(r&&r.error==='passcode'){store.del(PASS);pass=null;showLock('That passcode is not right.');return true;}
   if(r&&r.error==='locked'){showLock('Too many wrong tries. Wait 15 minutes and try again.');return true;}return false;};
-const showLock=msg=>{$('#s-lock').hidden=false;$('#s-form').hidden=true;$('#s-list').innerHTML='';$('#s-code').value='';say(msg||'Enter the passcode to send suggestions.');};
-const drawList=items=>{$('#s-list').innerHTML=(items||[]).map(s=>`<li><p class="meta">${when(s.time)} · ${esc(s.from)}${s.note?' · about '+esc(s.note):''}</p><p>${esc(s.text)}</p><span class="chip ${s.status==='new'?'new':''}">${esc(STATUS[s.status]||s.status)}</span>${s.reply?`<p class="reply"><strong>Claude:</strong> ${esc(s.reply)}</p>`:''}</li>`).join('');};
+const showLock=msg=>{$('#s-lock').hidden=false;$('#s-form').hidden=true;$('#s-list').innerHTML='';$('#s-hist').hidden=true;$('#s-code').value='';say(msg||'Enter the passcode to send suggestions.');};
+const drawList=items=>{items=items||[];$('#s-hist').hidden=!items.length;$('#s-sum').textContent='Earlier suggestions ('+items.length+')';$('#s-list').innerHTML=(items||[]).map(s=>`<li><p class="meta">${when(s.time)} · ${esc(s.from)}${s.note?' · about '+esc(s.note):''}</p><p>${esc(s.text)}</p><span class="chip ${s.status==='new'?'new':''}">${esc(STATUS[s.status]||s.status)}</span>${s.reply?`<p class="reply"><strong>Claude:</strong> ${esc(s.reply)}</p>`:''}</li>`).join('');};
 const showForm=()=>{$('#s-lock').hidden=true;$('#s-form').hidden=false;say('');
   api({action:'list',passcode:pass}).then(r=>{if(r&&r.ok)drawList(r.items);else locked(r);},()=>say('Could not load earlier suggestions. You can still send one.'));};
 const setupPanels=M=>{drawBar();drawVersions();
