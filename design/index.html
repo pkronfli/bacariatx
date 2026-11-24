@@ -94,6 +94,9 @@ button.b:disabled{opacity:.55;cursor:progress;transform:none}
 #key button{transition:border-color .15s ease,transform .08s ease}#key button:hover{border-color:var(--rule)}#key button:active{transform:scale(.99)}
 .pin{transition:background-color .15s ease}.pin:hover{background:#1d3d5e}
 .vbar button.b:hover{background:rgba(8,34,59,.1)}
+.newv{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:5;display:flex;flex-direction:column;align-items:center;gap:1px;min-height:48px;padding:8px 22px;border:2px solid #f3efe5;border-radius:999px;background:#08223b;color:#f3efe5;font:600 14.5px "Public Sans",sans-serif;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.35);white-space:nowrap}
+.newv span{font-weight:500;font-size:13px;opacity:.85}
+.newv:hover{background:#0d3050}
 .toast{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:4;background:#08223b;color:#f3efe5;font:600 14.5px "Public Sans",sans-serif;padding:8px 16px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.3);transition:opacity .4s ease}
 .log li.q{border:2px solid var(--accent)}
 .rep{display:grid;gap:8px;margin:10px 0 0}.rep textarea{min-height:64px}
@@ -238,12 +241,92 @@ const $=s=>document.querySelector(s);
 const wrap=$('#model'),pinsEl=$('#pins');
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+// ---------- fewer draw calls, same picture ----------
+// A model version builds thousands of small meshes. After build(), meshes that share a parent, a material and shadow settings
+// are joined into one mesh (or one instanced mesh when they share a shape), and lines that share a material into one set of
+// segments. Positions, normals, materials and groups stay as built, so every version looks the same; it just draws in a few
+// hundred calls instead of a few thousand. Groups are kept, so anything a version shows or hides as a group still works.
+// See-through things (the tree canopies) blend in the order they are drawn. For versions 1-18 (exact) they are left untouched,
+// so those versions come out pixel for pixel as they always did. Later versions batch them too and sort them for each view.
+const batchScene=(T,scene,exact)=>{
+  scene.updateMatrixWorld(true);
+  const texKeys=['map','alphaMap','aoMap','emissiveMap','specularMap','lightMap','bumpMap','normalMap'];
+  const plain=m=>m&&m.isMaterial&&!m.vertexColors&&!m.morphTargets&&!m.skinning&&!m.isShaderMaterial&&!m.isRawShaderMaterial;
+  const ok=o=>o.isMesh&&!o.isInstancedMesh&&!o.isSkinnedMesh&&o.visible&&!o.children.length&&o.renderOrder===0&&o.frustumCulled&&!o.userData.keep&&
+    o.geometry&&o.geometry.isBufferGeometry&&o.geometry.attributes.position&&o.geometry.attributes.normal&&!o.geometry.morphAttributes.position&&
+    (Array.isArray(o.material)?o.material.every(plain):plain(o.material))&&o.matrix.determinant()>0;
+  const jobs=[],sorters=[];
+  scene.traverse(par=>{const B=new Map(),L=new Map();
+    par.children.forEach(o=>{
+      if(!exact&&o.isLine&&!o.isLineSegments&&!o.isLineLoop&&o.visible&&!o.children.length&&o.material&&!o.material.isLineDashedMaterial&&!o.geometry.index&&o.geometry.attributes.position){
+        const k=o.material.uuid;(L.get(k)||L.set(k,[]).get(k)).push(o);return;}
+      if(!ok(o))return;o.updateMatrix();
+      const g=o.geometry,mats=Array.isArray(o.material)?o.material:[o.material];
+      if(exact&&mats.some(m=>m.transparent))return;
+      const n=g.index?g.index.count:g.attributes.position.count;
+      const parts=Array.isArray(o.material)?(g.groups.length?g.groups:[]).map(q=>({s:q.start,c:Math.min(q.count,n-q.start),m:mats[q.materialIndex]})):[{s:g.drawRange.start,c:Math.min(g.drawRange.count,n-g.drawRange.start),m:mats[0]}];
+      if(Array.isArray(o.material)&&!g.groups.length)return;
+      parts.forEach(q=>{if(!q.m||q.c<=0)return;const k=q.m.uuid+(o.castShadow?'c':'-')+(o.receiveShadow?'r':'-');
+        (B.get(k)||B.set(k,{m:q.m,cast:o.castShadow,recv:o.receiveShadow,list:[]}).get(k)).list.push({o,g,s:q.s,c:q.c,whole:!Array.isArray(o.material)&&q.s===0&&q.c===n});});
+      o.userData._gone=true;});
+    if(B.size||L.size)jobs.push({par,B,L});});
+  const v=new T.Vector3(),nm=new T.Matrix3();
+  jobs.forEach(({par,B,L})=>{
+    par.children.filter(o=>o.userData._gone).forEach(o=>par.remove(o));
+    B.forEach(({m,cast,recv,list})=>{
+      const uvs=texKeys.some(k=>m[k]);
+      // the same shape used many times (leaf clusters, bulbs): one instanced mesh
+      // see-through materials are drawn back to front, so they are only ever instanced, never joined: one batch per 30 ft square
+      // of ground (placed at its middle, so batches sort against each other and against lights and glass the way single meshes
+      // did), and inside a batch the pieces are re-sorted for each view
+      const see=m.transparent,many=es=>es.length>=(see?2:6)&&(see||es[0].g.attributes.position.count>=60);
+      const gk=e=>{if(!see)return e.g.uuid;v.setFromMatrixPosition(e.o.matrix);return e.g.uuid+'|'+Math.floor(v.x/30)+'|'+Math.floor(v.z/30);};
+      const byGeo=new Map();list.forEach(e=>{if(e.whole){e.k=gk(e);(byGeo.get(e.k)||byGeo.set(e.k,[]).get(e.k)).push(e);}});
+      const rest=[];list.forEach(e=>{const same=e.whole&&byGeo.get(e.k);if(same&&many(same))return;rest.push(e);});
+      byGeo.forEach(es=>{if(!many(es))return;
+        const im=new T.InstancedMesh(es[0].g,m,es.length);
+        if(see){const c=new T.Vector3();es.forEach(e=>c.add(v.setFromMatrixPosition(e.o.matrix)));c.divideScalar(es.length);im.position.copy(c);
+          const back=new T.Matrix4().makeTranslation(-c.x,-c.y,-c.z);es.forEach(e=>e.o.matrix.premultiply(back));}
+        es.forEach((e,i)=>im.setMatrixAt(i,e.o.matrix));
+        im.castShadow=cast;im.receiveShadow=recv;im.frustumCulled=false;par.add(im);im.updateMatrixWorld(true);
+        if(see){const C=es.map(e=>new T.Vector3().setFromMatrixPosition(e.o.matrix)),MX=es.map(e=>e.o.matrix),ord=es.map((_,i)=>i),z=new Float32Array(es.length),mv=new T.Matrix4();
+          sorters.push(cam=>{if(!m.transparent||!im.visible)return;mv.multiplyMatrices(cam.matrixWorldInverse,im.matrixWorld);const q=mv.elements;
+            for(let i=0;i<C.length;i++)z[i]=q[2]*C[i].x+q[6]*C[i].y+q[10]*C[i].z+q[14];
+            ord.sort((a,b)=>z[a]-z[b]);for(let i=0;i<ord.length;i++)MX[ord[i]].toArray(im.instanceMatrix.array,i*16);im.instanceMatrix.needsUpdate=true;});}});
+      if(see){rest.forEach(e=>{if(e.o.userData._gone){delete e.o.userData._gone;par.add(e.o);}});return;}
+      if(!rest.length)return;
+      if(rest.length===1&&rest[0].whole){const o=rest[0].o;delete o.userData._gone;par.add(o);return;}
+      let nv=0,ni=0;rest.forEach(e=>{nv+=e.g.attributes.position.count;ni+=e.c;});
+      const P=new Float32Array(nv*3),N=new Float32Array(nv*3),U=uvs?new Float32Array(nv*2):null,I=nv>65535?new Uint32Array(ni):new Uint16Array(ni);
+      let vo=0,io=0;
+      rest.forEach(e=>{const g=e.g,p=g.attributes.position,q=g.attributes.normal,u=g.attributes.uv,mx=e.o.matrix,c=p.count;nm.getNormalMatrix(mx);
+        for(let i=0;i<c;i++){v.fromBufferAttribute(p,i).applyMatrix4(mx);P[(vo+i)*3]=v.x;P[(vo+i)*3+1]=v.y;P[(vo+i)*3+2]=v.z;
+          v.fromBufferAttribute(q,i).applyMatrix3(nm).normalize();N[(vo+i)*3]=v.x;N[(vo+i)*3+1]=v.y;N[(vo+i)*3+2]=v.z;
+          if(U&&u){U[(vo+i)*2]=u.getX(i);U[(vo+i)*2+1]=u.getY(i);}}
+        if(g.index)for(let i=0;i<e.c;i++)I[io++]=vo+g.index.getX(e.s+i);else for(let i=0;i<e.c;i++)I[io++]=vo+e.s+i;
+        vo+=c;});
+      const geo=new T.BufferGeometry();geo.setAttribute('position',new T.BufferAttribute(P,3));geo.setAttribute('normal',new T.BufferAttribute(N,3));
+      if(U)geo.setAttribute('uv',new T.BufferAttribute(U,2));geo.setIndex(new T.BufferAttribute(I,1));
+      const me=new T.Mesh(geo,m);me.castShadow=cast;me.receiveShadow=recv;me.frustumCulled=false;par.add(me);});
+    // wires and other line strips with one material: one set of line segments
+    L.forEach(ls=>{if(ls.length<2)return;let n=0;ls.forEach(o=>{n+=Math.max(0,o.geometry.attributes.position.count-1)*2;});
+      const P=new Float32Array(n*3);let k=0;
+      ls.forEach(o=>{o.updateMatrix();const p=o.geometry.attributes.position;const w=i=>{v.fromBufferAttribute(p,i).applyMatrix4(o.matrix);P[k++]=v.x;P[k++]=v.y;P[k++]=v.z;};
+        for(let i=0;i<p.count-1;i++){w(i);w(i+1);}par.remove(o);});
+      const geo=new T.BufferGeometry();geo.setAttribute('position',new T.BufferAttribute(P,3));
+      const seg=new T.LineSegments(geo,ls[0].material);seg.frustumCulled=false;par.add(seg);});});
+  return sorters;
+};
+
 const start=M=>{
   const T=THREE,NOTES=M.notes,TAGS=M.tags,VIEWS=M.views;
   const renderer=new T.WebGLRenderer({antialias:true});
   renderer.setPixelRatio(Math.min(devicePixelRatio,2));
   renderer.setSize(wrap.clientWidth,wrap.clientHeight);
   renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
+  // the picture is redrawn only when something changes (the view, a button, the size), and the sun's shadows only when the scene does
+  renderer.shadowMap.autoUpdate=false;let dirty=3;
+  const redraw=sh=>{dirty=Math.max(dirty,2);if(sh)renderer.shadowMap.needsUpdate=true;};window.__bacariInvalidate=()=>redraw(true);
   wrap.insertBefore(renderer.domElement,pinsEl);
   const scene=new T.Scene();
   const cam=new T.PerspectiveCamera(45,wrap.clientWidth/wrap.clientHeight,1,1200);
@@ -286,13 +369,14 @@ const start=M=>{
   // the model version builds its own geometry with the helpers above
   const R=M.build({T,scene,C,mat,put,box,cyl,deckMats,stairs});
   const {fences,trees,bulbMat,lamps}=R,[treeMat,fallMat]=R.treeMats;
+  let sorters=[];try{sorters=batchScene(T,scene,!M.batchAll);}catch(e){console.warn('batching skipped',e);}
   const lvEl=$('#levels');if(lvEl&&M.levels)lvEl.innerHTML=M.levels.map(l=>`<li><span class="sw" style="background:${l[0]}"></span>${l[1]}</li>`).join('');
   if(M.lede)$('#lede').textContent=M.lede;
 
   // day / night
   const setNight=on=>{const bg=new T.Color(on?0x0b1a2b:0xdfe8ec);scene.background=bg;scene.fog=new T.Fog(bg,on?110:240,on?380:680);
     hemi.intensity=on?.2:.78;hemi.color.set(on?0x6a7fa8:0xe4eef6);sun.intensity=on?.06:.85;
-    bulbMat.color.set(on?0xffd27a:0xfff4d6);lamps.forEach((l,i)=>l.intensity=on?(i?.9:1.5):0);};
+    bulbMat.color.set(on?0xffd27a:0xfff4d6);lamps.forEach((l,i)=>{l.intensity=on?(i?.9:1.5):0;if(l.isLight)l.visible=on;});redraw(true);};
   setNight(false);
 
   // pins and notes
@@ -311,7 +395,7 @@ const start=M=>{
       el.style.display='';el.style.transform=`translate(${(v.x+1)/2*w}px,${(1-v.y)/2*h}px) translate(-50%,-50%)`;});};
 
   let tw=null;
-  const go=(pos,tgt,ms)=>{if(reduce){cam.position.set(...pos);ctl.target.set(...tgt);return;}
+  const go=(pos,tgt,ms)=>{redraw();if(reduce){cam.position.set(...pos);ctl.target.set(...tgt);return;}
     tw={a:cam.position.clone(),b:new T.Vector3(...pos),c:ctl.target.clone(),d:new T.Vector3(...tgt),t0:performance.now(),ms:ms||1000};};
   ctl.addEventListener('start',()=>{tw=null;});
   // zoom only with the + and − buttons (wheel and pinch zoom are off)
@@ -327,7 +411,7 @@ const start=M=>{
   const viewBtns=[...document.querySelectorAll('[data-view]')];
   const pressView=k=>viewBtns.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===k)));
   viewBtns.forEach(b=>b.addEventListener('click',()=>{const vw=VIEWS[b.dataset.view];go(b.dataset.view==='overview'||b.dataset.view==='plan'?fit(vw[0],vw[1]):vw[0],vw[1]);pressView(b.dataset.view);}));
-  const setActive=i=>{pinEls.forEach((e,j)=>e.classList.toggle('on',j===i));keyEls.forEach((e,j)=>e.classList.toggle('on',j===i));};
+  const setActive=i=>{redraw();pinEls.forEach((e,j)=>e.classList.toggle('on',j===i));keyEls.forEach((e,j)=>e.classList.toggle('on',j===i));};
   const focus=i=>{const p=new T.Vector3(...NOTES[i].p),dir=cam.position.clone().sub(ctl.target).normalize();
     dir.y=Math.max(dir.y,.45);dir.normalize();go(p.clone().add(dir.multiplyScalar(36)).toArray(),NOTES[i].p);setActive(i);pressView('');};
   pinsEl.addEventListener('click',e=>{const b=e.target.closest('.pin');if(b)focus(+b.dataset.i);});
@@ -337,19 +421,21 @@ const start=M=>{
   const nightBtn=$('#night');nightBtn.addEventListener('click',()=>{const on=nightBtn.getAttribute('aria-pressed')!=='true';nightBtn.setAttribute('aria-pressed',String(on));setNight(on);});
   const treeModes=['see-through','solid','hidden'];let tm=0;const treeBtn=$('#trees');
   treeBtn.addEventListener('click',()=>{tm=(tm+1)%3;treeBtn.textContent='Trees: '+treeModes[tm];
-    trees.visible=tm!==2;const solid=tm===1;[treeMat,fallMat].forEach(m=>{m.transparent=!solid;m.opacity=solid?1:.35;m.depthWrite=solid;m.needsUpdate=true;});});
-  const fenceBtn=$('#fence');fenceBtn.addEventListener('click',()=>{const on=fenceBtn.getAttribute('aria-pressed')!=='true';fenceBtn.setAttribute('aria-pressed',String(on));fences.visible=on;});
+    trees.visible=tm!==2;const solid=tm===1;[treeMat,fallMat].forEach(m=>{m.transparent=!solid;m.opacity=solid?1:.35;m.depthWrite=solid;m.needsUpdate=true;});redraw(true);});
+  const fenceBtn=$('#fence');fenceBtn.addEventListener('click',()=>{const on=fenceBtn.getAttribute('aria-pressed')!=='true';fenceBtn.setAttribute('aria-pressed',String(on));fences.visible=on;redraw(true);});
   // hide or show the apartments and parking garage behind the lot (models from version 14 build them as their own group)
   const bbBtn=$('#backb');if(R.backB){bbBtn.hidden=false;const bt=(R.backTags||[]);
-    bbBtn.addEventListener('click',()=>{const on=bbBtn.getAttribute('aria-pressed')!=='true';bbBtn.setAttribute('aria-pressed',String(on));R.backB.visible=on;
+    bbBtn.addEventListener('click',()=>{const on=bbBtn.getAttribute('aria-pressed')!=='true';bbBtn.setAttribute('aria-pressed',String(on));R.backB.visible=on;redraw(true);
       TAGS.forEach((g,i)=>{if(bt.includes(g.t))tagEls[i].classList.toggle('gone',!on);});});}
-  const labBtn=$('#labels');labBtn.addEventListener('click',()=>{const on=labBtn.getAttribute('aria-pressed')!=='true';labBtn.setAttribute('aria-pressed',String(on));pinsEl.style.display=on?'':'none';});
+  const labBtn=$('#labels');labBtn.addEventListener('click',()=>{const on=labBtn.getAttribute('aria-pressed')!=='true';labBtn.setAttribute('aria-pressed',String(on));pinsEl.style.display=on?'':'none';redraw();});
 
-  const ro=new ResizeObserver(()=>{const w=wrap.clientWidth,h=wrap.clientHeight;renderer.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix();});
+  const ro=new ResizeObserver(()=>{const w=wrap.clientWidth,h=wrap.clientHeight;renderer.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix();redraw();});
   ro.observe(wrap);
   const loop=now=>{if(tw){let k=Math.min(1,(now-tw.t0)/tw.ms);k=k<.5?2*k*k:1-((-2*k+2)**2)/2;
-      cam.position.lerpVectors(tw.a,tw.b,k);ctl.target.lerpVectors(tw.c,tw.d,k);if(k>=1)tw=null;}
-    ctl.update();renderer.render(scene,cam);drawPins();requestAnimationFrame(loop);};
+      cam.position.lerpVectors(tw.a,tw.b,k);ctl.target.lerpVectors(tw.c,tw.d,k);if(k>=1)tw=null;dirty=Math.max(dirty,2);}
+    if(ctl.update())dirty=Math.max(dirty,2);
+    if(dirty>0){dirty--;if(sorters.length){cam.updateMatrixWorld();sorters.forEach(f=>f(cam));}renderer.render(scene,cam);drawPins();}
+    requestAnimationFrame(loop);};
   requestAnimationFrame(loop);
 };
 
@@ -395,7 +481,7 @@ const drawList=items=>{items=items||[];LAST=items;const qs=items.filter(s=>s.sta
   // questions from Claude stay in view with a reply box; don't redraw them while someone is typing an answer
   const typing=[...document.querySelectorAll('#s-q textarea')].some(t=>t.value.trim()||t===document.activeElement);
   if(!typing)$('#s-q').innerHTML=qs.map(s=>`<li class="q">${card(s)}<form class="rep" data-id="${esc(s.id)}"><label class="lab" for="r-${esc(s.id)}">Your answer</label><textarea id="r-${esc(s.id)}" rows="2" maxlength="2000"></textarea><div class="row"><button class="b mic" type="button" data-for="r-${esc(s.id)}" aria-pressed="false">● Record voice</button><button class="b solid" type="submit">Send answer</button></div></form></li>`).join('');
-  $('#s-hist').hidden=!rest.length;$('#s-sum').textContent='Earlier suggestions ('+rest.length+')';$('#s-list').innerHTML=rest.map(s=>`<li>${card(s)}${undoBtn(s,items)}</li>`).join('');};
+  fillQ();$('#s-hist').hidden=!rest.length;$('#s-sum').textContent='Earlier suggestions ('+rest.length+')';$('#s-list').innerHTML=rest.map(s=>`<li>${card(s)}${undoBtn(s,items)}</li>`).join('');};
 // undo a change that's already in the model: sends a new suggestion asking Claude to take that change back out (as a new version)
 const undoOf=t=>(String(t||'').match(/^Undo (S\d+)\b/)||[])[1];
 const undoBtn=(s,items)=>{if(s.status!=='done'||undoOf(s.text)||/^Made version/.test(String(s.text||'')))return'';
@@ -524,6 +610,29 @@ const setupPanels=M=>{drawBar();drawVersions();
       else if(!locked(r))say('Could not send. Your text is still here; try again.');},()=>{busy=false;$('#s-send').disabled=false;say('Could not reach the server. Your text is still here; try again in a moment.');});});
 };
 
+// a new version went live while this page is open. If nothing is in progress the page updates itself, as before. If the person is
+// typing, recording, attaching files or sending, it waits and shows "New version ready, tap to update" instead.
+const DRAFT='bacari-draft';
+const inUse=()=>{const a=document.activeElement,tag=a&&a.tagName;
+  return busy||!!rec||mic.on||mmBtn().disabled||ATT.length>0||tag==='TEXTAREA'||(tag==='INPUT'&&a.type!=='button')||tag==='SELECT'||
+    [...document.querySelectorAll('#s-text,#s-q textarea,#s-code')].some(t=>t.value.trim());};
+const saveDraft=()=>{const q={};document.querySelectorAll('#s-q textarea').forEach(t=>{if(t.value.trim())q[t.id]=t.value;});
+  const d={t:$('#s-text').value,n:$('#s-note').value,q:q,ts:Date.now()};
+  if(d.t.trim()||Object.keys(q).length)sess.set(DRAFT,JSON.stringify(d));else sess.set(DRAFT,'');};
+let draftQ=null;
+const fillQ=()=>{if(!draftQ)return;Object.keys(draftQ).forEach(id=>{const t=document.getElementById(id);if(t&&!t.value){t.value=draftQ[id];delete draftQ[id];}});};
+const restoreDraft=()=>{let d=null;try{d=JSON.parse(sess.get(DRAFT));}catch(e){}sess.set(DRAFT,'');if(!d||Date.now()-d.ts>30*60e3)return;
+  if(d.t&&!$('#s-text').value)$('#s-text').value=d.t;if(d.n&&[...$('#s-note').options].some(o=>o.value===d.n))$('#s-note').value=d.n;draftQ=d.q||null;fillQ();};
+const update=n=>{saveCam();saveDraft();sess.set('bacari-updated',String(n));location.reload();};
+let offered=0;
+const offerUpdate=n=>{if(offered===n)return;offered=n;let el=$('#newv');
+  if(!el){el=document.createElement('button');el.id='newv';el.type='button';el.className='newv';wrap.appendChild(el);
+    el.addEventListener('click',()=>{if(mic.on||rec){toast('Finish or cancel the recording first.');return;}
+      if(ATT.length&&!confirm('Update now? The photos or files you attached are not sent yet and would need adding again. Your typed text is kept.'))return;update(offered);});}
+  el.innerHTML='<strong>Version '+n+' is ready</strong><span>Tap to update</span>';};
+// whenever the page is about to go away (update, viewing another version), keep any half-typed text for when it comes back
+addEventListener('pagehide',()=>{try{saveDraft();}catch(e){}});
+
 const fail=()=>{wrap.innerHTML='<p class="err">The 3D model could not load here. Try again, or open this page in another browser.</p>';};
 (async()=>{
   const j=u=>fetch(u,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
@@ -533,9 +642,16 @@ const fail=()=>{wrap.innerHTML='<p class="err">The 3D model could not load here.
   let c=null;try{c=JSON.parse(sess.get('bacari-patio-live'));}catch(e){}
   if(c&&has(c.n)&&Date.now()-c.t<6e5)live=c.n;
   h=+((location.hash.match(/^#v(\d+)$/)||[])[1]||0);shown=h&&has(h)?h:live;
-  const sc=document.createElement('script');sc.src='versions/v'+shown+'.js?'+(VERS.stamp||'');
-  sc.onload=()=>{try{if(!window.THREE||!THREE.OrbitControls||!window.PATIO_MODEL)throw 0;start(window.PATIO_MODEL);setupPanels(window.PATIO_MODEL);}catch(e){fail();}};
-  sc.onerror=fail;document.body.appendChild(sc);
+  const begin=()=>{try{if(!window.THREE||!THREE.OrbitControls||!window.PATIO_MODEL)throw 0;start(window.PATIO_MODEL);setupPanels(window.PATIO_MODEL);restoreDraft();}catch(e){console.error(e);fail();}};
+  // versions 1-18 are one script each. Later versions are a short list of part files (versions/vN.json): the parts are pieces of
+  // one build() function, joined here in order. Published parts never change, so they are cached and shared between versions.
+  if((VERS.versions.find(v=>v.n===shown)||{}).parts){
+    try{const man=await fetch('versions/v'+shown+'.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw 0;return r.json();});
+      const [meta,...src]=await Promise.all([fetch(man.meta).then(r=>{if(!r.ok)throw 0;return r.json();}),...man.parts.map(u=>fetch(u).then(r=>{if(!r.ok)throw 0;return r.text();}))]);
+      const body=src.join('\n')+'\n//# sourceURL=bacari-build.js';
+      window.PATIO_MODEL=Object.assign({version:shown,batchAll:true},meta,{build:new Function('kit',body)});begin();}catch(e){console.error(e);fail();}
+  }else{const sc=document.createElement('script');sc.src='versions/v'+shown+'.js?'+(VERS.stamp||'');
+    sc.onload=begin;sc.onerror=fail;document.body.appendChild(sc);}
   // keep checking for new versions: the suggestions service's live number (set the moment a version is made live)
   // wins once the site lists that version; otherwise versions.json decides. Viewers of the live model get the new one in place.
   const poll=async()=>{
@@ -543,7 +659,7 @@ const fail=()=>{wrap.innerHTML='<p class="err">The 3D model could not load here.
     if(vers&&vers.versions&&vers.versions.length)VERS=vers;
     const target=d&&d.ok&&d.live&&has(d.live)?d.live:(has(VERS.live)?VERS.live:live);
     if(target!==live){sess.set('bacari-patio-live',JSON.stringify({n:target,t:Date.now()}));
-      if(!h){saveCam();sess.set('bacari-updated',String(target));location.reload();return;}
+      if(!h){if(inUse()){offerUpdate(target);return;}update(target);return;}
       live=target;drawBar();drawVersions();}
     else if(vers)drawVersions();
     if(pass&&!$('#s-form').hidden&&Date.now()<fastUntil())api({action:'list',passcode:pass}).then(r=>{if(r&&r.ok)drawList(r.items);}).catch(()=>{});};

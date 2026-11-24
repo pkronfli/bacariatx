@@ -1,0 +1,24 @@
+{
+ "version": 18,
+ "base": 17,
+ "meta": "parts/meta.18.json",
+ "parts": [
+  "parts/helpers.18.js",
+  "parts/streets.18.js",
+  "parts/neighbors.18.js",
+  "parts/site-fences-gates.18.js",
+  "parts/building.18.js",
+  "parts/decks-bar.18.js",
+  "parts/furniture.18.js",
+  "parts/landscaping.18.js",
+  "parts/trees.18.js",
+  "parts/bar-string-lights.18.js",
+  "parts/planters.18.js",
+  "parts/corner-garden.18.js",
+  "parts/night-lighting.18.js",
+  "parts/street-detail.18.js",
+  "parts/night-extras.18.js",
+  "parts/finish.18.js"
+ ],
+ "note": "Version 18 is served from versions/v18.js; this is the same model split into parts, the base for later versions."
+}
