@@ -1,6 +1,6 @@
 {
- "live": 7,
- "stamp": "7",
+ "live": 8,
+ "stamp": "8",
  "versions": [
   {
    "n": 1,
@@ -43,6 +43,12 @@
    "date": "Nov 23, 2026",
    "by": "Robert",
    "summary": "Decks and their stairs drawn as real wood boards with wood fascia edges, and a more ornate street gate with lantern pillars, an iron arch and iron-and-wood leaves."
+  },
+  {
+   "n": 8,
+   "date": "Nov 23, 2026",
+   "by": "Robert",
+   "summary": "Eleven two-tops turned into four-tops across the decks, front terrace and garden, keeping clear staff aisles."
   }
  ]
 }
