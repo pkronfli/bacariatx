@@ -1,6 +1,6 @@
 {
- "live": 14,
- "stamp": "14",
+ "live": 15,
+ "stamp": "15",
  "versions": [
   {
    "n": 1,
@@ -85,6 +85,12 @@
    "date": "Nov 24, 2026",
    "by": "Patrick",
    "summary": "Bacari-style night lighting everywhere (bistro string-light canopies over every deck, rattan pendants, table candles, wall sconces, path lights), a 20 ft automated sliding gate on the back lot, and the apartments behind can be hidden."
+  },
+  {
+   "n": 15,
+   "date": "Nov 24, 2026",
+   "by": "Patrick",
+   "summary": "Up-lights for the trees at night: in-grade well lights washing each big live oak and a small spike light in every planter tree, on top of version 14's night lighting."
   }
  ]
 }
