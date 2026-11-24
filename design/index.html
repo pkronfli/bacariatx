@@ -124,6 +124,21 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
 .vrow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
 .vrow>div{flex:1 1 260px}.vrow strong{font-weight:700}
 @media(max-width:600px){.row2{grid-template-columns:1fr}}
+.vohead{margin:0;padding:14px max(5vw,16px) 0;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.vohead+.controls{padding-top:10px}
+.mapmic{position:absolute;left:50%;bottom:44px;transform:translateX(-50%);z-index:3;display:flex;gap:8px;align-items:center}
+.mapmic button{display:flex;align-items:center;gap:8px;min-height:48px;padding:0 20px 0 16px;border-radius:999px;border:2px solid #08223b;background:#f3efe5;color:#08223b;font:700 15px "Public Sans",sans-serif;cursor:pointer;box-shadow:0 3px 12px rgba(0,0,0,.3);transition:transform .08s ease,background-color .15s ease}
+.mapmic button:hover{background:#fff}.mapmic button:active{transform:scale(.97)}
+.mapmic button:focus-visible{outline:3px solid #d3c29a;outline-offset:2px}
+.mapmic svg{width:20px;height:20px;flex:none}
+.mapmic button.rec{background:#b3261e;border-color:#b3261e;color:#fff}
+.mapmic button.rec .dot{animation:blink 1s steps(2) infinite}
+.mapmic #mm-cancel{padding:0 14px;min-height:40px;font-size:14px}
+.mapmic button:disabled{opacity:.7;cursor:progress}
+@keyframes blink{50%{opacity:.25}}
+@media(max-width:600px){.mapmic{bottom:64px}.mapmic button{white-space:nowrap}}
+@media(prefers-reduced-motion:reduce){.mapmic button.rec .dot{animation:none}}
+.who{margin:0;font-size:15px;color:var(--muted)}.who strong{color:var(--ink)}
 </style>
 </head>
 <body>
@@ -133,33 +148,11 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
   <p class="lede" id="lede"></p>
 </div></header>
 
-<section class="band sug" id="suggest" hidden><div class="wrap">
-  <h2>Suggest a change</h2>
-  <p class="intro">Describe what you'd like changed, in plain words. Claude starts on it as soon as you send it and updates the model within a few minutes, and saves each update as a new version you can go back from.</p>
-  <form id="s-lock" hidden>
-    <div class="row"><div><label for="s-code">Passcode</label><input id="s-code" type="password" autocomplete="off"></div><button class="b solid" type="submit" id="s-unlock">Unlock</button></div>
-  </form>
-  <form id="s-form" hidden>
-    <div class="row2">
-      <div><label for="s-from">Your name</label><input id="s-from" maxlength="60"></div>
-      <div><label for="s-note">About</label><select id="s-note"></select></div>
-    </div>
-    <div><label for="s-text">What should change?</label><textarea id="s-text" rows="4" maxlength="4000" placeholder="Example: make the bar square and move it 10 feet toward the back wall."></textarea><p class="kbd">Type or press Record voice and talk. Press Enter to send · Shift + Enter for a new line</p></div>
-    <div class="row"><button class="b mic" type="button" data-for="s-text" aria-pressed="false">● Record voice</button><button class="b solid" type="submit" id="s-send">Send suggestion</button><button class="b" type="button" id="s-relock">Lock this device</button></div>
-  </form>
-  <p id="s-status" role="status" aria-live="polite"></p>
-  <ol id="s-q" class="log" aria-label="Questions from Claude"></ol>
-  <details id="s-hist" class="hist" hidden><summary id="s-sum">Earlier suggestions</summary>
-  <ol id="s-list" class="log" aria-label="Suggestions so far"></ol>
-  </details>
-</div></section>
-
 <section aria-label="3D model">
   <div id="vbar" class="vbar" hidden></div>
-  <div id="model" class="fig"><div id="pins"></div><p class="hint">Drag to turn · + and − to zoom (pinch on a phone) · tap a number</p><div class="zoom"><button class="zb" id="z-in" type="button" aria-label="Zoom in">+</button><button class="zb" id="z-out" type="button" aria-label="Zoom out">−</button></div></div>
-  <p class="keynote">Heights are measured from the existing patio, about 477.5 ft above sea level. Dark tags show ground heights from USGS lidar (2017, 1 m grid).</p>
-  <ul class="levels" id="levels" aria-label="Level key"></ul>
-  <div class="controls">
+  <div id="model" class="fig"><div id="pins"></div><p class="hint">Drag to turn · + and − to zoom (pinch on a phone) · tap a number</p><div class="mapmic" id="mapmic" hidden><button type="button" id="mm-rec" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 15a3.5 3.5 0 0 0 3.5-3.5v-6a3.5 3.5 0 1 0-7 0v6A3.5 3.5 0 0 0 12 15Z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5"/></svg><span id="mm-lab">Record a suggestion</span></button><button type="button" id="mm-cancel" hidden>Cancel</button></div><div class="zoom"><button class="zb" id="z-in" type="button" aria-label="Zoom in">+</button><button class="zb" id="z-out" type="button" aria-label="Zoom out">−</button></div></div>
+  <h2 class="vohead" id="vo-h">View options</h2>
+  <div class="controls" role="group" aria-labelledby="vo-h">
     <div class="seg" role="group" aria-label="Camera views">
       <button class="b" data-view="overview" aria-pressed="true">Overview</button>
       <button class="b" data-view="deck" aria-pressed="false">From upper deck</button>
@@ -176,6 +169,28 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
     </div>
   </div>
 </section>
+
+<section class="band sug" id="suggest" hidden><div class="wrap">
+  <h2>Suggest a change</h2>
+  <p class="who" id="s-who" hidden></p>
+  <p class="intro">Describe what you'd like changed, in plain words, or press Record a suggestion on the model and just talk. Claude starts on it as soon as you send it and updates the model within a few minutes, and saves each update as a new version you can go back from.</p>
+  <form id="s-lock" hidden>
+    <div class="row"><div><label for="s-code">Your passcode</label><input id="s-code" type="password" autocomplete="off"></div><button class="b solid" type="submit" id="s-unlock">Sign in</button></div>
+  </form>
+  <form id="s-form" hidden>
+    <div class="row2">
+      <div id="s-fromw"><label for="s-from">Your name</label><input id="s-from" maxlength="60"></div>
+      <div><label for="s-note">About</label><select id="s-note"></select></div>
+    </div>
+    <div><label for="s-text">What should change?</label><textarea id="s-text" rows="4" maxlength="4000" placeholder="Example: make the bar square and move it 10 feet toward the back wall."></textarea><p class="kbd">Type or press Record voice and talk. Press Enter to send · Shift + Enter for a new line</p></div>
+    <div class="row"><button class="b mic" type="button" data-for="s-text" aria-pressed="false">● Record voice</button><button class="b solid" type="submit" id="s-send">Send suggestion</button><button class="b" type="button" id="s-relock">Sign out</button></div>
+  </form>
+  <p id="s-status" role="status" aria-live="polite"></p>
+  <ol id="s-q" class="log" aria-label="Questions from Claude"></ol>
+  <details id="s-hist" class="hist" hidden><summary id="s-sum">Earlier suggestions</summary>
+  <ol id="s-list" class="log" aria-label="Suggestions so far"></ol>
+  </details>
+</div></section>
 
 <section class="band"><div class="wrap">
   <h2>What's in the model</h2>
@@ -227,6 +242,7 @@ const start=M=>{
   cam.position.set(...fit(...VIEWS.overview));ctl.target.set(...VIEWS.overview[1]);
   // after an automatic update, come back to the same camera view
   try{const k=JSON.parse(sess.get('bacari-cam'));if(k&&Date.now()-k.ts<120000){cam.position.set(...k.p);ctl.target.set(...k.t);}}catch(e){}
+  getView=()=>({p:cam.position.toArray().map(Math.round),t:ctl.target.toArray().map(Math.round)});
   saveCam=()=>sess.set('bacari-cam',JSON.stringify({p:cam.position.toArray(),t:ctl.target.toArray(),ts:Date.now()}));
   const upd=sess.get('bacari-updated');if(upd){sess.set('bacari-updated','');const t=document.createElement('p');t.className='toast';t.setAttribute('role','status');
     t.textContent='Updated to version '+upd;wrap.appendChild(t);setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),500);},5000);}
@@ -257,7 +273,7 @@ const start=M=>{
   // the model version builds its own geometry with the helpers above
   const R=M.build({T,scene,C,mat,put,box,cyl,deckMats,stairs});
   const {fences,trees,bulbMat,lamps}=R,[treeMat,fallMat]=R.treeMats;
-  $('#levels').innerHTML=M.levels.map(l=>`<li><span class="sw" style="background:${l[0]}"></span>${l[1]}</li>`).join('');
+  const lvEl=$('#levels');if(lvEl&&M.levels)lvEl.innerHTML=M.levels.map(l=>`<li><span class="sw" style="background:${l[0]}"></span>${l[1]}</li>`).join('');
   if(M.lede)$('#lede').textContent=M.lede;
 
   // day / night
@@ -327,11 +343,17 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;',
 const when=t=>{const d=new Date(t);return isNaN(d)?esc(t):d.toLocaleDateString(undefined,{month:'short',day:'numeric'})+', '+d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});};
 const STATUS={new:'Waiting for Claude',done:'Done',question:'Claude has a question',declined:'Not changed'};
 const PASS='bacari-patio-pass',NAME='bacari-patio-name';
-let CFG={api:''},VERS={live:1,versions:[{n:1}]},shown=1,live=1,pass=null,busy=false,saveCam=()=>{},h=0;
+let CFG={api:''},VERS={live:1,versions:[{n:1}]},shown=1,live=1,pass=null,busy=false,saveCam=()=>{},getView=null,h=0,me='';
 const fastUntil=()=>+(sess.get('bacari-fast')||0);
 const has=n=>VERS.versions.some(v=>v.n===n);
 const api=body=>fetch(CFG.api,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(body)}).then(r=>r.json());
 const say=t=>{$('#s-status').textContent=t||'';};
+const toast=(msg,ms)=>{const t=document.createElement('p');t.className='toast';t.setAttribute('role','status');t.textContent=msg;wrap.appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),500);},ms||5000);};
+// each person signs in with their own passcode; the server says whose it is, so suggestions carry the right name
+const setMe=name=>{if(!name)return;me=name;store.set(NAME,name);$('#s-from').value=name;$('#s-fromw').hidden=true;
+  const w=$('#s-who');w.hidden=false;w.innerHTML='Signed in as <strong>'+esc(name)+'</strong>.';};
+const clearMe=()=>{me='';$('#s-fromw').hidden=false;$('#s-who').hidden=true;};
 const goTo=n=>{if(n===live)history.replaceState(null,'',location.pathname);else location.hash='v'+n;location.reload();};
 
 const drawBar=()=>{const el=$('#vbar');if(shown===live){el.hidden=true;return;}
@@ -342,12 +364,12 @@ const drawVersions=()=>{const list=VERS.versions.slice().sort((a,b)=>b.n-a.n);if
   $('#v-list').innerHTML=list.map(v=>`<li><div class="vrow"><div><p><strong>Version ${v.n}</strong> ${v.n===live?'<span class="chip">Live</span>':''} ${v.n===shown&&shown!==live?'<span class="chip new">Showing now</span>':''}</p><p class="meta">${esc(v.date||'')}${v.by?' · requested by '+esc(v.by):''}</p><p>${esc(v.summary||'')}</p></div><div class="row">${v.n!==shown?`<button class="b" data-view="${v.n}">View</button>`:''}${v.n!==live&&CFG.api?`<button class="b solid" data-make="${v.n}">Make live</button>`:''}</div></div></li>`).join('');};
 const makeLive=n=>{if(busy)return;if(!pass){$('#suggest').scrollIntoView();say('Enter the passcode first, then choose the version again.');$('#s-code').focus();return;}
   busy=true;say('Switching the live version…');
-  api({action:'setlive',passcode:pass,version:n,from:store.get(NAME)||'Robert'}).then(r=>{busy=false;
+  api({action:'setlive',passcode:pass,version:n,from:me||store.get(NAME)||'Robert'}).then(r=>{busy=false;
     if(r&&r.ok){sess.set('bacari-patio-live',JSON.stringify({n:n,t:Date.now()}));live=n;goTo(n);}
     else if(!locked(r))say('Could not switch versions. Try again.');},()=>{busy=false;say('Could not reach the server. Try again in a moment.');});};
 const locked=r=>{if(r&&r.error==='passcode'){store.del(PASS);pass=null;showLock('That passcode is not right.');return true;}
   if(r&&r.error==='locked'){showLock('Too many wrong tries. Wait 15 minutes and try again.');return true;}return false;};
-const showLock=msg=>{$('#s-lock').hidden=false;$('#s-form').hidden=true;$('#s-list').innerHTML='';$('#s-q').innerHTML='';$('#s-hist').hidden=true;$('#s-code').value='';say(msg||'Enter the passcode to send suggestions.');};
+const showLock=msg=>{clearMe();$('#s-lock').hidden=false;$('#s-form').hidden=true;$('#s-list').innerHTML='';$('#s-q').innerHTML='';$('#s-hist').hidden=true;$('#s-code').value='';say(msg||'Sign in with your passcode to send suggestions.');};
 const card=s=>`<p class="meta">${when(s.time)} · ${esc(s.from)}${s.note?' · about '+esc(s.note):''}</p><p>${esc(s.text)}</p><span class="chip ${s.status==='new'?'new':''}">${esc(STATUS[s.status]||s.status)}</span>${s.reply?`<p class="reply"><strong>Claude:</strong> ${esc(s.reply)}</p>`:''}`;
 const drawList=items=>{items=items||[];const qs=items.filter(s=>s.status==='question'),rest=items.filter(s=>s.status!=='question');
   // questions from Claude stay in view with a reply box; don't redraw them while someone is typing an answer
@@ -368,29 +390,73 @@ const startRec=btn=>{const ta=document.getElementById(btn.dataset.for);if(!ta)re
   try{r.start();}catch(x){say('Could not start recording. Try again.');rec=null;return;}
   btn.setAttribute('aria-pressed','true');btn.textContent='■ Stop';say('Listening… talk, then press Stop.');};
 document.addEventListener('click',e=>{const b=e.target.closest('button.mic');if(b)startRec(b);});
+// voice suggestion straight from the model: record, then send the audio (plus the browser's own transcript when it can make one,
+// and the camera view) as a new suggestion. Nothing is shown while talking; it lands in the list below.
+const MR=window.MediaRecorder;
+const mic={on:false,rec:null,sr:null,chunks:[],words:'',t0:0,timer:null,stream:null,cancel:false};
+const mmLab=()=>$('#mm-lab'),mmBtn=()=>$('#mm-rec');
+const mmIdle=t=>{const b=mmBtn();b.classList.remove('rec');b.setAttribute('aria-pressed','false');b.disabled=false;mmLab().textContent=t||'Record a suggestion';$('#mm-cancel').hidden=true;};
+const viewText=()=>{if(!getView)return'';const v=getView();
+  return '\n\n(Recorded on version '+shown+' while looking at the model from about x '+v.p[0]+', height '+v.p[1]+', z '+v.p[2]+' toward x '+v.t[0]+', height '+v.t[1]+', z '+v.t[2]+'.)';};
+const blobData=b=>new Promise((ok,no)=>{const f=new FileReader();f.onload=()=>ok(f.result);f.onerror=no;f.readAsDataURL(b);});
+const micStart=async()=>{
+  if(!pass){toast('Sign in first, just below the model.');$('#suggest').scrollIntoView({behavior:reduce?'auto':'smooth'});setTimeout(()=>$('#s-code').focus(),400);return;}
+  if(!MR||!navigator.mediaDevices){toast('This browser cannot record audio. Type the suggestion below instead.');return;}
+  let stream;try{stream=await navigator.mediaDevices.getUserMedia({audio:true});}catch(e){toast('The microphone is blocked. Allow microphone access for this site, then try again.',7000);return;}
+  const type=['audio/webm;codecs=opus','audio/mp4','audio/webm','audio/ogg'].find(t=>MR.isTypeSupported&&MR.isTypeSupported(t))||'';
+  const opt={audioBitsPerSecond:32000};if(type)opt.mimeType=type;let rec;try{rec=new MR(stream,opt);}catch(x){rec=new MR(stream);}
+  Object.assign(mic,{on:true,rec,stream,chunks:[],words:'',t0:Date.now(),cancel:false,sr:null});
+  rec.ondataavailable=e=>{if(e.data&&e.data.size)mic.chunks.push(e.data);};
+  rec.onstop=()=>{stream.getTracks().forEach(t=>t.stop());micSend();};
+  rec.start(1000);
+  if(SR){try{const r=new SR();r.lang='en-US';r.continuous=true;r.interimResults=false;
+    r.onresult=e=>{let t='';for(let i=0;i<e.results.length;i++)if(e.results[i].isFinal)t+=e.results[i][0].transcript+' ';mic.words=t.trim();};
+    r.onerror=()=>{};r.onend=()=>{if(mic.on&&mic.sr===r)try{r.start();}catch(x){}};mic.sr=r;r.start();}catch(x){mic.sr=null;}}
+  const b=mmBtn();b.classList.add('rec');b.setAttribute('aria-pressed','true');$('#mm-cancel').hidden=false;
+  const tick=()=>{const s=Math.floor((Date.now()-mic.t0)/1000);mmLab().innerHTML='<span class="dot">●</span> '+Math.floor(s/60)+':'+String(s%60).padStart(2,'0')+' · tap to send';
+    if(s>=240)micStop();};
+  tick();mic.timer=setInterval(tick,500);};
+const micStop=cancel=>{if(!mic.on)return;mic.on=false;mic.cancel=!!cancel;clearInterval(mic.timer);
+  const r=mic.sr;mic.sr=null;if(r)try{r.stop();}catch(x){}
+  mmBtn().disabled=true;mmLab().textContent=cancel?'Cancelled':'Sending…';$('#mm-cancel').hidden=true;
+  setTimeout(()=>{try{mic.rec.stop();}catch(x){}},cancel?0:700);};
+const micSend=async()=>{
+  if(mic.cancel){mmIdle();return;}
+  const blob=new Blob(mic.chunks,{type:(mic.rec&&mic.rec.mimeType)||'audio/webm'});
+  if(Date.now()-mic.t0<1500||!blob.size){mmIdle();toast('That was too short. Tap, talk, then tap again to send.');return;}
+  let data='';try{data=await blobData(blob);}catch(e){}
+  const words=mic.words.trim(),text=(words||'(voice note: listen to the audio link in column I)')+viewText();
+  const from=me||store.get(NAME)||'Robert';
+  api({action:'suggest',passcode:pass,from:from,note:'Voice note from the model',text:text,version:shown,audio:data?{type:blob.type,data:data}:null}).then(r=>{
+    if(r&&r.ok){mmIdle();drawList(r.items);sess.set('bacari-fast',String(Date.now()+20*60e3));
+      toast('Sent. Claude is starting on it; scroll down to see it.',6000);}
+    else{mmIdle();if(!locked(r))toast('Could not send the recording. Try again.');}},
+    ()=>{mmIdle();toast('Could not reach the server. Try again in a moment.');});};
+document.addEventListener('click',e=>{if(e.target.closest('#mm-rec')){if(mic.on)micStop();else if(!mmBtn().disabled)micStart();}
+  else if(e.target.closest('#mm-cancel'))micStop(true);});
 const showForm=()=>{$('#s-lock').hidden=true;$('#s-form').hidden=false;say('');
-  api({action:'list',passcode:pass}).then(r=>{if(r&&r.ok)drawList(r.items);else locked(r);},()=>say('Could not load earlier suggestions. You can still send one.'));};
+  api({action:'list',passcode:pass}).then(r=>{if(r&&r.ok){setMe(r.name);drawList(r.items);}else locked(r);},()=>say('Could not load earlier suggestions. You can still send one.'));};
 const setupPanels=M=>{drawBar();drawVersions();
   $('#v-list').addEventListener('click',e=>{const v=e.target.closest('[data-view]'),m=e.target.closest('[data-make]');if(v)goTo(+v.dataset.view);else if(m)makeLive(+m.dataset.make);});
   if(!CFG.api)return;
-  $('#suggest').hidden=false;
+  $('#suggest').hidden=false;$('#mapmic').hidden=false;
   if(!SR)document.documentElement.classList.add('nomic');
   $('#s-note').innerHTML='<option value="">The whole model</option>'+M.notes.map((n,i)=>`<option value="${i+1}. ${esc(n.t)}">${i+1}. ${esc(n.t)}</option>`).join('');
   $('#s-from').value=store.get(NAME)||'Robert';
   pass=store.get(PASS);if(pass)showForm();else showLock();
   $('#s-lock').addEventListener('submit',e=>{e.preventDefault();const code=$('#s-code').value.trim();if(!code||busy)return;busy=true;say('Checking…');
-    api({action:'check',passcode:code}).then(r=>{busy=false;if(r&&r.ok){pass=code;store.set(PASS,code);$('#s-code').value='';showForm();}else if(!locked(r))say('Could not check the passcode. Try again.');},()=>{busy=false;say('Could not reach the server. Try again in a moment.');});});
+    api({action:'check',passcode:code}).then(r=>{busy=false;if(r&&r.ok){pass=code;store.set(PASS,code);$('#s-code').value='';setMe(r.name);showForm();}else if(!locked(r))say('Could not check the passcode. Try again.');},()=>{busy=false;say('Could not reach the server. Try again in a moment.');});});
   $('#s-text').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();$('#s-form').requestSubmit();}});
   // answering a question from Claude
   $('#s-q').addEventListener('keydown',e=>{if(e.target.tagName==='TEXTAREA'&&e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();e.target.form.requestSubmit();}});
   $('#s-q').addEventListener('submit',e=>{e.preventDefault();stopRec();const f=e.target,t=f.querySelector('textarea'),text=t.value.trim(),btn=f.querySelector('button[type=submit]');
     if(!text){t.focus();return;}if(busy)return;busy=true;btn.disabled=true;say('Sending your answer…');
-    api({action:'reply',passcode:pass,id:f.dataset.id,from:$('#s-from').value.trim()||'Robert',text:text}).then(r=>{busy=false;btn.disabled=false;
+    api({action:'reply',passcode:pass,id:f.dataset.id,from:me||$('#s-from').value.trim()||'Robert',text:text}).then(r=>{busy=false;btn.disabled=false;
       if(r&&r.ok){t.value='';t.blur();drawList(r.items);sess.set('bacari-fast',String(Date.now()+20*60e3));say('Answer sent. Claude is picking it up now; the model will update on this page by itself.');}
       else if(!locked(r))say('Could not send your answer. Try again.');},()=>{busy=false;btn.disabled=false;say('Could not reach the server. Try again in a moment.');});});
-  $('#s-relock').addEventListener('click',()=>{store.del(PASS);pass=null;showLock('Locked on this device.');});
+  $('#s-relock').addEventListener('click',()=>{store.del(PASS);store.del(NAME);pass=null;showLock('Signed out on this device.');});
   $('#s-form').addEventListener('submit',e=>{e.preventDefault();stopRec();const text=$('#s-text').value.trim();if(busy)return;if(!text){say('Write what you would like changed first.');$('#s-text').focus();return;}
-    const from=$('#s-from').value.trim()||'Robert';store.set(NAME,from);busy=true;$('#s-send').disabled=true;say('Sending…');
+    const from=me||$('#s-from').value.trim()||'Robert';store.set(NAME,from);busy=true;$('#s-send').disabled=true;say('Sending…');
     api({action:'suggest',passcode:pass,from:from,note:$('#s-note').value,text:text,version:shown}).then(r=>{busy=false;$('#s-send').disabled=false;
       if(r&&r.ok){$('#s-text').value='';drawList(r.items);sess.set('bacari-fast',String(Date.now()+20*60e3));say('Sent. Claude is starting on it now; the model will update on this page by itself in a few minutes.');}
       else if(!locked(r))say('Could not send. Your text is still here; try again.');},()=>{busy=false;$('#s-send').disabled=false;say('Could not reach the server. Your text is still here; try again in a moment.');});});
