@@ -1,6 +1,8 @@
 /* Bacari Austin design concept: model version 4.
    One file per version. The page (../index.html) loads the live version and calls build().
-   CHANGES FROM VERSION 3: the W 6th street gate is drawn as a double gate standing partly open, so it reads as a door.
+   CHANGES FROM VERSION 3 (Robert's suggestions S001-S003): bar stools rebuilt as four-leg rattan bistro bar stools with a woven
+   seat at 30 in, footrest ring and full hoop back; 12 more two-tops (front terrace lawn, a front row on the low deck, the medium
+   deck and the garden paving), keeping aisles of about 3½ ft or more for staff; the two smaller trees with brown tops are now green.
    EARLIER, FROM VERSION 2: tables and chairs restyled to match Bacari's Los Angeles patios (Silver Lake, W 3rd):
    square walnut-top tables on black iron bases, French rattan bistro chairs with woven seats, navy built-in banquettes with
    striped cushions and bright throw pillows along the fences, rattan-back bar stools.
@@ -43,7 +45,7 @@ notes:[
  {p:[137.4,12,84],t:'Wooden fence around the property',d:'A wooden fence about 6½ ft tall follows the whole property line: 137 ft along W 6th, 130 ft down each side, and along the back alley. It has a guest gate on W 6th and a wider service gate on the alley. On the east side it stands on the retaining edge of the neighbor\'s higher parking lot.',f:'Check: Austin\'s fence height limits, and whether a solid fence on W 6th should have openings so the patio shows from the street.'},
  {p:[73,3.5,79],t:'Existing landscaping, kept',d:'Landscaping that shows in the site videos, worked into the garden: the turf lawn, the teal block walls with terracotta pots on top, steel planters with agaves and yuccas, cedar slat screens, the stamped concrete patio, mulch beds, bamboo along the west edge, and the lawn under the front oak.',f:'Check: which of these Robert wants to keep. They are placed where they fit the concept, not exactly where they stand today.'}
 ,
-{p:[102,3,97],t:'Tables and chairs like Bacari LA',d:'Furniture follows Bacari\'s Los Angeles patios: 30-inch square walnut tables on black iron bases, pushed together for four or six; French rattan bistro chairs with woven seats; navy built-in banquettes with striped cushions and bright pillows along the east fence and the back wall; rattan-back stools at the bar.',f:'Check: seat count per deck against the occupant load, and exact chair and table models.'}
+{p:[102,3,97],t:'Tables and chairs like Bacari LA',d:'Furniture follows Bacari\'s Los Angeles patios: 30-inch square walnut tables on black iron bases, pushed together for four or six; French rattan bistro chairs with woven seats; navy built-in banquettes with striped cushions and bright pillows along the east fence and the back wall; rattan bistro bar stools with woven seats, footrest rings and hoop backs at the bar. Version 4 adds two-tops on the front terrace lawn, a front row on the low deck, and more on the medium deck and the garden paving, about 140 seats with the bar, keeping aisles of about 3½ ft or more so staff can get through.',f:'Check: seat count per deck against the occupant load, and the exact bar stool, chair and table models used at the other restaurants.'}
 ],
 tags:[{p:[124,9.5,-6],t:'486 ft · sidewalk',h:1},{p:[22,9.2,8],t:'486 ft · front terrace',h:1},{p:[104,1,62],t:'477.5 ft · patio',h:1},{p:[104,-.8,141],t:'476 ft · alley',h:1},{p:[164,7,80],t:'483 ft · neighbor parking',h:1},{p:[92,7,3],t:'Retaining wall + bank',h:1},{p:[70,9.5,-26],t:'W 6th St'},{p:[-88,3,70],t:'Pressler St'},{p:[30,60,170],t:'Pressler Apartments'},{p:[160,42,196],t:'Parking garage'},{p:[-30,31,32],t:'Title company'},{p:[8,-.8,141],t:'Back alley'},{p:[226,35,66],t:'Salon + print shop'},{p:[33,26,58],t:'Bar Peached building'}],
 views:{overview:[[250,125,165],[72,0,66]],deck:[[61,16,90],[102,2,58]],bar:[[80,5.4,96],[110,5,44]],street:[[64,24,-32],[92,0,72]],up:[[104,5.5,98],[74,7,8]],plan:[[70,240,65.5],[70,0,65]]},
@@ -100,14 +102,7 @@ build(kit){
     for(let i=0;i<=n;i++){const a=i/n,b=Math.min(1,(i+1)/n),xa=x0+(x1-x0)*a,xb=x0+(x1-x0)*b,za=z0+(z1-z0)*a,zb=z0+(z1-z0)*b,y=gy((za+zb)/2);
       if(i<n){ax?box(xa-.15,xa+.15,y-.6,y+6.5,za,zb,m||fenceM,fences):box(xa,xb,y-.6,y+6.5,za-.15,za+.15,m||fenceM,fences);}
       box(xa-.3,xa+.3,gy(za)-.6,gy(za)+7,za-.3,za+.3,fenceP,fences);}};
-  fence(0,.3,41,.3,()=>8.5);// W 6th street gate: two 3 ft leaves hinged on the posts, swung partly open into the front terrace
-  const gateFrame=mat(0x5a3d26);
-  [[41,1],[47,-1]].forEach(([hx,dir])=>{const leaf=new T.Group();leaf.position.set(hx,0,.3);leaf.rotation.y=-dir*.55;fences.add(leaf);
-    const L=2.95,y0=8.1,y1=14.6;
-    for(let i=0;i<6;i++){const a=.05+i*L/6,p=dir*a,q=dir*(a+L/6-.06);box(Math.min(p,q),Math.max(p,q),y0,y1,-.08,.08,gateM,leaf);}
-    [y0+.6,y1-.6].forEach(y=>box(dir>0?0:-L,dir>0?L:0,y-.18,y+.18,-.14,.14,gateFrame,leaf));
-    box(dir>0?.05:-.35,dir>0?.35:-.05,y0,y1,-.14,.14,gateFrame,leaf);
-    box(dir*(L-.35)-.06,dir*(L-.35)+.06,11,11.9,.14,.3,C.rail,leaf);});fence(47,.3,137,.3,()=>8.5);
+  fence(0,.3,41,.3,()=>8.5);fence(41,.3,47,.3,()=>8.5,gateM);fence(47,.3,137,.3,()=>8.5);
   fence(.3,.3,.3,130,gW);fence(137.4,.3,137.4,130,gE);
   fence(0,129.7,30,129.7,()=>-1.9);fence(30,129.7,44,129.7,()=>-1.9,gateM);fence(44,129.7,137,129.7,()=>-1.9);
   for(let z=0;z<130;z+=10)box(137,138.2,-3,gE(z+5),z,Math.min(z+10,130),cmu);
@@ -180,7 +175,8 @@ build(kit){
   const IN={};const inst=(k,geo,m)=>{IN[k]=IN[k]||{geo,m,list:[]};return IN[k];};
   const O=new T.Object3D();
   const add=(k,geo,m,x,y,z,ry,sx,sy,sz,rx)=>{O.position.set(x,y,z);O.rotation.set(rx||0,ry||0,0);O.scale.set(sx||1,sy||1,sz||1);O.updateMatrix();inst(k,geo,m).list.push(O.matrix.clone());};
-  const G={box:new T.BoxGeometry(1,1,1),cyl:new T.CylinderGeometry(.5,.5,1,10),hoop:new T.TorusGeometry(.62,.06,6,16,Math.PI)};
+  const G={box:new T.BoxGeometry(1,1,1),cyl:new T.CylinderGeometry(.5,.5,1,10),hoop:new T.TorusGeometry(.62,.06,6,16,Math.PI),foot:new T.TorusGeometry(.58,.045,6,20)};
+  G.foot.rotateX(Math.PI/2);
   G.cyl.translate(0,.5,0);G.box.translate(0,.5,0);
   const F={walnut:mat(0x5a3823),iron:mat(0x1d1d1f),rattan:mat(0xa77445),weave:mat(0x8c8578),navy:mat(0x2b3d5e),cush:mat(0xcfc8b8)};
   const pillowM=[0xd6457a,0x2f8f8a,0xe08a2e,0xe3c04a,0x3b5fa8,0xb33b3b].map(c=>mat(c));
@@ -215,16 +211,24 @@ build(kit){
   const planter=(x0,x1,z0,z1)=>{box(x0,x1,0,2.2,z0,z1,C.corten);const cx=(x0+x1)/2,cz=(z0+z1)/2,L=Math.max(x1-x0,z1-z0),along=x1-x0>z1-z0;
     for(let k=-1;k<=1;k+=2)agave(along?cx+k*L/4:cx,2.2,along?cz:cz+k*L/4);};
   [[72,79,0],[72,97,0],[82,98,0],[102,97,0],[111,88,Math.PI/2],[111,58,Math.PI/2],[103,49,0]].forEach(([x,z,r])=>table(x,.22,z,4,true,r));
-  // bar stools: rattan seat and low back, iron footrest ring
-  stoolRing.forEach(a=>{const x=BX+Math.cos(a)*8.6,z=BZ+Math.sin(a)*8.6,ry=Math.atan2(-Math.cos(a),-Math.sin(a));
-    add('sl',G.cyl,F.iron,x,.3,z,0,.18,2.8,.18);add('ss',G.cyl,F.weave,x,3.1,z,0,1.3,.2,1.3);
-    const [bx,bz]=loc(x,z,ry,0,-.74);add('sb',G.box,F.rattan,bx,3.3,bz,ry,1.1,.9,.1,-.1);});
+  // bar stools: four-leg French rattan bistro bar stools, woven seat at 30 in (for the 42-44 in bar top), footrest ring, hoop back
+  stoolRing.forEach(a=>{const x=BX+Math.cos(a)*8.6,z=BZ+Math.sin(a)*8.6,ry=Math.atan2(-Math.cos(a),-Math.sin(a)),y=.31;
+    [[-.48,-.48],[.48,-.48],[-.48,.48],[.48,.48]].forEach(([dx,dz])=>{const [px,pz]=loc(x,z,ry,dx,dz);add('sl',G.cyl,F.rattan,px,y,pz,0,.13,2.35,.13);});
+    add('sf',G.foot,F.rattan,x,y+.95,z,ry);
+    add('ss',G.cyl,F.weave,x,y+2.35,z,0,1.45,.16,1.45);add('sr',G.foot,F.rattan,x,y+2.45,z,ry,1.22,1,1.22);
+    [[-.58],[.58]].forEach(([dx])=>{const [px,pz]=loc(x,z,ry,dx,-.6);add('su',G.cyl,F.rattan,px,y+2.45,pz,0,.1,1.25,.1);});
+    const [bx,bz]=loc(x,z,ry,0,-.62);add('sb',G.box,F.weave,bx,y+2.65,bz,ry,1.1,.95,.08,-.1);
+    add('sh',G.hoop,F.rattan,bx,y+3.65,bz,ry,.95,.8,1);});
   const flush=()=>{Object.values(IN).forEach(({geo,m,list})=>{const im=new T.InstancedMesh(geo,m,list.length);list.forEach((mx,i)=>im.setMatrixAt(i,mx));
     im.castShadow=true;im.receiveShadow=true;scene.add(im);});};
   planter(96,102,53,55.5);planter(80,86,61.5,64);planter(100,106,86,88.5);planter(106,112,65,67.5);planter(58,64,97,99.5);
   [[68,100],[116,98],[111,44],[87,46.5],[98,100],[106,78.5],[68,61.5]].forEach(([x,z])=>{const sh=put(new T.SphereGeometry(1.6,10,8),C.shrub,x,1.1,z);sh.scale.y=.7;});
   for(let x=70;x<=102;x+=8){table(x,5,11,2);if(x<88||x>96)table(x,5,29,2);}
-  [[115,12],[128,12],[115,31],[128,31]].forEach(([x,z])=>table(x,3,z,2));
+  [[115,12],[128,12],[115,31],[128,31],[133,22]].forEach(([x,z])=>table(x,3,z,2));
+  // version 4: more two-tops, keeping staff aisles of about 3½ ft or more
+  [[16,12],[16,27],[54,10],[54,30]].forEach(([x,z])=>table(x,8.58,z,2));            // front terrace lawn
+  [68,76,84,100,108,116].forEach(x=>table(x,1.5,108,2));                              // front row on the low deck, clear of both stairs
+  table(110,.2,99,2);                                                                  // garden paving, south-east
   for(let z=48;z<=96;z+=8)two(129.6,3,z,-Math.PI/2,true);banq(132.4,45,132.4,99,3,-Math.PI/2);
   for(let x=64;x<=120;x+=8)two(x,1.5,117.4,Math.PI,true);banq(61,120.2,123,120.2,1.5,Math.PI);
   [[30,89.5,Math.PI/2],[38,89.5,Math.PI/2],[50,89.5,Math.PI/2],[60,82,0],[60,72,0]].forEach(([x,z,r])=>table(x,10,z,2,false,r));
@@ -271,7 +275,7 @@ build(kit){
   const oak=(x,z,k,leaf,y0)=>{k=k||1;y0=y0||0;const t=put(new T.CylinderGeometry(.9*k,1.3*k,13,10),C.trunk,x,y0+6.5,z,trees);t.rotation.z=.06;
     [[0,19,0,11],[6,17,3,8],[-6,18,-2,9],[2,21,-6,8],[-3,16,6,8]].forEach(([dx,y,dz,r])=>{const c=put(new T.IcosahedronGeometry(r*k,1),leaf||treeMat,x+dx*k,y0+y*(k>1?1.08:1),z+dz*k,trees);c.scale.y=.55;c.castShadow=true;});};
   const fallMat=mat(0xb98a3e,{transparent:true,opacity:.35,depthWrite:false});
-  oak(32,18,1.6,null,8.5);oak(17,108,1.8,null,-1.2);oak(100,14,1.1,fallMat,0);oak(133,99,.9,fallMat,0);
+  oak(32,18,1.6,null,8.5);oak(17,108,1.8,null,-1.2);oak(100,14,1.1,null,0);oak(133,99,.9,null,0);
 
   // string lights radiating from the bar
   const bulbMat=new T.MeshBasicMaterial({color:0xfff4d6});
@@ -289,3 +293,4 @@ build(kit){
   return {fences,walls,trees,treeMats:[treeMat,fallMat],bulbMat,lamps};
 }
 };
+
