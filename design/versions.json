@@ -1,6 +1,6 @@
 {
- "live": 9,
- "stamp": "9",
+ "live": 10,
+ "stamp": "10",
  "versions": [
   {
    "n": 1,
@@ -55,6 +55,12 @@
    "date": "Nov 23, 2026",
    "by": "Robert",
    "summary": "More planters throughout: olive and boxwood planters at the deck corners and by the gate and steps, hanging troughs on the upper deck railing, and a planted trough along the W 6th retaining wall."
+  },
+  {
+   "n": 10,
+   "date": "Nov 23, 2026",
+   "by": "Robert",
+   "summary": "The planters are now big corten boxes, about 3½ ft square and 3 ft tall, each with a small tree (olive or Texas mountain laurel) and boxwood around the trunk."
   }
  ]
 }
