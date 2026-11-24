@@ -95,6 +95,10 @@ button.b:disabled{opacity:.55;cursor:progress;transform:none}
 .pin{transition:background-color .15s ease}.pin:hover{background:#1d3d5e}
 .vbar button.b:hover{background:rgba(8,34,59,.1)}
 .toast{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:4;background:#08223b;color:#f3efe5;font:600 14.5px "Public Sans",sans-serif;padding:8px 16px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.3);transition:opacity .4s ease}
+.log li.q{border:2px solid var(--accent)}
+.rep{display:grid;gap:8px;margin:10px 0 0}.rep textarea{min-height:64px}
+button.mic[aria-pressed=true]{background:#b3261e;border-color:#b3261e;color:#fff}
+.nomic button.mic{display:none}
 .kbd{font-size:13.5px;color:var(--muted);margin:6px 0 0}
 .vbar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:10px max(5vw,16px);background:#d3c29a;color:#08223b;font-size:15px}
 .vbar p{margin:0;flex:1 1 220px}
@@ -140,10 +144,11 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
       <div><label for="s-from">Your name</label><input id="s-from" maxlength="60"></div>
       <div><label for="s-note">About</label><select id="s-note"></select></div>
     </div>
-    <div><label for="s-text">What should change?</label><textarea id="s-text" rows="4" maxlength="4000" placeholder="Example: make the bar square and move it 10 feet toward the back wall."></textarea><p class="kbd">Press Enter to send · Shift + Enter for a new line</p></div>
-    <div class="row"><button class="b solid" type="submit" id="s-send">Send suggestion</button><button class="b" type="button" id="s-relock">Lock this device</button></div>
+    <div><label for="s-text">What should change?</label><textarea id="s-text" rows="4" maxlength="4000" placeholder="Example: make the bar square and move it 10 feet toward the back wall."></textarea><p class="kbd">Type or press Record voice and talk. Press Enter to send · Shift + Enter for a new line</p></div>
+    <div class="row"><button class="b mic" type="button" data-for="s-text" aria-pressed="false">● Record voice</button><button class="b solid" type="submit" id="s-send">Send suggestion</button><button class="b" type="button" id="s-relock">Lock this device</button></div>
   </form>
   <p id="s-status" role="status" aria-live="polite"></p>
+  <ol id="s-q" class="log" aria-label="Questions from Claude"></ol>
   <details id="s-hist" class="hist" hidden><summary id="s-sum">Earlier suggestions</summary>
   <ol id="s-list" class="log" aria-label="Suggestions so far"></ol>
   </details>
@@ -341,22 +346,49 @@ const makeLive=n=>{if(busy)return;if(!pass){$('#suggest').scrollIntoView();say('
     else if(!locked(r))say('Could not switch versions. Try again.');},()=>{busy=false;say('Could not reach the server. Try again in a moment.');});};
 const locked=r=>{if(r&&r.error==='passcode'){store.del(PASS);pass=null;showLock('That passcode is not right.');return true;}
   if(r&&r.error==='locked'){showLock('Too many wrong tries. Wait 15 minutes and try again.');return true;}return false;};
-const showLock=msg=>{$('#s-lock').hidden=false;$('#s-form').hidden=true;$('#s-list').innerHTML='';$('#s-hist').hidden=true;$('#s-code').value='';say(msg||'Enter the passcode to send suggestions.');};
-const drawList=items=>{items=items||[];$('#s-hist').hidden=!items.length;$('#s-sum').textContent='Earlier suggestions ('+items.length+')';$('#s-list').innerHTML=(items||[]).map(s=>`<li><p class="meta">${when(s.time)} · ${esc(s.from)}${s.note?' · about '+esc(s.note):''}</p><p>${esc(s.text)}</p><span class="chip ${s.status==='new'?'new':''}">${esc(STATUS[s.status]||s.status)}</span>${s.reply?`<p class="reply"><strong>Claude:</strong> ${esc(s.reply)}</p>`:''}</li>`).join('');};
+const showLock=msg=>{$('#s-lock').hidden=false;$('#s-form').hidden=true;$('#s-list').innerHTML='';$('#s-q').innerHTML='';$('#s-hist').hidden=true;$('#s-code').value='';say(msg||'Enter the passcode to send suggestions.');};
+const card=s=>`<p class="meta">${when(s.time)} · ${esc(s.from)}${s.note?' · about '+esc(s.note):''}</p><p>${esc(s.text)}</p><span class="chip ${s.status==='new'?'new':''}">${esc(STATUS[s.status]||s.status)}</span>${s.reply?`<p class="reply"><strong>Claude:</strong> ${esc(s.reply)}</p>`:''}`;
+const drawList=items=>{items=items||[];const qs=items.filter(s=>s.status==='question'),rest=items.filter(s=>s.status!=='question');
+  // questions from Claude stay in view with a reply box; don't redraw them while someone is typing an answer
+  const typing=[...document.querySelectorAll('#s-q textarea')].some(t=>t.value.trim()||t===document.activeElement);
+  if(!typing)$('#s-q').innerHTML=qs.map(s=>`<li class="q">${card(s)}<form class="rep" data-id="${esc(s.id)}"><label class="lab" for="r-${esc(s.id)}">Your answer</label><textarea id="r-${esc(s.id)}" rows="2" maxlength="2000"></textarea><div class="row"><button class="b mic" type="button" data-for="r-${esc(s.id)}" aria-pressed="false">● Record voice</button><button class="b solid" type="submit">Send answer</button></div></form></li>`).join('');
+  $('#s-hist').hidden=!rest.length;$('#s-sum').textContent='Earlier suggestions ('+rest.length+')';$('#s-list').innerHTML=rest.map(s=>`<li>${card(s)}</li>`).join('');};
+// voice: the browser turns speech into text in the box as he talks, so he can check it before sending
+const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec=null,recBtn=null;
+const stopRec=()=>{if(rec)rec.stop();};
+const startRec=btn=>{const ta=document.getElementById(btn.dataset.for);if(!ta)return;
+  if(rec){const same=recBtn===btn;stopRec();if(same)return;}
+  const r=new SR();rec=r;recBtn=btn;r.lang='en-US';r.continuous=true;r.interimResults=true;
+  const base=ta.value.trim()?ta.value.trim()+' ':'';
+  r.onresult=e=>{let t='';for(let i=0;i<e.results.length;i++)t+=e.results[i][0].transcript;ta.value=base+t.trim();};
+  r.onerror=e=>{say(e.error==='not-allowed'||e.error==='service-not-allowed'?'The microphone is blocked. Allow microphone access for this site in the browser, then try again.':e.error==='no-speech'?'No speech heard. Press Record voice and try again.':'Recording stopped. Press Record voice to try again.');};
+  r.onend=()=>{btn.setAttribute('aria-pressed','false');btn.textContent='● Record voice';if(rec===r){rec=null;recBtn=null;}
+    if(ta.value.trim())say('Check the text, fix anything it misheard, then send.');};
+  try{r.start();}catch(x){say('Could not start recording. Try again.');rec=null;return;}
+  btn.setAttribute('aria-pressed','true');btn.textContent='■ Stop';say('Listening… talk, then press Stop.');};
+document.addEventListener('click',e=>{const b=e.target.closest('button.mic');if(b)startRec(b);});
 const showForm=()=>{$('#s-lock').hidden=true;$('#s-form').hidden=false;say('');
   api({action:'list',passcode:pass}).then(r=>{if(r&&r.ok)drawList(r.items);else locked(r);},()=>say('Could not load earlier suggestions. You can still send one.'));};
 const setupPanels=M=>{drawBar();drawVersions();
   $('#v-list').addEventListener('click',e=>{const v=e.target.closest('[data-view]'),m=e.target.closest('[data-make]');if(v)goTo(+v.dataset.view);else if(m)makeLive(+m.dataset.make);});
   if(!CFG.api)return;
   $('#suggest').hidden=false;
+  if(!SR)document.documentElement.classList.add('nomic');
   $('#s-note').innerHTML='<option value="">The whole model</option>'+M.notes.map((n,i)=>`<option value="${i+1}. ${esc(n.t)}">${i+1}. ${esc(n.t)}</option>`).join('');
   $('#s-from').value=store.get(NAME)||'Robert';
   pass=store.get(PASS);if(pass)showForm();else showLock();
   $('#s-lock').addEventListener('submit',e=>{e.preventDefault();const code=$('#s-code').value.trim();if(!code||busy)return;busy=true;say('Checking…');
     api({action:'check',passcode:code}).then(r=>{busy=false;if(r&&r.ok){pass=code;store.set(PASS,code);$('#s-code').value='';showForm();}else if(!locked(r))say('Could not check the passcode. Try again.');},()=>{busy=false;say('Could not reach the server. Try again in a moment.');});});
   $('#s-text').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();$('#s-form').requestSubmit();}});
+  // answering a question from Claude
+  $('#s-q').addEventListener('keydown',e=>{if(e.target.tagName==='TEXTAREA'&&e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();e.target.form.requestSubmit();}});
+  $('#s-q').addEventListener('submit',e=>{e.preventDefault();stopRec();const f=e.target,t=f.querySelector('textarea'),text=t.value.trim(),btn=f.querySelector('button[type=submit]');
+    if(!text){t.focus();return;}if(busy)return;busy=true;btn.disabled=true;say('Sending your answer…');
+    api({action:'reply',passcode:pass,id:f.dataset.id,from:$('#s-from').value.trim()||'Robert',text:text}).then(r=>{busy=false;btn.disabled=false;
+      if(r&&r.ok){t.value='';t.blur();drawList(r.items);sess.set('bacari-fast',String(Date.now()+20*60e3));say('Answer sent. Claude is picking it up now; the model will update on this page by itself.');}
+      else if(!locked(r))say('Could not send your answer. Try again.');},()=>{busy=false;btn.disabled=false;say('Could not reach the server. Try again in a moment.');});});
   $('#s-relock').addEventListener('click',()=>{store.del(PASS);pass=null;showLock('Locked on this device.');});
-  $('#s-form').addEventListener('submit',e=>{e.preventDefault();const text=$('#s-text').value.trim();if(busy)return;if(!text){say('Write what you would like changed first.');$('#s-text').focus();return;}
+  $('#s-form').addEventListener('submit',e=>{e.preventDefault();stopRec();const text=$('#s-text').value.trim();if(busy)return;if(!text){say('Write what you would like changed first.');$('#s-text').focus();return;}
     const from=$('#s-from').value.trim()||'Robert';store.set(NAME,from);busy=true;$('#s-send').disabled=true;say('Sending…');
     api({action:'suggest',passcode:pass,from:from,note:$('#s-note').value,text:text,version:shown}).then(r=>{busy=false;$('#s-send').disabled=false;
       if(r&&r.ok){$('#s-text').value='';drawList(r.items);sess.set('bacari-fast',String(Date.now()+20*60e3));say('Sent. Claude is starting on it now; the model will update on this page by itself in a few minutes.');}
