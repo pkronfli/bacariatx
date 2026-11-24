@@ -1,6 +1,6 @@
 {
- "live": 2,
- "stamp": "2",
+ "live": 3,
+ "stamp": "3",
  "versions": [
   {
    "n": 1,
@@ -13,6 +13,12 @@
    "date": "Nov 23, 2026",
    "by": "Patrick",
    "summary": "Building and neighbors reshaped from Google Earth and the videos. Kitchen double door, hidden service corridor and restroom route placed as Robert describes. Existing landscaping added. Billboard removed."
+  },
+  {
+   "n": 3,
+   "date": "Nov 23, 2026",
+   "by": "Patrick",
+   "summary": "Tables and chairs restyled like Bacari's LA patios: walnut tables on black iron bases, rattan bistro chairs, navy banquettes with bright pillows, rattan-back bar stools."
   }
  ]
 }
