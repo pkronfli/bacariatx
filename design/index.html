@@ -85,6 +85,17 @@ h2{font-size:clamp(22px,2.6vw,30px);line-height:1.15;margin:0 0 6px;text-wrap:ba
 .foot{font-size:14px;color:var(--muted);padding-top:20px;padding-bottom:40px}
 @media(max-width:600px){.controls{flex-direction:column;align-items:stretch}.seg{justify-content:flex-start}button.b{padding:0 13px;font-size:14px}}
 [hidden]{display:none!important}
+button.b{transition:transform .08s ease,box-shadow .15s ease,background-color .15s ease,color .15s ease;box-shadow:0 1px 2px rgba(0,0,0,.12)}
+button.b:hover{background:color-mix(in srgb,var(--btn) 12%,transparent);box-shadow:0 3px 8px rgba(0,0,0,.18);transform:translateY(-1px)}
+button.b[aria-pressed=true]:hover,button.b.solid:hover{background:color-mix(in srgb,var(--btn) 85%,var(--bg))}
+button.b:active,.zb:active{transform:translateY(1px) scale(.97);box-shadow:0 0 1px rgba(0,0,0,.2)}
+button.b:disabled{opacity:.55;cursor:progress;transform:none}
+.zb{transition:transform .08s ease,background-color .15s ease}.zb:hover{background:#fff;transform:scale(1.06)}
+#key button{transition:border-color .15s ease,transform .08s ease}#key button:hover{border-color:var(--rule)}#key button:active{transform:scale(.99)}
+.pin{transition:background-color .15s ease}.pin:hover{background:#1d3d5e}
+.vbar button.b:hover{background:rgba(8,34,59,.1)}
+.toast{position:absolute;left:50%;top:14px;transform:translateX(-50%);z-index:4;background:#08223b;color:#f3efe5;font:600 14.5px "Public Sans",sans-serif;padding:8px 16px;border-radius:999px;box-shadow:0 4px 14px rgba(0,0,0,.3);transition:opacity .4s ease}
+.kbd{font-size:13.5px;color:var(--muted);margin:6px 0 0}
 .vbar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:10px max(5vw,16px);background:#d3c29a;color:#08223b;font-size:15px}
 .vbar p{margin:0;flex:1 1 220px}
 .vbar button.b{border-color:#08223b;color:#08223b;min-height:40px}
@@ -129,7 +140,7 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
       <div><label for="s-from">Your name</label><input id="s-from" maxlength="60"></div>
       <div><label for="s-note">About</label><select id="s-note"></select></div>
     </div>
-    <div><label for="s-text">What should change?</label><textarea id="s-text" rows="4" maxlength="4000" placeholder="Example: make the bar square and move it 10 feet toward the back wall."></textarea></div>
+    <div><label for="s-text">What should change?</label><textarea id="s-text" rows="4" maxlength="4000" placeholder="Example: make the bar square and move it 10 feet toward the back wall."></textarea><p class="kbd">Press Enter to send · Shift + Enter for a new line</p></div>
     <div class="row"><button class="b solid" type="submit" id="s-send">Send suggestion</button><button class="b" type="button" id="s-relock">Lock this device</button></div>
   </form>
   <p id="s-status" role="status" aria-live="polite"></p>
@@ -209,6 +220,11 @@ const start=M=>{
   ctl.enableDamping=true;ctl.dampingFactor=.08;ctl.maxPolarAngle=Math.PI/2-.03;ctl.minDistance=8;ctl.maxDistance=460;ctl.enableZoom=false;
   const fit=(pos,tgt)=>{const k=wrap.clientWidth/wrap.clientHeight<1?1.6:1;return pos.map((q,i)=>tgt[i]+(q-tgt[i])*k);};
   cam.position.set(...fit(...VIEWS.overview));ctl.target.set(...VIEWS.overview[1]);
+  // after an automatic update, come back to the same camera view
+  try{const k=JSON.parse(sess.get('bacari-cam'));if(k&&Date.now()-k.ts<120000){cam.position.set(...k.p);ctl.target.set(...k.t);}}catch(e){}
+  saveCam=()=>sess.set('bacari-cam',JSON.stringify({p:cam.position.toArray(),t:ctl.target.toArray(),ts:Date.now()}));
+  const upd=sess.get('bacari-updated');if(upd){sess.set('bacari-updated','');const t=document.createElement('p');t.className='toast';t.setAttribute('role','status');
+    t.textContent='Updated to version '+upd;wrap.appendChild(t);setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),500);},5000);}
 
   const hemi=new T.HemisphereLight(0xe4eef6,0x8a7a5c,.78);
   const sun=new T.DirectionalLight(0xfff0d8,.85);
@@ -305,7 +321,8 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;',
 const when=t=>{const d=new Date(t);return isNaN(d)?esc(t):d.toLocaleDateString(undefined,{month:'short',day:'numeric'})+', '+d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});};
 const STATUS={new:'Waiting for Claude',done:'Done',question:'Claude has a question',declined:'Not changed'};
 const PASS='bacari-patio-pass',NAME='bacari-patio-name';
-let CFG={api:''},VERS={live:1,versions:[{n:1}]},shown=1,live=1,pass=null,busy=false;
+let CFG={api:''},VERS={live:1,versions:[{n:1}]},shown=1,live=1,pass=null,busy=false,saveCam=()=>{},h=0;
+const fastUntil=()=>+(sess.get('bacari-fast')||0);
 const has=n=>VERS.versions.some(v=>v.n===n);
 const api=body=>fetch(CFG.api,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(body)}).then(r=>r.json());
 const say=t=>{$('#s-status').textContent=t||'';};
@@ -337,11 +354,12 @@ const setupPanels=M=>{drawBar();drawVersions();
   pass=store.get(PASS);if(pass)showForm();else showLock();
   $('#s-lock').addEventListener('submit',e=>{e.preventDefault();const code=$('#s-code').value.trim();if(!code||busy)return;busy=true;say('Checking…');
     api({action:'check',passcode:code}).then(r=>{busy=false;if(r&&r.ok){pass=code;store.set(PASS,code);$('#s-code').value='';showForm();}else if(!locked(r))say('Could not check the passcode. Try again.');},()=>{busy=false;say('Could not reach the server. Try again in a moment.');});});
+  $('#s-text').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();$('#s-form').requestSubmit();}});
   $('#s-relock').addEventListener('click',()=>{store.del(PASS);pass=null;showLock('Locked on this device.');});
   $('#s-form').addEventListener('submit',e=>{e.preventDefault();const text=$('#s-text').value.trim();if(busy)return;if(!text){say('Write what you would like changed first.');$('#s-text').focus();return;}
     const from=$('#s-from').value.trim()||'Robert';store.set(NAME,from);busy=true;$('#s-send').disabled=true;say('Sending…');
     api({action:'suggest',passcode:pass,from:from,note:$('#s-note').value,text:text,version:shown}).then(r=>{busy=false;$('#s-send').disabled=false;
-      if(r&&r.ok){$('#s-text').value='';drawList(r.items);say('Sent. Claude is starting on it now; the model updates in a few minutes.');}
+      if(r&&r.ok){$('#s-text').value='';drawList(r.items);sess.set('bacari-fast',String(Date.now()+20*60e3));say('Sent. Claude is starting on it now; the model will update on this page by itself in a few minutes.');}
       else if(!locked(r))say('Could not send. Your text is still here; try again.');},()=>{busy=false;$('#s-send').disabled=false;say('Could not reach the server. Your text is still here; try again in a moment.');});});
 };
 
@@ -353,14 +371,24 @@ const fail=()=>{wrap.innerHTML='<p class="err">The 3D model could not load here.
   live=has(VERS.live)?VERS.live:VERS.versions[VERS.versions.length-1].n;
   let c=null;try{c=JSON.parse(sess.get('bacari-patio-live'));}catch(e){}
   if(c&&has(c.n)&&Date.now()-c.t<6e5)live=c.n;
-  const h=+((location.hash.match(/^#v(\d+)$/)||[])[1]||0);shown=h&&has(h)?h:live;
+  h=+((location.hash.match(/^#v(\d+)$/)||[])[1]||0);shown=h&&has(h)?h:live;
   const sc=document.createElement('script');sc.src='versions/v'+shown+'.js?'+(VERS.stamp||'');
   sc.onload=()=>{try{if(!window.THREE||!THREE.OrbitControls||!window.PATIO_MODEL)throw 0;start(window.PATIO_MODEL);setupPanels(window.PATIO_MODEL);}catch(e){fail();}};
   sc.onerror=fail;document.body.appendChild(sc);
-  // a version made live a moment ago is recorded by the suggestions service before the site catches up
-  if(CFG.api)fetch(CFG.api+'?action=live').then(r=>r.json()).then(d=>{if(!d||!d.ok||!d.live||!has(d.live))return;
-    const val=JSON.stringify({n:d.live,t:Date.now()});sess.set('bacari-patio-live',val);
-    if(d.live!==live){if(!h&&sess.get('bacari-patio-live')===val)location.reload();else{live=d.live;drawBar();drawVersions();}}}).catch(()=>{});
+  // keep checking for new versions: the suggestions service's live number (set the moment a version is made live)
+  // wins once the site lists that version; otherwise versions.json decides. Viewers of the live model get the new one in place.
+  const poll=async()=>{
+    const [vers,d]=await Promise.all([j('versions.json?ts='+Date.now()),CFG.api?fetch(CFG.api+'?action=live').then(r=>r.json()).catch(()=>null):null]);
+    if(vers&&vers.versions&&vers.versions.length)VERS=vers;
+    const target=d&&d.ok&&d.live&&has(d.live)?d.live:(has(VERS.live)?VERS.live:live);
+    if(target!==live){sess.set('bacari-patio-live',JSON.stringify({n:target,t:Date.now()}));
+      if(!h){saveCam();sess.set('bacari-updated',String(target));location.reload();return;}
+      live=target;drawBar();drawVersions();}
+    else if(vers)drawVersions();
+    if(pass&&!$('#s-form').hidden&&Date.now()<fastUntil())api({action:'list',passcode:pass}).then(r=>{if(r&&r.ok)drawList(r.items);}).catch(()=>{});};
+  const tick=()=>setTimeout(async()=>{if(!document.hidden)await poll().catch(()=>{});tick();},Date.now()<fastUntil()?8000:30000);
+  poll().catch(()=>{});tick();
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden)poll().catch(()=>{});});
 })();
 }
 </script>
