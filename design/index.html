@@ -139,6 +139,14 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
 @media(max-width:600px){.mapmic{bottom:64px}.mapmic button{white-space:nowrap}}
 @media(prefers-reduced-motion:reduce){.mapmic button.rec .dot{animation:none}}
 .who{margin:0;font-size:15px;color:var(--muted)}.who strong{color:var(--ink)}
+.att{display:flex;flex-wrap:wrap;gap:8px;margin:0;padding:0;list-style:none}
+.att li{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:4px 4px 4px 4px;font-size:14px;max-width:100%}
+.att img{width:44px;height:44px;object-fit:cover;border-radius:6px;flex:none}
+.att .fi{width:44px;height:44px;border-radius:6px;display:grid;place-items:center;background:var(--bg);font-weight:700;font-size:12px;color:var(--muted);flex:none}
+.att .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:180px}
+.att button{all:unset;cursor:pointer;width:32px;height:32px;display:grid;place-items:center;border-radius:50%;font-size:18px;color:var(--muted)}
+.att button:hover{background:var(--bg)}.att button:focus-visible{outline:3px solid var(--accent)}
+.chip.att-n{background:transparent;color:var(--muted);border:1px solid var(--rule);margin-left:6px}
 </style>
 </head>
 <body>
@@ -154,7 +162,7 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
   <h2 class="vohead" id="vo-h">View options</h2>
   <div class="controls" role="group" aria-labelledby="vo-h">
     <div class="seg" role="group" aria-label="Camera views">
-      <button class="b" data-view="overview" aria-pressed="true">Overview</button>
+      <button class="b" data-view="overview" aria-pressed="false">Overview</button>
       <button class="b" data-view="deck" aria-pressed="false">From upper deck</button>
       <button class="b" data-view="bar" aria-pressed="false">At the bar</button>
       <button class="b" data-view="street" aria-pressed="false">From W 6th</button>
@@ -165,6 +173,7 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
       <button class="b" id="night" aria-pressed="false">Night</button>
       <button class="b" id="trees" aria-pressed="false">Trees: see-through</button>
       <button class="b" id="fence" aria-pressed="true">Fence</button>
+      <button class="b" id="backb" aria-pressed="true" hidden>Back buildings</button>
       <button class="b" id="labels" aria-pressed="false">Numbers</button>
     </div>
   </div>
@@ -182,8 +191,10 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
       <div id="s-fromw"><label for="s-from">Your name</label><input id="s-from" maxlength="60"></div>
       <div><label for="s-note">About</label><select id="s-note"></select></div>
     </div>
-    <div><label for="s-text">What should change?</label><textarea id="s-text" rows="4" maxlength="4000" placeholder="Example: make the bar square and move it 10 feet toward the back wall."></textarea><p class="kbd">Type or press Record voice and talk. Press Enter to send · Shift + Enter for a new line</p></div>
-    <div class="row"><button class="b mic" type="button" data-for="s-text" aria-pressed="false">● Record voice</button><button class="b solid" type="submit" id="s-send">Send suggestion</button><button class="b" type="button" id="s-relock">Sign out</button></div>
+    <div><label for="s-text">What should change?</label><textarea id="s-text" rows="4" maxlength="4000" placeholder="Example: make the bar square and move it 10 feet toward the back wall."></textarea><p class="kbd">Type or press Record voice and talk. Add photos, drawings or PDFs with + Photo or file. Press Enter to send · Shift + Enter for a new line</p></div>
+    <ul class="att" id="s-att" aria-label="Attached photos and files"></ul>
+    <input type="file" id="s-file" multiple accept="image/*" hidden>
+    <div class="row"><button class="b mic" type="button" data-for="s-text" aria-pressed="false">● Record voice</button><button class="b" type="button" id="s-addf">+ Photo or file</button><button class="b solid" type="submit" id="s-send">Send suggestion</button><button class="b" type="button" id="s-relock">Sign out</button></div>
   </form>
   <p id="s-status" role="status" aria-live="polite"></p>
   <ol id="s-q" class="log" aria-label="Questions from Claude"></ol>
@@ -239,7 +250,9 @@ const start=M=>{
   const ctl=new T.OrbitControls(cam,renderer.domElement);
   ctl.enableDamping=true;ctl.dampingFactor=.08;ctl.maxPolarAngle=Math.PI/2-.03;ctl.minDistance=8;ctl.maxDistance=460;
   const fit=(pos,tgt)=>{const k=wrap.clientWidth/wrap.clientHeight<1?1.6:1;return pos.map((q,i)=>tgt[i]+(q-tgt[i])*k);};
-  cam.position.set(...fit(...VIEWS.overview));ctl.target.set(...VIEWS.overview[1]);
+  // the model opens at an angle from W 6th, looking in over the corner garden toward the bar
+  const START=[[138,84,-78],[70,0,64]];
+  cam.position.set(...fit(...START));ctl.target.set(...START[1]);
   // after an automatic update, come back to the same camera view
   try{const k=JSON.parse(sess.get('bacari-cam'));if(k&&Date.now()-k.ts<120000){cam.position.set(...k.p);ctl.target.set(...k.t);}}catch(e){}
   getView=()=>({p:cam.position.toArray().map(Math.round),t:ctl.target.toArray().map(Math.round)});
@@ -294,7 +307,7 @@ const start=M=>{
       if(v.z>1||Math.abs(v.x)>1.05||Math.abs(v.y)>1.05){el.style.display='none';return;}
       el.style.display='';el.style.transform=`translate(${(v.x+1)/2*w}px,${(1-v.y)/2*h}px)`;});
     TAGS.forEach((g,i)=>{v.set(...g.p).project(cam);const el=tagEls[i];
-      if(v.z>1||Math.abs(v.x)>.95||Math.abs(v.y)>.95){el.style.display='none';return;}
+      if(v.z>1||Math.abs(v.x)>.95||Math.abs(v.y)>.95||el.classList.contains('gone')){el.style.display='none';return;}
       el.style.display='';el.style.transform=`translate(${(v.x+1)/2*w}px,${(1-v.y)/2*h}px) translate(-50%,-50%)`;});};
 
   let tw=null;
@@ -326,6 +339,10 @@ const start=M=>{
   treeBtn.addEventListener('click',()=>{tm=(tm+1)%3;treeBtn.textContent='Trees: '+treeModes[tm];
     trees.visible=tm!==2;const solid=tm===1;[treeMat,fallMat].forEach(m=>{m.transparent=!solid;m.opacity=solid?1:.35;m.depthWrite=solid;m.needsUpdate=true;});});
   const fenceBtn=$('#fence');fenceBtn.addEventListener('click',()=>{const on=fenceBtn.getAttribute('aria-pressed')!=='true';fenceBtn.setAttribute('aria-pressed',String(on));fences.visible=on;});
+  // hide or show the apartments and parking garage behind the lot (models from version 14 build them as their own group)
+  const bbBtn=$('#backb');if(R.backB){bbBtn.hidden=false;const bt=(R.backTags||[]);
+    bbBtn.addEventListener('click',()=>{const on=bbBtn.getAttribute('aria-pressed')!=='true';bbBtn.setAttribute('aria-pressed',String(on));R.backB.visible=on;
+      TAGS.forEach((g,i)=>{if(bt.includes(g.t))tagEls[i].classList.toggle('gone',!on);});});}
   const labBtn=$('#labels');labBtn.addEventListener('click',()=>{const on=labBtn.getAttribute('aria-pressed')!=='true';labBtn.setAttribute('aria-pressed',String(on));pinsEl.style.display=on?'':'none';});
 
   const ro=new ResizeObserver(()=>{const w=wrap.clientWidth,h=wrap.clientHeight;renderer.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix();});
@@ -351,7 +368,7 @@ const say=t=>{$('#s-status').textContent=t||'';};
 const toast=(msg,ms)=>{const t=document.createElement('p');t.className='toast';t.setAttribute('role','status');t.textContent=msg;wrap.appendChild(t);
   setTimeout(()=>{t.style.opacity='0';setTimeout(()=>t.remove(),500);},ms||5000);};
 // each person signs in with their own passcode; the server says whose it is, so suggestions carry the right name
-const setMe=name=>{if(!name)return;me=name;store.set(NAME,name);$('#s-from').value=name;$('#s-fromw').hidden=true;
+const setMe=(name,r)=>{if(r)setFilesOk(r.files);if(!name)return;me=name;store.set(NAME,name);$('#s-from').value=name;$('#s-fromw').hidden=true;
   const w=$('#s-who');w.hidden=false;w.innerHTML='Signed in as <strong>'+esc(name)+'</strong>.';};
 const clearMe=()=>{me='';$('#s-fromw').hidden=false;$('#s-who').hidden=true;};
 const goTo=n=>{if(n===live)history.replaceState(null,'',location.pathname);else location.hash='v'+n;location.reload();};
@@ -370,7 +387,7 @@ const makeLive=n=>{if(busy)return;if(!pass){$('#suggest').scrollIntoView();say('
 const locked=r=>{if(r&&r.error==='passcode'){store.del(PASS);pass=null;showLock('That passcode is not right.');return true;}
   if(r&&r.error==='locked'){showLock('Too many wrong tries. Wait 15 minutes and try again.');return true;}return false;};
 const showLock=msg=>{clearMe();$('#s-lock').hidden=false;$('#s-form').hidden=true;$('#s-list').innerHTML='';$('#s-q').innerHTML='';$('#s-hist').hidden=true;$('#s-code').value='';say(msg||'Sign in with your passcode to send suggestions.');};
-const card=s=>`<p class="meta">${when(s.time)} · ${esc(s.from)}${s.note?' · about '+esc(s.note):''}</p><p>${esc(s.text)}</p><span class="chip ${s.status==='new'?'new':''}">${esc(STATUS[s.status]||s.status)}</span>${s.reply?`<p class="reply"><strong>Claude:</strong> ${esc(s.reply)}</p>`:''}`;
+const card=s=>`<p class="meta">${when(s.time)} · ${esc(s.from)}${s.note?' · about '+esc(s.note):''}</p><p>${esc(s.text)}</p><span class="chip ${s.status==='new'?'new':''}">${esc(STATUS[s.status]||s.status)}</span>${s.photos?`<span class="chip att-n">${s.photos} attached</span>`:''}${s.voice?'<span class="chip att-n">voice note</span>':''}${s.reply?`<p class="reply"><strong>Claude:</strong> ${esc(s.reply)}</p>`:''}`;
 const drawList=items=>{items=items||[];const qs=items.filter(s=>s.status==='question'),rest=items.filter(s=>s.status!=='question');
   // questions from Claude stay in view with a reply box; don't redraw them while someone is typing an answer
   const typing=[...document.querySelectorAll('#s-q textarea')].some(t=>t.value.trim()||t===document.activeElement);
@@ -434,8 +451,26 @@ const micSend=async()=>{
     ()=>{mmIdle();toast('Could not reach the server. Try again in a moment.');});};
 document.addEventListener('click',e=>{if(e.target.closest('#mm-rec')){if(mic.on)micStop();else if(!mmBtn().disabled)micStart();}
   else if(e.target.closest('#mm-cancel'))micStop(true);});
+// photos and files attached to a suggestion. Photos are shrunk in the browser (longest side 2000 px, JPEG) so they upload fast;
+// other files (PDF, Word, Excel, text) go as they are, up to about 5 MB each, when the server says it takes them (files:true).
+let ATT=[],FILES_OK=false;
+const ATT_MAX=6,FILE_MAX=5.5e6,DOC_ACCEPT='.pdf,.doc,.docx,.xls,.xlsx,.csv,.txt,.dwg,.dxf,.skp';
+const setFilesOk=ok=>{FILES_OK=!!ok;$('#s-file').accept=FILES_OK?'image/*,'+DOC_ACCEPT:'image/*';$('#s-addf').textContent=FILES_OK?'+ Photo or file':'+ Photo';};
+const drawAtt=()=>{$('#s-att').innerHTML=ATT.map((a,i)=>`<li>${a.thumb?`<img src="${a.thumb}" alt="">`:`<span class="fi">${esc((a.name.split('.').pop()||'FILE').slice(0,4).toUpperCase())}</span>`}<span class="nm">${esc(a.name)}</span><button type="button" data-rm="${i}" aria-label="Remove ${esc(a.name)}">×</button></li>`).join('');};
+const shrink=f=>new Promise(ok=>{const u=URL.createObjectURL(f),im=new Image();
+  im.onload=()=>{const k=Math.min(1,2000/Math.max(im.naturalWidth,im.naturalHeight)),c=document.createElement('canvas');c.width=Math.round(im.naturalWidth*k);c.height=Math.round(im.naturalHeight*k);
+    c.getContext('2d').drawImage(im,0,0,c.width,c.height);URL.revokeObjectURL(u);const d=c.toDataURL('image/jpeg',.85);ok({type:'image/jpeg',data:d,thumb:d,img:true});};
+  im.onerror=()=>{URL.revokeObjectURL(u);ok(null);};im.src=u;});
+const addFiles=async list=>{for(const f of list){if(ATT.length>=ATT_MAX){say('Up to '+ATT_MAX+' photos or files per suggestion.');break;}
+    const isImg=/^image\//.test(f.type);let a=null;
+    if(isImg)a=await shrink(f);
+    if(!a){if(!isImg&&!FILES_OK){say('This sign-in only takes photos for now; '+f.name+' was not added.');continue;}
+      if(f.size>FILE_MAX){say(f.name+' is too big (over 5 MB).');continue;}
+      try{a={type:f.type||'application/octet-stream',data:await blobData(f),img:isImg};}catch(e){continue;}}
+    a.name=f.name||'photo.jpg';ATT.push(a);}
+  drawAtt();};
 const showForm=()=>{$('#s-lock').hidden=true;$('#s-form').hidden=false;say('');
-  api({action:'list',passcode:pass}).then(r=>{if(r&&r.ok){setMe(r.name);drawList(r.items);}else locked(r);},()=>say('Could not load earlier suggestions. You can still send one.'));};
+  api({action:'list',passcode:pass}).then(r=>{if(r&&r.ok){setMe(r.name,r);drawList(r.items);}else locked(r);},()=>say('Could not load earlier suggestions. You can still send one.'));};
 const setupPanels=M=>{drawBar();drawVersions();
   $('#v-list').addEventListener('click',e=>{const v=e.target.closest('[data-view]'),m=e.target.closest('[data-make]');if(v)goTo(+v.dataset.view);else if(m)makeLive(+m.dataset.make);});
   if(!CFG.api)return;
@@ -445,7 +480,7 @@ const setupPanels=M=>{drawBar();drawVersions();
   $('#s-from').value=store.get(NAME)||'Robert';
   pass=store.get(PASS);if(pass)showForm();else showLock();
   $('#s-lock').addEventListener('submit',e=>{e.preventDefault();const code=$('#s-code').value.trim();if(!code||busy)return;busy=true;say('Checking…');
-    api({action:'check',passcode:code}).then(r=>{busy=false;if(r&&r.ok){pass=code;store.set(PASS,code);$('#s-code').value='';setMe(r.name);showForm();}else if(!locked(r))say('Could not check the passcode. Try again.');},()=>{busy=false;say('Could not reach the server. Try again in a moment.');});});
+    api({action:'check',passcode:code}).then(r=>{busy=false;if(r&&r.ok){pass=code;store.set(PASS,code);$('#s-code').value='';setMe(r.name,r);showForm();}else if(!locked(r))say('Could not check the passcode. Try again.');},()=>{busy=false;say('Could not reach the server. Try again in a moment.');});});
   $('#s-text').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();$('#s-form').requestSubmit();}});
   // answering a question from Claude
   $('#s-q').addEventListener('keydown',e=>{if(e.target.tagName==='TEXTAREA'&&e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();e.target.form.requestSubmit();}});
@@ -454,11 +489,20 @@ const setupPanels=M=>{drawBar();drawVersions();
     api({action:'reply',passcode:pass,id:f.dataset.id,from:me||$('#s-from').value.trim()||'Robert',text:text}).then(r=>{busy=false;btn.disabled=false;
       if(r&&r.ok){t.value='';t.blur();drawList(r.items);sess.set('bacari-fast',String(Date.now()+20*60e3));say('Answer sent. Claude is picking it up now; the model will update on this page by itself.');}
       else if(!locked(r))say('Could not send your answer. Try again.');},()=>{busy=false;btn.disabled=false;say('Could not reach the server. Try again in a moment.');});});
+  $('#s-addf').addEventListener('click',()=>$('#s-file').click());
+  $('#s-file').addEventListener('change',e=>{addFiles([...e.target.files]);e.target.value='';});
+  $('#s-att').addEventListener('click',e=>{const b=e.target.closest('[data-rm]');if(b){ATT.splice(+b.dataset.rm,1);drawAtt();}});
+  // drop photos or files anywhere on the form, or paste a screenshot into the text box
+  $('#s-form').addEventListener('dragover',e=>{e.preventDefault();});
+  $('#s-form').addEventListener('drop',e=>{e.preventDefault();if(e.dataTransfer&&e.dataTransfer.files.length)addFiles([...e.dataTransfer.files]);});
+  $('#s-text').addEventListener('paste',e=>{const fs=[...(e.clipboardData&&e.clipboardData.files)||[]];if(fs.length){e.preventDefault();addFiles(fs);}});
   $('#s-relock').addEventListener('click',()=>{store.del(PASS);store.del(NAME);pass=null;showLock('Signed out on this device.');});
-  $('#s-form').addEventListener('submit',e=>{e.preventDefault();stopRec();const text=$('#s-text').value.trim();if(busy)return;if(!text){say('Write what you would like changed first.');$('#s-text').focus();return;}
+  $('#s-form').addEventListener('submit',e=>{e.preventDefault();stopRec();const text=$('#s-text').value.trim();if(busy)return;if(!text&&!ATT.length){say('Write what you would like changed first, or add a photo.');$('#s-text').focus();return;}
     const from=me||$('#s-from').value.trim()||'Robert';store.set(NAME,from);busy=true;$('#s-send').disabled=true;say('Sending…');
-    api({action:'suggest',passcode:pass,from:from,note:$('#s-note').value,text:text,version:shown}).then(r=>{busy=false;$('#s-send').disabled=false;
-      if(r&&r.ok){$('#s-text').value='';drawList(r.items);sess.set('bacari-fast',String(Date.now()+20*60e3));say('Sent. Claude is starting on it now; the model will update on this page by itself in a few minutes.');}
+    const photos=ATT.filter(a=>a.img).map(a=>({type:a.type,data:a.data,name:a.name})),files=ATT.filter(a=>!a.img).map(a=>({type:a.type,data:a.data,name:a.name}));
+    if(ATT.length)say('Sending… (uploading '+ATT.length+' attachment'+(ATT.length>1?'s':'')+')');
+    api({action:'suggest',passcode:pass,from:from,note:$('#s-note').value,text:text,version:shown,photos:photos,files:files}).then(r=>{busy=false;$('#s-send').disabled=false;
+      if(r&&r.ok){$('#s-text').value='';ATT=[];drawAtt();drawList(r.items);sess.set('bacari-fast',String(Date.now()+20*60e3));say('Sent. Claude is starting on it now; the model will update on this page by itself in a few minutes.');}
       else if(!locked(r))say('Could not send. Your text is still here; try again.');},()=>{busy=false;$('#s-send').disabled=false;say('Could not reach the server. Your text is still here; try again in a moment.');});});
 };
 
