@@ -388,13 +388,21 @@ const locked=r=>{if(r&&r.error==='passcode'){store.del(PASS);pass=null;showLock(
   if(r&&r.error==='locked'){showLock('Too many wrong tries. Wait 15 minutes and try again.');return true;}return false;};
 const showLock=msg=>{clearMe();$('#s-lock').hidden=false;$('#s-form').hidden=true;$('#s-list').innerHTML='';$('#s-q').innerHTML='';$('#s-hist').hidden=true;$('#s-code').value='';say(msg||'Sign in with your passcode to send suggestions.');};
 // voice notes keep the camera position in the sheet for Claude, but the list on the page leaves it out
-const shownText=t=>String(t==null?'':t).replace(/\n*\(Recorded on version \d+ while looking at the model[^)]*\)/g,'').replace('(voice note: listen to the audio link in column I)','(voice note)').trim();
+const shownText=t=>{const u=String(t==null?'':t).match(/^Undo (S\d+): [^\n]*\nOriginal suggestion from [^:\n]+: "([\s\S]*?)"\n/);if(u)return 'Undo '+u[1]+': take back "'+u[2]+'"';return shownText0(t);};
+const shownText0=t=>String(t==null?'':t).replace(/\n*\(Recorded on version \d+ while looking at the model[^)]*\)/g,'').replace('(voice note: listen to the audio link in column I)','(voice note)').trim();
 const card=s=>`<p class="meta">${when(s.time)} · ${esc(s.from)}${s.note?' · about '+esc(s.note):''}</p><p>${esc(shownText(s.text))}</p><span class="chip ${s.status==='new'||s.status==='working'?'new':''}">${esc(STATUS[s.status]||s.status)}</span>${s.photos?`<span class="chip att-n">${s.photos} attached</span>`:''}${s.voice?'<span class="chip att-n">voice note</span>':''}${s.reply?`<p class="reply"><strong>Claude:</strong> ${esc(s.reply)}</p>`:''}`;
-const drawList=items=>{items=items||[];const qs=items.filter(s=>s.status==='question'),rest=items.filter(s=>s.status!=='question');
+const drawList=items=>{items=items||[];LAST=items;const qs=items.filter(s=>s.status==='question'),rest=items.filter(s=>s.status!=='question');
   // questions from Claude stay in view with a reply box; don't redraw them while someone is typing an answer
   const typing=[...document.querySelectorAll('#s-q textarea')].some(t=>t.value.trim()||t===document.activeElement);
   if(!typing)$('#s-q').innerHTML=qs.map(s=>`<li class="q">${card(s)}<form class="rep" data-id="${esc(s.id)}"><label class="lab" for="r-${esc(s.id)}">Your answer</label><textarea id="r-${esc(s.id)}" rows="2" maxlength="2000"></textarea><div class="row"><button class="b mic" type="button" data-for="r-${esc(s.id)}" aria-pressed="false">● Record voice</button><button class="b solid" type="submit">Send answer</button></div></form></li>`).join('');
-  $('#s-hist').hidden=!rest.length;$('#s-sum').textContent='Earlier suggestions ('+rest.length+')';$('#s-list').innerHTML=rest.map(s=>`<li>${card(s)}</li>`).join('');};
+  $('#s-hist').hidden=!rest.length;$('#s-sum').textContent='Earlier suggestions ('+rest.length+')';$('#s-list').innerHTML=rest.map(s=>`<li>${card(s)}${undoBtn(s,items)}</li>`).join('');};
+// undo a change that's already in the model: sends a new suggestion asking Claude to take that change back out (as a new version)
+const undoOf=t=>(String(t||'').match(/^Undo (S\d+)\b/)||[])[1];
+const undoBtn=(s,items)=>{if(s.status!=='done'||undoOf(s.text)||/^Made version/.test(String(s.text||'')))return'';
+  const sent=items.find(o=>undoOf(o.text)===String(s.id));
+  if(sent)return `<p class="meta">Undo sent as ${esc(sent.id)}${sent.status==='done'?' · removed':''}</p>`;
+  return `<div class="row"><button class="b" type="button" data-undo="${esc(s.id)}">Undo this change</button></div>`;};
+let LAST=[];
 // voice: the browser turns speech into text in the box as he talks, so he can check it before sending
 const SR=window.SpeechRecognition||window.webkitSpeechRecognition;let rec=null,recBtn=null;
 const stopRec=()=>{if(rec)rec.stop();};
@@ -474,6 +482,14 @@ const addFiles=async list=>{for(const f of list){if(ATT.length>=ATT_MAX){say('Up
 const showForm=()=>{$('#s-lock').hidden=true;$('#s-form').hidden=false;say('');
   api({action:'list',passcode:pass}).then(r=>{if(r&&r.ok){setMe(r.name,r);drawList(r.items);}else locked(r);},()=>say('Could not load earlier suggestions. You can still send one.'));};
 const setupPanels=M=>{drawBar();drawVersions();
+  $('#s-list').addEventListener('click',e=>{const b=e.target.closest('[data-undo]');if(!b||busy)return;const s=LAST.find(o=>String(o.id)===b.dataset.undo);if(!s)return;
+    if(!confirm('Undo '+s.id+'? Claude will take that change back out of the model and save it as a new version. Everything else stays.'))return;
+    const text='Undo '+s.id+': please take the change made for this earlier suggestion back out of the model, and keep everything else (including later changes) as it is now.\n'+
+      'Original suggestion from '+s.from+': "'+shownText(s.text)+'"\nWhat Claude did'+(s.version?' (version '+s.version+')':'')+': '+(s.reply||'');
+    busy=true;b.disabled=true;say('Sending the undo…');
+    api({action:'suggest',passcode:pass,from:me||store.get(NAME)||'Robert',note:'Undo '+s.id,text:text,version:shown}).then(r=>{busy=false;
+      if(r&&r.ok){drawList(r.items);sess.set('bacari-fast',String(Date.now()+20*60e3));say('Undo sent. Claude is taking '+s.id+' out now; the model will update on this page by itself.');}
+      else{b.disabled=false;if(!locked(r))say('Could not send the undo. Try again.');}},()=>{busy=false;b.disabled=false;say('Could not reach the server. Try again in a moment.');});});
   $('#v-list').addEventListener('click',e=>{const v=e.target.closest('[data-view]'),m=e.target.closest('[data-make]');if(v)goTo(+v.dataset.view);else if(m)makeLive(+m.dataset.make);});
   if(!CFG.api)return;
   $('#suggest').hidden=false;$('#mapmic').hidden=false;
