@@ -1,6 +1,6 @@
 {
- "live": 5,
- "stamp": "5",
+ "live": 4,
+ "stamp": "4",
  "versions": [
   {
    "n": 1,
@@ -23,14 +23,8 @@
   {
    "n": 4,
    "date": "Nov 23, 2026",
-   "by": "Robert",
-   "summary": "Rattan bistro bar stools with footrests and hoop backs, 12 more two-tops with clear staff aisles, and the two brown-topped trees made green."
-  },
-  {
-   "n": 5,
-   "date": "Nov 23, 2026",
-   "by": "Robert",
-   "summary": "Straight backs on all chairs and bar stools, and a glass double door on the upper floor opening onto the deck."
+   "by": "Patrick",
+   "summary": "Front gate on W 6th drawn as a double gate standing partly open, so it reads as a door."
   }
  ]
 }
