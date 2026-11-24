@@ -1,6 +1,6 @@
 {
- "live": 4,
- "stamp": "4",
+ "live": 5,
+ "stamp": "5",
  "versions": [
   {
    "n": 1,
@@ -25,6 +25,12 @@
    "date": "Nov 23, 2026",
    "by": "Robert",
    "summary": "Rattan bistro bar stools with footrests and hoop backs, 12 more two-tops with clear staff aisles, and the two brown-topped trees made green."
+  },
+  {
+   "n": 5,
+   "date": "Nov 23, 2026",
+   "by": "Robert",
+   "summary": "Glass double door added on the second floor, opening from the building onto the upper deck."
   }
  ]
 }
