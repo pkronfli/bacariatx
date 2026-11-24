@@ -1,6 +1,6 @@
 {
- "live": 4,
- "stamp": "4",
+ "live": 5,
+ "stamp": "5",
  "versions": [
   {
    "n": 1,
@@ -25,6 +25,12 @@
    "date": "Nov 23, 2026",
    "by": "Patrick",
    "summary": "Front gate on W 6th drawn as a double gate standing partly open, so it reads as a door."
+  },
+  {
+   "n": 5,
+   "date": "Nov 23, 2026",
+   "by": "Patrick",
+   "summary": "Banquette back cushions restyled like Bacari LA: full-length cushions in bright patterned prints over grey-striped seats."
   }
  ]
 }
