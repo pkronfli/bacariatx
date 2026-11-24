@@ -1,6 +1,6 @@
 {
- "live": 12,
- "stamp": "12",
+ "live": 13,
+ "stamp": "13",
  "versions": [
   {
    "n": 1,
@@ -73,6 +73,12 @@
    "date": "Nov 24, 2026",
    "by": "Robert",
    "summary": "The building is painted a light blue, keeping its white trim, cedar cladding and brick chimney."
+  },
+  {
+   "n": 13,
+   "date": "Nov 24, 2026",
+   "by": "Patrick",
+   "summary": "Every tree on the property is now drawn as a Texas live oak (short thick trunks, long twisting limbs, broad dark-green canopies), on top of version 12's light blue building."
   }
  ]
 }
