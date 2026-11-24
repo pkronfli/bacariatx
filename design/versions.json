@@ -1,6 +1,6 @@
 {
- "live": 13,
- "stamp": "13",
+ "live": 14,
+ "stamp": "14",
  "versions": [
   {
    "n": 1,
@@ -79,6 +79,12 @@
    "date": "Nov 24, 2026",
    "by": "Patrick",
    "summary": "Every tree on the property is now drawn as a Texas live oak (short thick trunks, long twisting limbs, broad dark-green canopies), on top of version 12's light blue building."
+  },
+  {
+   "n": 14,
+   "date": "Nov 24, 2026",
+   "by": "Patrick",
+   "summary": "Bacari-style night lighting everywhere (bistro string-light canopies over every deck, rattan pendants, table candles, wall sconces, path lights), a 20 ft automated sliding gate on the back lot, and the apartments behind can be hidden."
   }
  ]
 }
