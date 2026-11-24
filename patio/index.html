@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bacari Austin Patio Concept</title>
+<meta name="description" content="3D concept model of Robert Kronfli&#x27;s patio idea for Bacari Austin on West 6th Street: tiered decks stepping down to a central bar, on the real lot and terrain.">
+<link rel="canonical" href="https://bacariatx.com/patio/">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="theme-color" content="#08223b">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Bacari Austin">
+<meta property="og:locale" content="en_US">
+<meta property="og:url" content="https://bacariatx.com/patio/">
+<meta property="og:title" content="Bacari Austin: Patio Concept">
+<meta property="og:description" content="3D concept model of Robert Kronfli&#x27;s patio idea for Bacari Austin on West 6th Street: tiered decks stepping down to a central bar, on the real lot and terrain.">
+<meta property="og:image" content="https://bacariatx.com/og-image.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Bacari patio at dusk with string lights and the Bacari logo">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Bacari Austin: Patio Concept">
+<meta name="twitter:description" content="3D concept model of Robert Kronfli&#x27;s patio idea for Bacari Austin on West 6th Street: tiered decks stepping down to a central bar, on the real lot and terrain.">
+<meta name="twitter:image" content="https://bacariatx.com/og-image.jpg">
+<meta name="twitter:image:alt" content="Bacari patio at dusk with string lights and the Bacari logo">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;600;700&display=swap">
+<style>
+/* VOICE: a working design-review model for a family rebuilding a restaurant; warm, clear, honest about guesses
+   IDEA: an architect's site model on the table, picked up and turned in the hand
+   PICTURE: a live 3D massing model of Robert's tiered decks stepping down to one central bar
+   COLOUR and TYPE: Bacari's own navy, parchment and sand, deck-wood tones for each level; Public Sans
+   LAYOUT: short title band, full-bleed model, view controls and level key, numbered notes, what we need to scale it */
+:root{color-scheme:light dark;--bg:light-dark(#f3efe5,#0b1a2b);--ink:light-dark(#08223b,#ece6d6);--muted:light-dark(#4a5568,#b0b9c6);--rule:light-dark(#d3c29a,#2c4560);--panel:light-dark(#e9e0ca,#13283f);--accent:light-dark(#8b6755,#d3c29a);--btn:light-dark(#08223b,#e9e0ca);--btn-ink:light-dark(#f3efe5,#08223b)}
+:root[data-theme=light]{color-scheme:light}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 "Public Sans","Helvetica Neue",Arial,sans-serif;overflow-x:clip}
+.band{padding:clamp(24px,4vw,56px) max(5vw,16px)}
+.wrap{max-width:1240px;margin:0 auto}
+.top{background:#08223b;color:#f3efe5;padding-bottom:clamp(20px,3vw,36px)}
+.top .sub{margin:0 0 8px;color:#b2c6d8;font-size:15px}
+h1{font-size:clamp(28px,4.6vw,46px);line-height:1.08;margin:0;text-wrap:balance;letter-spacing:-.015em;max-width:22ch}
+.lede{margin:14px 0 0;max-width:68ch;color:#d8e2ec;font-size:16px}
+.fig{position:relative;height:clamp(400px,66vh,780px);background:#dfe8ec;overflow:hidden;touch-action:none}
+.fig canvas{position:absolute;inset:0;width:100%!important;height:100%!important;display:block}
+#pins{position:absolute;inset:0;pointer-events:none;z-index:2}
+.pin{position:absolute;left:0;top:0;width:28px;height:28px;margin:-14px 0 0 -14px;border-radius:50%;border:2px solid #f3efe5;background:#08223b;color:#f3efe5;font:700 13px/24px "Public Sans",sans-serif;text-align:center;pointer-events:auto;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.35);padding:0;will-change:transform}
+.tag{position:absolute;left:0;top:0;font:600 12.5px "Public Sans",sans-serif;color:#08223b;background:rgba(243,239,229,.88);padding:2px 8px;border-radius:4px;white-space:nowrap;will-change:transform}
+.tag.h{background:#08223b;color:#f3efe5;font-weight:500}
+.pin.on{background:#d3c29a;color:#08223b;border-color:#08223b;z-index:3}
+.pin:focus-visible{outline:3px solid #d3c29a;outline-offset:2px}
+.hint{position:absolute;left:12px;bottom:10px;margin:0;z-index:2;font-size:13px;color:#08223b;background:rgba(243,239,229,.85);padding:4px 10px;border-radius:999px;pointer-events:none}
+.err{position:absolute;inset:0;display:grid;place-items:center;margin:0;padding:24px;text-align:center;color:#08223b}
+.controls{display:flex;flex-wrap:wrap;gap:10px 18px;justify-content:space-between;align-items:center;padding:14px max(5vw,16px);border-bottom:1px solid var(--rule)}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+button.b{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--btn);background:transparent;color:var(--ink);font:600 14.5px "Public Sans",sans-serif;cursor:pointer}
+button.b[aria-pressed=true]{background:var(--btn);color:var(--btn-ink)}
+button.b:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.keynote{margin:0;padding:12px max(5vw,16px) 0;font-size:14px;color:var(--muted)}
+.levels{list-style:none;margin:0;padding:8px max(5vw,16px) 0;display:flex;flex-wrap:wrap;gap:8px 18px;font-size:14px;color:var(--muted)}
+.levels li{display:flex;align-items:center;gap:8px;white-space:nowrap}
+.sw{width:18px;height:18px;border-radius:4px;border:1px solid rgba(0,0,0,.25);flex:none}
+h2{font-size:clamp(22px,2.6vw,30px);line-height:1.15;margin:0 0 6px;text-wrap:balance}
+.intro{margin:0 0 20px;max-width:68ch;color:var(--muted)}
+#key{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,340px),1fr));gap:12px}
+#key button{all:unset;box-sizing:border-box;display:grid;grid-template-columns:32px 1fr;gap:0 12px;width:100%;padding:14px 16px;border-radius:10px;background:var(--panel);cursor:pointer;border:2px solid transparent}
+#key button:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+#key li.on button{border-color:var(--accent)}
+.num{grid-row:span 3;width:28px;height:28px;border-radius:50%;background:var(--btn);color:var(--btn-ink);font-weight:700;font-size:13px;display:grid;place-items:center}
+.kt{font-weight:600;line-height:1.3}
+.kd{font-size:15px;margin-top:4px}
+.kf{font-size:14px;color:var(--accent);margin-top:6px}
+.asks{background:var(--panel)}
+.asks ol{margin:0;padding-left:22px;display:grid;gap:10px;max-width:76ch}
+.asks li::marker{color:var(--accent);font-weight:700}
+.foot{font-size:14px;color:var(--muted);padding-top:20px;padding-bottom:40px}
+@media(max-width:600px){.controls{flex-direction:column;align-items:stretch}.seg{justify-content:flex-start}button.b{padding:0 13px;font-size:14px}}
+</style>
+</head>
+<body>
+<header class="band top"><div class="wrap">
+  <p class="sub">Bacari Austin · West 6th patio · concept model</p>
+  <h1>Robert's patio: decks stepping down to one central bar</h1>
+  <p class="lede">A 3D concept model of the ideas in Robert's walkthrough video, set on the real lot. Decks step down from the upper deck in three levels around a garden, with a big bar in the middle as "the nucleus of the energy of the patio." The lot is about 137 ft along W 6th by 130 ft deep, from Travis County records checked against Google satellite and 3D imagery. Ground heights come from USGS lidar: the front terrace is level with the street, and the patio sits about 9 ft lower. Deck heights and exact positions are still estimates.</p>
+</div></header>
+
+<section aria-label="3D model">
+  <div id="model" class="fig"><div id="pins"></div><p class="hint">Drag to turn · pinch or scroll to zoom · tap a number</p></div>
+  <p class="keynote">Heights are measured from the existing patio, about 477.5 ft above sea level. Dark tags show ground heights from USGS lidar (2017, 1 m grid).</p>
+  <ul class="levels" aria-label="Level key">
+    <li><span class="sw" style="background:#cdb994"></span>Street + front terrace +8½ ft</li>
+    <li><span class="sw" style="background:#8f6342"></span>Upper deck ~+9½ ft (existing)</li>
+    <li><span class="sw" style="background:#a8744a"></span>High deck ~6 ft</li>
+    <li><span class="sw" style="background:#c08d5c"></span>Medium deck ~3½ ft</li>
+    <li><span class="sw" style="background:#d6ac7c"></span>Low deck ~1½ ft</li>
+    <li><span class="sw" style="background:#cdb994"></span>Garden at patio level (0)</li>
+    <li><span class="sw" style="background:#b4aea2"></span>River-rock paths</li>
+  </ul>
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Camera views">
+      <button class="b" data-view="overview" aria-pressed="true">Overview</button>
+      <button class="b" data-view="deck" aria-pressed="false">From upper deck</button>
+      <button class="b" data-view="bar" aria-pressed="false">At the bar</button>
+      <button class="b" data-view="street" aria-pressed="false">From W 6th</button>
+      <button class="b" data-view="up" aria-pressed="false">Toward W 6th</button>
+      <button class="b" data-view="plan" aria-pressed="false">Plan</button>
+    </div>
+    <div class="seg" role="group" aria-label="Display">
+      <button class="b" id="night" aria-pressed="false">Night</button>
+      <button class="b" id="trees" aria-pressed="false">Trees: see-through</button>
+      <button class="b" id="labels" aria-pressed="true">Numbers</button>
+    </div>
+  </div>
+</section>
+
+<section class="band"><div class="wrap">
+  <h2>What's in the model</h2>
+  <p class="intro">Each number follows something Robert describes in the video. Tap one to fly to it. The lines marked "Check" are questions for the architect.</p>
+  <ol id="key"></ol>
+</div></section>
+
+<section class="band asks"><div class="wrap">
+  <h2>To put this to scale</h2>
+  <p class="intro">This version uses Robert's video, Travis County parcel records for 1315 W 6th St, Google Maps and Earth imagery from December 2023, USGS lidar ground heights from 2017, and Patrick's walk-around videos from outside the fence on November 23, 2026. The building footprint (about 46 × 45 ft) and tree positions were traced from the satellite view to within roughly 5–10 ft. Robert's deck locations are interpreted from what he points at in the video. These would make it a measured model.</p>
+  <ol>
+    <li><strong>The Matterport scan.</strong> The share link helps, but the downloadable files help most: the point cloud (E57) or 3D mesh (OBJ) and the measured floor plan, which Matterport sells as add-ons.</li>
+    <li><strong>A site survey with a tree survey,</strong> showing property and lease lines, ground levels, and each oak's position and trunk size. The landlord may already have one, and Austin's tree rules will require it anyway.</li>
+    <li><strong>Three heights:</strong> the upper deck floor above the lot, the existing back fence, and the ground floor above the lot.</li>
+    <li><strong>The lease boundary:</strong> exactly how much of the parking lot, including where the shipping containers sit, comes with the lease.</li>
+    <li><strong>Robert's check on this layout:</strong> whether the high, medium and low decks sit where he meant, round or square bar, and what happens to the back lot.</li>
+  </ol>
+</div></section>
+<footer class="band foot"><div class="wrap">Concept only, not to scale. Drawn from Robert Kronfli's site walkthrough, November 2026.</div></footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+{
+const NOTES=[
+ {p:[39,6,89],t:'Kitchen door + hidden service corridor',d:'The kitchen door goes where the rear window is now. A wall under the upper deck hides the staff route: dirty dishes in, drop at the dish pit, pick up at the line, then out to the patio by a side lane.',f:'Check: corridor width and the dish route for the health code set where this wall goes.'},
+ {p:[59,3,60],t:'Guest route to the restrooms',d:'Guests reach the restrooms through the building\'s side door off the garden. The service side stays closed to them.'},
+ {p:[50,13,90],t:'Upper deck, railing opened',d:'The existing upper deck at the back of the building, on the upper floor, close to street level and about 9–10 ft above the patio. A section of railing opens to stairs that lead down to the new decks.'},
+ {p:[73,8.5,90],t:'High deck (about 6 ft)',d:'The first level down. It wraps along the back wall, like the treehouse feel at Silver Lake: different decks, different paths.',f:'Check: a drop this high needs guardrails.'},
+ {p:[128,6,52],t:'Medium deck (about 3½ ft, hip height)',d:'Runs down the east side where the barrel-roof walkway is now. The neighbor\'s parking lot beyond the side wall is about 5½ ft higher than the patio, so this deck sits just below their cars.',f:'Check: how tall the side wall needs to be to screen the parking lot.'},
+ {p:[100,4,19],t:'Low deck (about 1½ ft)',d:'Wraps the front, where the grass and mulch are now. The ground here is about 8 ft below the W 6th sidewalk, behind the block retaining wall and grass bank, so the deck is well below street level. Steps come down to it from the front terrace.',f:'Check: how much street noise the wall and grade really block.'},
+ {p:[100,7,60],t:'Central bar',d:'A big round or square bar in the middle of the garden. "Think of this as the field in a stadium," with everyone looking down at it from the decks.',f:'Check: water, drains, power and ice all have to run under the garden.'},
+ {p:[112,3,40],t:'Seating pockets',d:'Small seating areas set into the planting around the bar, each one its own zone.'},
+ {p:[90,10.5,83],t:'Pergola pocket',d:'A pergola over one of the pockets, reached by its own path.'},
+ {p:[78,1.5,60],t:'River-rock paths',d:'Solid paths running from each deck down to the bar and pockets.'},
+ {p:[100,11,106.5],t:'Tall back wall',d:'About as tall as the existing fence. It blocks the view of the back lot, the shipping containers and the apartments, so the garden feels fully closed in.',f:'Check: Austin\'s height limit for walls.'},
+ {p:[6,33,92],t:'Heritage oak',d:'The roughly 100-year-old heritage oak stands behind the building at its back-west corner, by the back lot, where Patrick\'s walk-around found it. A second large oak shades the front terrace, which is level with the W 6th sidewalk. Tree sizes and positions are traced from the satellite view.',f:'Check: an arborist and Austin\'s rules on digging near protected trees, especially for the kitchen and service corridor right beside it.'},
+ {p:[100,3,121],t:'Back lot',d:'The paved lot behind the wall, where the shipping containers sit now. It falls about 2 ft toward the apartments. Robert didn\'t say how it should be used; it could stay parking or a service yard.'},
+ {p:[64,6,24],t:'Grade change: street down to the garden',d:'The site falls about 9 ft from W 6th to the patio, and about 10 ft to the back of the lot. In the concept, guests come off the sidewalk onto the front terrace under the oak, then down a flight of steps to the low deck and the garden.',f:'Check: accessibility. Wheelchair users need a ramp or lift from street level down to the garden and the restrooms.'}
+];
+const TAGS=[{p:[124,9.5,-6],t:'486 ft · sidewalk',h:1},{p:[12,9.2,24],t:'486 ft · front terrace',h:1},{p:[66,1,50],t:'477.5 ft · patio',h:1},{p:[40,-.5,118],t:'476 ft · back lot',h:1},{p:[162,7,80],t:'483 ft · neighbor parking',h:1},{p:[92,7,3],t:'Retaining wall + bank',h:1},{p:[70,9.5,-26],t:'W 6th St'},{p:[-97,.5,60],t:'Pressler St'},{p:[-10,58,182],t:'Pressler Apartments'},{p:[-34,21,42],t:'Neighbor building'},{p:[33,31,62],t:'Bar Peached building'}];
+const VIEWS={overview:[[190,105,190],[72,0,55]],deck:[[54,17.5,90],[104,3,48]],bar:[[88,5.4,74],[122,4,28]],street:[[50,20,-28],[96,0,62]],up:[[112,5.5,80],[60,7,6]],plan:[[70,230,60.5],[70,0,60]]};
+const BX=100,BZ=60;
+const $=s=>document.querySelector(s);
+const wrap=$('#model'),pinsEl=$('#pins');
+const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+const init=()=>{
+  const T=THREE;
+  const renderer=new T.WebGLRenderer({antialias:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio,2));
+  renderer.setSize(wrap.clientWidth,wrap.clientHeight);
+  renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
+  wrap.insertBefore(renderer.domElement,pinsEl);
+  const scene=new T.Scene();
+  const cam=new T.PerspectiveCamera(45,wrap.clientWidth/wrap.clientHeight,1,1200);
+  const ctl=new T.OrbitControls(cam,renderer.domElement);
+  ctl.enableDamping=true;ctl.dampingFactor=.08;ctl.maxPolarAngle=Math.PI/2-.03;ctl.minDistance=8;ctl.maxDistance=280;
+  const fit=(pos,tgt)=>{const k=wrap.clientWidth/wrap.clientHeight<1?1.6:1;return pos.map((q,i)=>tgt[i]+(q-tgt[i])*k);};
+  cam.position.set(...fit(...VIEWS.overview));ctl.target.set(...VIEWS.overview[1]);
+
+  const hemi=new T.HemisphereLight(0xe4eef6,0x8a7a5c,.78);
+  const sun=new T.DirectionalLight(0xfff0d8,.85);
+  sun.position.set(-40,130,-50);sun.target.position.set(70,0,65);
+  sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);
+  Object.assign(sun.shadow.camera,{left:-150,right:150,top:150,bottom:-150,near:10,far:420});
+  sun.shadow.bias=-.0008;
+  scene.add(hemi,sun,sun.target);
+
+  const mat=(c,o)=>new T.MeshLambertMaterial(Object.assign({color:c},o||{}));
+  const C={stucco:mat(0xf1ece2),teal:mat(0x5fb3bf),dark:mat(0x3a2a1f),post:mat(0x6e4c33),rail:mat(0x2e241c),
+    upper:mat(0x8f6342),high:mat(0xa8744a),med:mat(0xc08d5c),low:mat(0xd6ac7c),skirt:mat(0x6b5038),
+    garden:mat(0xcdb994),rock:mat(0xb4aea2),wall:mat(0xe9e3d7),wood:mat(0x6b4a33),top:mat(0x4a3020),
+    stool:mat(0x2f5d4a),chair:mat(0x5b3d2a),corten:mat(0x8a4a2a),agave:mat(0x6f8f86),shrub:mat(0x5c7a45),
+    ctx:mat(0xc9ccd0),lot:mat(0xb9b5ab),trunk:mat(0x5a4330)};
+  const treeMat=mat(0x4d6a3b,{transparent:true,opacity:.35,depthWrite:false});
+
+  const put=(g,m,x,y,z,parent)=>{const me=new T.Mesh(g,m);me.position.set(x,y,z);me.castShadow=true;me.receiveShadow=true;(parent||scene).add(me);return me;};
+  const box=(x0,x1,y0,y1,z0,z1,m,parent)=>put(new T.BoxGeometry(x1-x0,y1-y0,z1-z0),m,(x0+x1)/2,(y0+y1)/2,(z0+z1)/2,parent);
+  const cyl=(r,h,x,y,z,m,seg)=>put(new T.CylinderGeometry(r,r,h,seg||16),m,x,y+h/2,z);
+  const deckMats=top=>[C.skirt,C.skirt,top,C.skirt,C.skirt,C.skirt];
+  const deck=(x0,x1,z0,z1,y,top)=>box(x0,x1,0,y,z0,z1,deckMats(top));
+
+  const stairs=(x,z,yTop,yBot,dx,dz,w,m)=>{const n=Math.max(2,Math.round((yTop-yBot)/.6)),r=(yTop-yBot)/n;
+    for(let i=1;i<n;i++){const top=yTop-r*i,h=top-yBot,cx=x+dx*(i-.5),cz=z+dz*(i-.5);
+      put(new T.BoxGeometry(dx?1:w,h,dz?1:w),m,cx,yBot+h/2,cz);}};
+  // terrain. Heights are feet relative to the existing patio (about 477.5 ft above sea level, USGS lidar 2017).
+  // x runs west to east along W 6th, z runs from the sidewalk to the back of the lot.
+  const wedge=(x0,x1,z0,z1,yF,yB,m,base)=>{base=base==null?-3:base;const sh=new T.Shape();sh.moveTo(z0,base);sh.lineTo(z1,base);sh.lineTo(z1,yB);sh.lineTo(z0,yF);sh.lineTo(z0,base);
+    const geo=new T.ExtrudeGeometry(sh,{depth:x1-x0,bevelEnabled:false});geo.rotateY(-Math.PI/2);const me=new T.Mesh(geo,m);me.position.set(x1,0,0);me.castShadow=false;me.receiveShadow=true;scene.add(me);return me;};
+  const g=new T.Mesh(new T.PlaneGeometry(900,900),C.lot);g.rotation.x=-Math.PI/2;g.position.set(70,-3,80);g.receiveShadow=true;scene.add(g);
+  const road=mat(0x6d6f72),walk=mat(0xd9d4c8),asph=mat(0x55585c),stripe=mat(0xf2f2f2),cmu=mat(0xb3ada3),bank=mat(0x7f9a5c),gravel=mat(0xbdb7aa);
+  box(-130,320,-3,8.4,-42,-12,road);box(-130,320,-3,8.5,-12,0,walk);
+  wedge(-112,-80,0,320,8.4,-6,road);
+  wedge(-80,-1,0,140,8.5,-1.5,C.garden);box(-60,-8,5,27,15,70,C.ctx);
+  box(-85,70,-3,55,140,225,C.ctx);for(let f=1;f<6;f++)box(-84,69,f*9,f*9+4,139.8,140,mat(0x9aa3ad));
+  wedge(138,186,0,200,8.5,1,asph);for(let z=30;z<=190;z+=9){const y=8.5-7.5*z/200;box(140,156,y,y+.06,z,z+.4,stripe);}
+  box(186,262,-3,24,5,125,C.ctx);
+  // site: front terrace at street level, retaining wall and bank, sunken garden pad, sloping back lot
+  box(0,62,-3,8.5,0,40,C.garden);box(61.6,62.2,-3,8.6,0,40,cmu);
+  wedge(0,10,40,85,8.5,-.5,C.garden);
+  wedge(62,137,0,4,8.5,4.5,bank);box(62,137,-3,4.5,4,4.8,cmu);
+  box(56,137,-3,0,4.8,106,C.garden);
+  wedge(0,56,85,136,-.5,-1.9,gravel);wedge(56,137,106,136,-1.2,-1.9,gravel);
+  box(137,138,-3,9,0,107,C.wall);box(-1,0,-3,9,0,136,C.wall);
+  box(72,92,-1.4,7,118,126,mat(0xe6e0cf));box(104,124,-1.4,7,117,125,mat(0xe6e0cf));
+  // building: lower floor opens to the garden and back lot, upper floor sits near street level
+  box(10,56,-3,22,40,85,C.stucco);box(8.2,10,-1,26,52,57,mat(0x9a5a3c));box(10,56,-.5,7.5,85,85.25,mat(0x9c6a45));box(9.9,56.1,9.3,9.7,40,85.1,mat(0xd8d2c6));
+  box(33,39,-.5,7.5,85.2,85.5,C.dark);box(54,56.2,0,8,57,63,C.dark);box(30,36,8.5,16,39.7,40.1,C.dark);
+  box(22,56,9.4,10,85,94,C.upper);
+  [23,34,45,55].forEach(x=>box(x-.5,x+.5,-.5,9.4,93,94,C.post));
+  box(22,48,-.5,8,93.2,93.7,C.wood);box(50,51.6,-.5,7,92.4,95,C.teal);
+  const rail=(x0,z0,x1,z1,y)=>{const L=Math.hypot(x1-x0,z1-z0),alongX=z0===z1;
+    [1.3,2.5,3.5].forEach(h=>alongX?box(x0,x1,y+h-.1,y+h+.1,z0-.1,z0+.1,C.rail):box(x0-.1,x0+.1,y+h-.1,y+h+.1,z0,z1,C.rail));
+    const n=Math.max(1,Math.round(L/6));for(let i=0;i<=n;i++){const x=x0+(x1-x0)*i/n,z=z0+(z1-z0)*i/n;box(x-.15,x+.15,y,y+3.6,z-.15,z+.15,C.rail);}};
+  rail(22,94,56,94,10);rail(22,85,22,94,10);rail(56,85,56,87.5,10);rail(56,91.5,56,94,10);
+  // front terrace edge: guardrail, and steps down from street level to the low deck
+  rail(62,0,62,17,8.5);rail(62,21,62,40,8.5);
+  stairs(62,19,8.5,1.5,1,0,4,mat(0xa9a39a));
+
+  // decks: high (L-shape along the back wall), medium (east side), low (front)
+  deck(62,84,70,106,6,C.high);deck(84,137,96,106,6,C.high);
+  stairs(56,89.5,10,6,1,0,4,C.high);
+  deck(120,137,30,96,3.5,C.med);
+  stairs(128,96,6,3.5,0,-1,4,C.med);
+  deck(72,137,8,30,1.5,C.low);deck(62,72,8,30,1.5,C.low);
+  stairs(128,30,3.5,1.5,0,-1,4,C.low);
+  rail(62,70,62,87.5,6);rail(62,91.5,62,106,6);rail(62,70,71,70,6);rail(75,70,84,70,6);rail(84,96,98,96,6);rail(102,96,120,96,6);rail(120,96,126,96,6);rail(130,96,137,96,6);
+  rail(120,30,120,58,3.5);rail(120,62,120,96,3.5);
+
+  // paths and walkways
+  box(98,102,.12,.3,32,48.5,C.rock);box(98,102,.12,.3,71.5,87,C.rock);box(111.5,115,.12,.3,58,62,C.rock);box(57,88.5,.12,.3,58,62,C.rock);box(56,62,.12,.3,62,94,C.rock);
+  const ringG=new T.RingGeometry(7.2,11.5,64);ringG.rotateX(-Math.PI/2);put(ringG,C.rock,BX,.31,BZ);
+  stairs(73,70,6,0,0,-1,4,C.high);stairs(100,96,6,0,0,-1,4,C.high);stairs(120,60,3.5,0,-1,0,4,C.med);stairs(100,30,1.5,0,0,1,4,C.low);
+
+  // central bar
+  const ring=(ro,ri,d,m,y)=>{const sh=new T.Shape();sh.absarc(0,0,ro,0,Math.PI*2,false);const h=new T.Path();h.absarc(0,0,ri,0,Math.PI*2,true);sh.holes.push(h);
+    const geo=new T.ExtrudeGeometry(sh,{depth:d,bevelEnabled:false,curveSegments:56});geo.rotateX(-Math.PI/2);return put(geo,m,BX,y,BZ);};
+  ring(7,4.6,3.4,C.stucco,0);ring(7.6,4.3,.25,C.top,3.4);
+  cyl(2,5.5,BX,0,BZ,C.wood,24);cyl(2.6,.2,BX,3.2,BZ,C.top,24);cyl(.25,11.5,BX,5.5,BZ,C.rail,8);
+  for(let i=0;i<18;i++){const a=i/18*Math.PI*2;cyl(.65,2.5,BX+Math.cos(a)*8.6,.3,BZ+Math.sin(a)*8.6,C.stool,12);}
+
+  // furniture and planting
+  const table=(x,y,z,n,big)=>{const r=big?1.4:1;cyl(r,.15,x,y+2.4,z,C.top,18);cyl(.14,2.4,x,y,z,C.rail,6);
+    for(let i=0;i<n;i++){const a=i/n*Math.PI*2+.4,d=r+1;box(x+Math.cos(a)*d-.6,x+Math.cos(a)*d+.6,y,y+1.5,z+Math.sin(a)*d-.6,z+Math.sin(a)*d+.6,C.chair);}};
+  const agave=(x,y,z)=>{for(let i=0;i<7;i++){const c=put(new T.ConeGeometry(.22,2.2,5),C.agave,x,y+1,z);c.rotation.set(Math.cos(i)*.7,i,Math.sin(i*1.7)*.7);}};
+  const planter=(x0,x1,z0,z1)=>{box(x0,x1,0,2.2,z0,z1,C.corten);const cx=(x0+x1)/2,cz=(z0+z1)/2,L=Math.max(x1-x0,z1-z0),along=x1-x0>z1-z0;
+    for(let k=-1;k<=1;k+=2)agave(along?cx+k*L/4:cx,2.2,along?cz:cz+k*L/4);};
+  [[72,40],[82,46],[110,38],[114,46],[110,80],[116,88],[70,50]].forEach(([x,z])=>table(x,.12,z,4,true));
+  planter(90,96,36,38.5);planter(104,110,36,38.5);planter(90,96,82,84.5);planter(104,110,82,84.5);planter(66,72,63,65.5);planter(80,86,54,56.5);
+  [[66,34],[88,32],[116,32],[66,66],[108,92],[94,93],[116,68]].forEach(([x,z])=>{const sh=put(new T.SphereGeometry(1.6,10,8),C.shrub,x,1.1,z);sh.scale.y=.7;});
+  for(let x=68;x<=132;x+=8)table(x,1.5,18,2);
+  for(let z=38;z<=90;z+=8)table(129,3.5,z,2);
+  for(let z=78;z<=102;z+=8)table(73,6,z,2);
+  for(let x=92;x<=134;x+=8)table(x,6,101,2);
+  for(let x=27;x<=51;x+=8)table(x,10,89.5,2);
+  {const x0=85,x1=95,z0=76,z1=88;[[x0,z0],[x1,z0],[x0,z1],[x1,z1]].forEach(([x,z])=>box(x-.3,x+.3,0,9,z-.3,z+.3,C.post));
+   box(x0-.5,x1+.5,8.6,9.2,z0-.3,z0+.3,C.post);box(x0-.5,x1+.5,8.6,9.2,z1-.3,z1+.3,C.post);
+   for(let x=x0;x<=x1;x+=1.5)box(x-.12,x+.12,9.2,9.6,z0-1,z1+1,C.wood);table(90,.12,82,6,true);}
+  // front garden path from the entry steps to the building and the garden
+  box(41,47,8.5,8.7,0,40,C.rock);box(47,62,8.5,8.7,17,21,C.rock);
+
+  // back wall
+  const walls=new T.Group();scene.add(walls);
+  box(56,137,0,9,106,107,C.wall,walls);
+
+  // trees: heritage oak behind the building's back-west corner, a large oak on the front terrace, others traced from the satellite view
+  const trees=new T.Group();scene.add(trees);
+  const oak=(x,z,k,leaf,y0)=>{k=k||1;y0=y0||0;const t=put(new T.CylinderGeometry(.9*k,1.3*k,13,10),C.trunk,x,y0+6.5,z,trees);t.rotation.z=.06;
+    [[0,19,0,11],[6,17,3,8],[-6,18,-2,9],[2,21,-6,8],[-3,16,6,8]].forEach(([dx,y,dz,r])=>{const c=put(new T.IcosahedronGeometry(r*k,1),leaf||treeMat,x+dx*k,y0+y*(k>1?1.08:1),z+dz*k,trees);c.scale.y=.55;c.castShadow=true;});};
+  const fallMat=mat(0xb98a3e,{transparent:true,opacity:.35,depthWrite:false});
+  oak(28,20,1.3,null,8.5);oak(82,13,1,fallMat,1.5);oak(132,48,.9,fallMat);oak(6,92,1.7,null,-.6);oak(132,100,.8,fallMat);
+
+  // string lights radiating from the bar
+  const bulbMat=new T.MeshBasicMaterial({color:0xfff4d6});
+  const bulbG=new T.SphereGeometry(.28,8,6),lineMat=new T.LineBasicMaterial({color:0x2b2b2b});
+  const P0=new T.Vector3(BX,17,BZ),glow=[];
+  [[64,32],[100,28],[136,32],[136,62],[136,104],[100,104],[64,104],[60,62]].forEach(([x,z])=>{
+    const P1=new T.Vector3(x,13,z);cyl(.18,13,x,0,z,C.rail,6);const pts=[];
+    for(let i=0;i<=24;i++){const t=i/24,q=P0.clone().lerp(P1,t);q.y-=3*4*t*(1-t);pts.push(q);if(i%2===1){const b=new T.Mesh(bulbG,bulbMat);b.position.copy(q);scene.add(b);}}
+    scene.add(new T.Line(new T.BufferGeometry().setFromPoints(pts),lineMat));glow.push(pts[12]);});
+  const lamps=[new T.PointLight(0xffc678,0,50,1.4)];lamps[0].position.set(BX,10,BZ);
+  glow.forEach((q,i)=>{if(i%2===0){const l=new T.PointLight(0xffc678,0,34,1.4);l.position.copy(q);lamps.push(l);}});
+  lamps.forEach(l=>scene.add(l));
+
+  // day / night
+  const setNight=on=>{const bg=new T.Color(on?0x0b1a2b:0xdfe8ec);scene.background=bg;scene.fog=new T.Fog(bg,on?90:160,on?300:420);
+    hemi.intensity=on?.2:.78;hemi.color.set(on?0x6a7fa8:0xe4eef6);sun.intensity=on?.06:.85;
+    bulbMat.color.set(on?0xffd27a:0xfff4d6);lamps.forEach((l,i)=>l.intensity=on?(i?.9:1.5):0);};
+  setNight(false);
+
+  // pins and notes
+  pinsEl.innerHTML=NOTES.map((n,i)=>`<button class="pin" data-i="${i}" aria-label="${i+1}: ${n.t}">${i+1}</button>`).join('');
+  $('#key').innerHTML=NOTES.map((n,i)=>`<li data-i="${i}"><button type="button" data-i="${i}"><span class="num">${i+1}</span><span class="kt">${n.t}</span><span class="kd">${n.d}</span>${n.f?`<span class="kf">${n.f}</span>`:''}</button></li>`).join('');
+  pinsEl.insertAdjacentHTML('beforeend',TAGS.map(g=>`<span class="tag${g.h?' h':''}">${g.t}</span>`).join(''));
+  const tagEls=[...pinsEl.querySelectorAll('.tag')];
+  const pinEls=[...pinsEl.querySelectorAll('.pin')],keyEls=[...document.querySelectorAll('#key li')];
+  const v=new T.Vector3();
+  const drawPins=()=>{const w=wrap.clientWidth,h=wrap.clientHeight;
+    NOTES.forEach((n,i)=>{v.set(...n.p).project(cam);const el=pinEls[i];
+      if(v.z>1||Math.abs(v.x)>1.05||Math.abs(v.y)>1.05){el.style.display='none';return;}
+      el.style.display='';el.style.transform=`translate(${(v.x+1)/2*w}px,${(1-v.y)/2*h}px)`;});
+    TAGS.forEach((g,i)=>{v.set(...g.p).project(cam);const el=tagEls[i];
+      if(v.z>1||Math.abs(v.x)>.95||Math.abs(v.y)>.95){el.style.display='none';return;}
+      el.style.display='';el.style.transform=`translate(${(v.x+1)/2*w}px,${(1-v.y)/2*h}px) translate(-50%,-50%)`;});};
+
+  let tw=null;
+  const go=(pos,tgt,ms)=>{if(reduce){cam.position.set(...pos);ctl.target.set(...tgt);return;}
+    tw={a:cam.position.clone(),b:new T.Vector3(...pos),c:ctl.target.clone(),d:new T.Vector3(...tgt),t0:performance.now(),ms:ms||1000};};
+  ctl.addEventListener('start',()=>{tw=null;});
+  const viewBtns=[...document.querySelectorAll('[data-view]')];
+  const pressView=k=>viewBtns.forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.view===k)));
+  viewBtns.forEach(b=>b.addEventListener('click',()=>{const vw=VIEWS[b.dataset.view];go(b.dataset.view==='overview'||b.dataset.view==='plan'?fit(vw[0],vw[1]):vw[0],vw[1]);pressView(b.dataset.view);}));
+  const setActive=i=>{pinEls.forEach((e,j)=>e.classList.toggle('on',j===i));keyEls.forEach((e,j)=>e.classList.toggle('on',j===i));};
+  const focus=i=>{const p=new T.Vector3(...NOTES[i].p),dir=cam.position.clone().sub(ctl.target).normalize();
+    dir.y=Math.max(dir.y,.45);dir.normalize();go(p.clone().add(dir.multiplyScalar(36)).toArray(),NOTES[i].p);setActive(i);pressView('');};
+  pinsEl.addEventListener('click',e=>{const b=e.target.closest('.pin');if(b)focus(+b.dataset.i);});
+  $('#key').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;focus(+b.dataset.i);
+    wrap.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});});
+
+  const nightBtn=$('#night');nightBtn.addEventListener('click',()=>{const on=nightBtn.getAttribute('aria-pressed')!=='true';nightBtn.setAttribute('aria-pressed',String(on));setNight(on);});
+  const treeModes=['see-through','solid','hidden'];let tm=0;const treeBtn=$('#trees');
+  treeBtn.addEventListener('click',()=>{tm=(tm+1)%3;treeBtn.textContent='Trees: '+treeModes[tm];
+    trees.visible=tm!==2;const solid=tm===1;[treeMat,fallMat].forEach(m=>{m.transparent=!solid;m.opacity=solid?1:.35;m.depthWrite=solid;m.needsUpdate=true;});});
+  const labBtn=$('#labels');labBtn.addEventListener('click',()=>{const on=labBtn.getAttribute('aria-pressed')!=='true';labBtn.setAttribute('aria-pressed',String(on));pinsEl.style.display=on?'':'none';});
+
+  const ro=new ResizeObserver(()=>{const w=wrap.clientWidth,h=wrap.clientHeight;renderer.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix();});
+  ro.observe(wrap);
+  const loop=now=>{if(tw){let k=Math.min(1,(now-tw.t0)/tw.ms);k=k<.5?2*k*k:1-((-2*k+2)**2)/2;
+      cam.position.lerpVectors(tw.a,tw.b,k);ctl.target.lerpVectors(tw.c,tw.d,k);if(k>=1)tw=null;}
+    ctl.update();renderer.render(scene,cam);drawPins();requestAnimationFrame(loop);};
+  requestAnimationFrame(loop);
+};
+
+try{if(!window.THREE||!THREE.OrbitControls)throw new Error('three.js missing');init();}
+catch(e){wrap.innerHTML='<p class="err">The 3D model could not load here. Try opening this page in a desktop or mobile browser.</p>';}
+}
+</script>
+</body>
+</html>
