@@ -1,7 +1,8 @@
 /* Bacari Austin design concept: model version 5.
    One file per version. The page (../index.html) loads the live version and calls build().
-   CHANGES FROM VERSION 4 (Robert's suggestion S004): a glass double door added on the second (street-level) floor, on the
-   east wall, opening from the building straight onto the upper deck next to the stairs down to the high deck.
+   CHANGES FROM VERSION 4 (Robert's suggestions S004-S005): every chair and bar stool back now stands straight up (the backs had a
+   small tilt that made chairs facing east or west lean sideways); new glass double door on the upper (second) floor's east wall,
+   opening onto the upper deck next to the stairs down to the high deck.
    EARLIER, FROM VERSION 3 (Robert's suggestions S001-S003): bar stools rebuilt as four-leg rattan bistro bar stools with a woven
    seat at 30 in, footrest ring and full hoop back; 12 more two-tops (front terrace lawn, a front row on the low deck, the medium
    deck and the garden paving), keeping aisles of about 3½ ft or more for staff; the two smaller trees with brown tops are now green.
@@ -47,8 +48,8 @@ notes:[
  {p:[137.4,12,84],t:'Wooden fence around the property',d:'A wooden fence about 6½ ft tall follows the whole property line: 137 ft along W 6th, 130 ft down each side, and along the back alley. It has a guest gate on W 6th and a wider service gate on the alley. On the east side it stands on the retaining edge of the neighbor\'s higher parking lot.',f:'Check: Austin\'s fence height limits, and whether a solid fence on W 6th should have openings so the patio shows from the street.'},
  {p:[73,3.5,79],t:'Existing landscaping, kept',d:'Landscaping that shows in the site videos, worked into the garden: the turf lawn, the teal block walls with terracotta pots on top, steel planters with agaves and yuccas, cedar slat screens, the stamped concrete patio, mulch beds, bamboo along the west edge, and the lawn under the front oak.',f:'Check: which of these Robert wants to keep. They are placed where they fit the concept, not exactly where they stand today.'}
 ,
-{p:[57,15,73],t:'Second-floor door onto the upper deck',d:'A glass double door on the east wall of the upper floor, the floor that is level with W 6th. It opens straight onto the upper deck, a few steps from the stairs down to the high deck, so guests upstairs can walk out to the patio without going around.',f:'Check: which wall Robert has in mind, and whether it should be a single door, a double door or a wide folding door.'},
-{p:[102,3,97],t:'Tables and chairs like Bacari LA',d:'Furniture follows Bacari\'s Los Angeles patios: 30-inch square walnut tables on black iron bases, pushed together for four or six; French rattan bistro chairs with woven seats; navy built-in banquettes with striped cushions and bright pillows along the east fence and the back wall; rattan bistro bar stools with woven seats, footrest rings and hoop backs at the bar. Version 4 adds two-tops on the front terrace lawn, a front row on the low deck, and more on the medium deck and the garden paving, about 140 seats with the bar, keeping aisles of about 3½ ft or more so staff can get through.',f:'Check: seat count per deck against the occupant load, and the exact bar stool, chair and table models used at the other restaurants.'}
+{p:[102,3,97],t:'Tables and chairs like Bacari LA',d:'Furniture follows Bacari\'s Los Angeles patios: 30-inch square walnut tables on black iron bases, pushed together for four or six; French rattan bistro chairs with woven seats; navy built-in banquettes with striped cushions and bright pillows along the east fence and the back wall; rattan bistro bar stools with woven seats, footrest rings and hoop backs at the bar. Version 4 adds two-tops on the front terrace lawn, a front row on the low deck, and more on the medium deck and the garden paving, about 140 seats with the bar, keeping aisles of about 3½ ft or more so staff can get through.',f:'Check: seat count per deck against the occupant load, and the exact bar stool, chair and table models used at the other restaurants.'},
+{p:[56.5,19,69],t:'Upper-floor door to the deck',d:'Version 5 adds a glass double door on the east wall of the upper (street-level) floor. It opens onto the upper deck right beside the opened railing and the stairs down to the high deck, so guests upstairs can walk straight out and down into the patio.',f:'Check: whether this is the spot Robert has in mind, and whether the existing boarded doors on the back wall should open up too.'}
 ],
 tags:[{p:[124,9.5,-6],t:'486 ft · sidewalk',h:1},{p:[22,9.2,8],t:'486 ft · front terrace',h:1},{p:[104,1,62],t:'477.5 ft · patio',h:1},{p:[104,-.8,141],t:'476 ft · alley',h:1},{p:[164,7,80],t:'483 ft · neighbor parking',h:1},{p:[92,7,3],t:'Retaining wall + bank',h:1},{p:[70,9.5,-26],t:'W 6th St'},{p:[-88,3,70],t:'Pressler St'},{p:[30,60,170],t:'Pressler Apartments'},{p:[160,42,196],t:'Parking garage'},{p:[-30,31,32],t:'Title company'},{p:[8,-.8,141],t:'Back alley'},{p:[226,35,66],t:'Salon + print shop'},{p:[33,26,58],t:'Bar Peached building'}],
 views:{overview:[[250,125,165],[72,0,66]],deck:[[61,16,90],[102,2,58]],bar:[[80,5.4,96],[110,5,44]],street:[[64,24,-32],[92,0,72]],up:[[104,5.5,98],[74,7,8]],plan:[[70,240,65.5],[70,0,65]]},
@@ -139,9 +140,10 @@ build(kit){
   box(36.6,43.4,0,7.9,85,85.2,white);box(37,39.95,0,7.5,85.2,85.4,C.dark);box(40.05,43,0,7.5,85.2,85.4,C.dark);
   // wall at the deck columns makes the hidden service corridor; staff door at its east end; partition keeps guests on the restroom side
   box(24,64,-.5,9.4,93,93.4,C.wood);box(63.6,64,0,8,85.2,93,clad);box(56.3,64,0,9.4,84.8,85.2,C.wood);
-  // version 5: glass double door on the upper (second) floor, east wall, opening onto the upper deck
-  box(56,56.25,10,18.2,69.6,76.4,white);box(56.25,56.4,10,17.8,70,72.9,glass);box(56.25,56.4,10,17.8,73.1,76,glass);
-  box(56.4,56.55,13.2,13.6,72.3,72.5,C.dark);box(56.4,56.55,13.2,13.6,73.5,73.7,C.dark);
+  // version 5: glass double door on the upper floor's east wall, onto the upper deck beside the stairs down to the high deck
+  box(56,56.2,9.6,18.2,65.4,72.6,white);
+  [[65.8,69.15],[69.25,72.2]].forEach(([a,b])=>{box(56.2,56.32,10,17.8,a,b,C.dark);box(56.32,56.36,10.6,17.2,a+.3,b-.3,glass);});
+  [68.8,69.6].forEach(z=>box(56.36,56.5,13,15.2,z-.06,z+.06,C.rail));
   // guest restroom door on the east wall, under the deck
   box(56,56.3,0,7.5,65.5,69,C.teal);
 
@@ -179,7 +181,7 @@ build(kit){
   // FURNITURE in the style of Bacari's LA patios (Silver Lake, W 3rd): 30-inch square walnut tops on black iron bases,
   // French rattan bistro chairs with woven seats, navy banquettes with striped cushions and bright pillows. Instanced for speed.
   const IN={};const inst=(k,geo,m)=>{IN[k]=IN[k]||{geo,m,list:[]};return IN[k];};
-  const O=new T.Object3D();
+  const O=new T.Object3D();O.rotation.order='YXZ';
   const add=(k,geo,m,x,y,z,ry,sx,sy,sz,rx)=>{O.position.set(x,y,z);O.rotation.set(rx||0,ry||0,0);O.scale.set(sx||1,sy||1,sz||1);O.updateMatrix();inst(k,geo,m).list.push(O.matrix.clone());};
   const G={box:new T.BoxGeometry(1,1,1),cyl:new T.CylinderGeometry(.5,.5,1,10),hoop:new T.TorusGeometry(.62,.06,6,16,Math.PI),foot:new T.TorusGeometry(.58,.045,6,20)};
   G.foot.rotateX(Math.PI/2);
@@ -191,7 +193,7 @@ build(kit){
   const chair=(x,y,z,ry)=>{
     [[-.6,-.6],[.6,-.6],[-.6,.6],[.6,.6]].forEach(([dx,dz])=>{const [px,pz]=loc(x,z,ry,dx,dz);add('cl',G.cyl,F.rattan,px,y,pz,0,.1,1.55,.1);});
     add('cs',G.box,F.weave,x,y+1.45,z,ry,1.4,.14,1.35);
-    const [bx,bz]=loc(x,z,ry,0,-.68);add('cb',G.box,F.weave,bx,y+1.6,bz,ry,1.15,1.15,.08,-.12);
+    const [bx,bz]=loc(x,z,ry,0,-.68);add('cb',G.box,F.weave,bx,y+1.6,bz,ry,1.15,1.15,.08);
     add('ch',G.hoop,F.rattan,bx,y+2.75,bz,ry,1,1,1,0);
     [[-.62],[.62]].forEach(([dx])=>{const [px,pz]=loc(x,z,ry,dx,-.68);add('cu',G.cyl,F.rattan,px,y+1.5,pz,0,.09,1.3,.09);});};
   // table: w x d feet (2.5 = 30 in), black iron base, walnut top at 30 in
@@ -223,7 +225,7 @@ build(kit){
     add('sf',G.foot,F.rattan,x,y+.95,z,ry);
     add('ss',G.cyl,F.weave,x,y+2.35,z,0,1.45,.16,1.45);add('sr',G.foot,F.rattan,x,y+2.45,z,ry,1.22,1,1.22);
     [[-.58],[.58]].forEach(([dx])=>{const [px,pz]=loc(x,z,ry,dx,-.6);add('su',G.cyl,F.rattan,px,y+2.45,pz,0,.1,1.25,.1);});
-    const [bx,bz]=loc(x,z,ry,0,-.62);add('sb',G.box,F.weave,bx,y+2.65,bz,ry,1.1,.95,.08,-.1);
+    const [bx,bz]=loc(x,z,ry,0,-.62);add('sb',G.box,F.weave,bx,y+2.65,bz,ry,1.1,.95,.08);
     add('sh',G.hoop,F.rattan,bx,y+3.65,bz,ry,.95,.8,1);});
   const flush=()=>{Object.values(IN).forEach(({geo,m,list})=>{const im=new T.InstancedMesh(geo,m,list.length);list.forEach((mx,i)=>im.setMatrixAt(i,mx));
     im.castShadow=true;im.receiveShadow=true;scene.add(im);});};
@@ -299,3 +301,4 @@ build(kit){
   return {fences,walls,trees,treeMats:[treeMat,fallMat],bulbMat,lamps};
 }
 };
+
