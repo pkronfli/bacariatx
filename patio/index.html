@@ -81,27 +81,44 @@ h2{font-size:clamp(22px,2.6vw,30px);line-height:1.15;margin:0 0 6px;text-wrap:ba
 .asks li::marker{color:var(--accent);font-weight:700}
 .foot{font-size:14px;color:var(--muted);padding-top:20px;padding-bottom:40px}
 @media(max-width:600px){.controls{flex-direction:column;align-items:stretch}.seg{justify-content:flex-start}button.b{padding:0 13px;font-size:14px}}
+[hidden]{display:none!important}
+.vbar{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:10px max(5vw,16px);background:#d3c29a;color:#08223b;font-size:15px}
+.vbar p{margin:0;flex:1 1 220px}
+.vbar button.b{border-color:#08223b;color:#08223b;min-height:40px}
+button.b.solid{background:var(--btn);color:var(--btn-ink)}
+.sug label,.sug .lab{display:block;font-weight:600;font-size:14.5px;margin:0 0 6px}
+.sug input,.sug select,.sug textarea{display:block;width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--rule);border-radius:8px;padding:10px 12px;min-height:44px}
+.sug textarea{resize:vertical;line-height:1.5}
+.sug input:focus-visible,.sug select:focus-visible,.sug textarea:focus-visible{outline:3px solid var(--accent);outline-offset:1px}
+.sug form{display:grid;gap:14px;max-width:720px}
+.row2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.row{display:flex;flex-wrap:wrap;gap:10px;align-items:end}
+.row>div{flex:1 1 200px}
+#s-status{margin:14px 0 0;font-size:15px;color:var(--accent);min-height:1.5em}
+.log{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:10px;max-width:860px}
+.log li{background:var(--panel);border-radius:10px;padding:12px 16px}
+.log .meta{font-size:13.5px;color:var(--muted);margin:0 0 4px}
+.log p{margin:0 0 6px;overflow-wrap:anywhere}
+.chip{display:inline-block;font-size:13px;font-weight:600;border-radius:999px;padding:2px 10px;background:var(--btn);color:var(--btn-ink)}
+.chip.new{background:#d3c29a;color:#08223b}
+.log .reply{font-size:15px;margin:8px 0 0;padding-left:10px;border-left:3px solid var(--accent)}
+.vrow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
+.vrow>div{flex:1 1 260px}.vrow strong{font-weight:700}
+@media(max-width:600px){.row2{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header class="band top"><div class="wrap">
   <p class="sub">Bacari Austin · West 6th patio · concept model</p>
   <h1>Robert's patio: decks stepping down to one central bar</h1>
-  <p class="lede">A 3D concept model of the ideas in Robert's walkthrough video, set on the real lot. Decks step down from the upper deck in three levels around a garden, with a big bar in the middle as "the nucleus of the energy of the patio." The lot is about 137 ft along W 6th by 130 ft deep, from Travis County records checked against Google satellite and 3D imagery. Ground heights come from USGS lidar: the front terrace is level with the street, and the patio sits about 9 ft lower. Deck heights and exact positions are still estimates.</p>
+  <p class="lede" id="lede"></p>
 </div></header>
 
 <section aria-label="3D model">
+  <div id="vbar" class="vbar" hidden></div>
   <div id="model" class="fig"><div id="pins"></div><p class="hint">Drag to turn · pinch or scroll to zoom · tap a number</p></div>
   <p class="keynote">Heights are measured from the existing patio, about 477.5 ft above sea level. Dark tags show ground heights from USGS lidar (2017, 1 m grid).</p>
-  <ul class="levels" aria-label="Level key">
-    <li><span class="sw" style="background:#cdb994"></span>Street + front terrace +8½ ft</li>
-    <li><span class="sw" style="background:#8f6342"></span>Upper deck ~+9½ ft (existing)</li>
-    <li><span class="sw" style="background:#a8744a"></span>High deck ~6 ft</li>
-    <li><span class="sw" style="background:#c08d5c"></span>Medium deck ~3½ ft</li>
-    <li><span class="sw" style="background:#d6ac7c"></span>Low deck ~1½ ft</li>
-    <li><span class="sw" style="background:#cdb994"></span>Garden at patio level (0)</li>
-    <li><span class="sw" style="background:#b4aea2"></span>River-rock paths</li>
-  </ul>
+  <ul class="levels" id="levels" aria-label="Level key"></ul>
   <div class="controls">
     <div class="seg" role="group" aria-label="Camera views">
       <button class="b" data-view="overview" aria-pressed="true">Overview</button>
@@ -114,6 +131,7 @@ h2{font-size:clamp(22px,2.6vw,30px);line-height:1.15;margin:0 0 6px;text-wrap:ba
     <div class="seg" role="group" aria-label="Display">
       <button class="b" id="night" aria-pressed="false">Night</button>
       <button class="b" id="trees" aria-pressed="false">Trees: see-through</button>
+      <button class="b" id="fence" aria-pressed="true">Fence</button>
       <button class="b" id="labels" aria-pressed="true">Numbers</button>
     </div>
   </div>
@@ -125,9 +143,33 @@ h2{font-size:clamp(22px,2.6vw,30px);line-height:1.15;margin:0 0 6px;text-wrap:ba
   <ol id="key"></ol>
 </div></section>
 
+<section class="band sug" id="suggest" hidden><div class="wrap">
+  <h2>Suggest a change</h2>
+  <p class="intro">Describe what you'd like changed, in plain words. Claude updates the model, usually within the hour, and saves each update as a new version you can go back from.</p>
+  <form id="s-lock" hidden>
+    <div class="row"><div><label for="s-code">Passcode</label><input id="s-code" type="password" autocomplete="off"></div><button class="b solid" type="submit" id="s-unlock">Unlock</button></div>
+  </form>
+  <form id="s-form" hidden>
+    <div class="row2">
+      <div><label for="s-from">Your name</label><input id="s-from" maxlength="60"></div>
+      <div><label for="s-note">About</label><select id="s-note"></select></div>
+    </div>
+    <div><label for="s-text">What should change?</label><textarea id="s-text" rows="4" maxlength="4000" placeholder="Example: make the bar square and move it 10 feet toward the back wall."></textarea></div>
+    <div class="row"><button class="b solid" type="submit" id="s-send">Send suggestion</button><button class="b" type="button" id="s-relock">Lock this device</button></div>
+  </form>
+  <p id="s-status" role="status" aria-live="polite"></p>
+  <ol id="s-list" class="log" aria-label="Suggestions so far"></ol>
+</div></section>
+
+<section class="band" id="versions" hidden><div class="wrap">
+  <h2>Versions</h2>
+  <p class="intro">Every update is saved. Look at any earlier version, or make it the live one again.</p>
+  <ol id="v-list" class="log"></ol>
+</div></section>
+
 <section class="band asks"><div class="wrap">
   <h2>To put this to scale</h2>
-  <p class="intro">This version uses Robert's video, Travis County parcel records for 1315 W 6th St, Google Maps and Earth imagery from December 2023, USGS lidar ground heights from 2017, and Patrick's walk-around videos from outside the fence on November 23, 2026. The building footprint (about 46 × 45 ft) and tree positions were traced from the satellite view to within roughly 5–10 ft. Robert's deck locations are interpreted from what he points at in the video. These would make it a measured model.</p>
+  <p class="intro">This version uses Robert's video, Travis County parcel records for 1315 W 6th St, Google Maps and Earth imagery from December 2023, USGS lidar ground heights from 2017, and Patrick's walk-around videos from outside the fence on November 23, 2026. The building footprint (about 46 × 45 ft), the tree positions, the back alley and the neighboring buildings were traced from the satellite view to within roughly 5–10 ft. The fence follows the county parcel lines, not a survey. Robert's deck locations are interpreted from what he points at in the video. These would make it a measured model.</p>
   <ol>
     <li><strong>The Matterport scan.</strong> The share link helps, but the downloadable files help most: the point cloud (E57) or 3D mesh (OBJ) and the measured floor plan, which Matterport sells as add-ons.</li>
     <li><strong>A site survey with a tree survey,</strong> showing property and lease lines, ground levels, and each oak's position and trunk size. The landlord may already have one, and Austin's tree rules will require it anyway.</li>
@@ -142,31 +184,12 @@ h2{font-size:clamp(22px,2.6vw,30px);line-height:1.15;margin:0 0 6px;text-wrap:ba
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
 <script>
 {
-const NOTES=[
- {p:[39,6,89],t:'Kitchen door + hidden service corridor',d:'The kitchen door goes where the rear window is now. A wall under the upper deck hides the staff route: dirty dishes in, drop at the dish pit, pick up at the line, then out to the patio by a side lane.',f:'Check: corridor width and the dish route for the health code set where this wall goes.'},
- {p:[59,3,60],t:'Guest route to the restrooms',d:'Guests reach the restrooms through the building\'s side door off the garden. The service side stays closed to them.'},
- {p:[50,13,90],t:'Upper deck, railing opened',d:'The existing upper deck at the back of the building, on the upper floor, close to street level and about 9–10 ft above the patio. A section of railing opens to stairs that lead down to the new decks.'},
- {p:[73,8.5,90],t:'High deck (about 6 ft)',d:'The first level down. It wraps along the back wall, like the treehouse feel at Silver Lake: different decks, different paths.',f:'Check: a drop this high needs guardrails.'},
- {p:[128,6,52],t:'Medium deck (about 3½ ft, hip height)',d:'Runs down the east side where the barrel-roof walkway is now. The neighbor\'s parking lot beyond the side wall is about 5½ ft higher than the patio, so this deck sits just below their cars.',f:'Check: how tall the side wall needs to be to screen the parking lot.'},
- {p:[100,4,19],t:'Low deck (about 1½ ft)',d:'Wraps the front, where the grass and mulch are now. The ground here is about 8 ft below the W 6th sidewalk, behind the block retaining wall and grass bank, so the deck is well below street level. Steps come down to it from the front terrace.',f:'Check: how much street noise the wall and grade really block.'},
- {p:[100,7,60],t:'Central bar',d:'A big round or square bar in the middle of the garden. "Think of this as the field in a stadium," with everyone looking down at it from the decks.',f:'Check: water, drains, power and ice all have to run under the garden.'},
- {p:[112,3,40],t:'Seating pockets',d:'Small seating areas set into the planting around the bar, each one its own zone.'},
- {p:[90,10.5,83],t:'Pergola pocket',d:'A pergola over one of the pockets, reached by its own path.'},
- {p:[78,1.5,60],t:'River-rock paths',d:'Solid paths running from each deck down to the bar and pockets.'},
- {p:[100,11,106.5],t:'Tall back wall',d:'About as tall as the existing fence. It blocks the view of the back lot, the shipping containers and the apartments, so the garden feels fully closed in.',f:'Check: Austin\'s height limit for walls.'},
- {p:[6,33,92],t:'Heritage oak',d:'The roughly 100-year-old heritage oak stands behind the building at its back-west corner, by the back lot, where Patrick\'s walk-around found it. A second large oak shades the front terrace, which is level with the W 6th sidewalk. Tree sizes and positions are traced from the satellite view.',f:'Check: an arborist and Austin\'s rules on digging near protected trees, especially for the kitchen and service corridor right beside it.'},
- {p:[100,3,121],t:'Back lot',d:'The paved lot behind the wall, where the shipping containers sit now. It falls about 2 ft toward the apartments. Robert didn\'t say how it should be used; it could stay parking or a service yard.'},
- {p:[64,6,24],t:'Grade change: street down to the garden',d:'The site falls about 9 ft from W 6th to the patio, and about 10 ft to the back of the lot. In the concept, guests come off the sidewalk onto the front terrace under the oak, then down a flight of steps to the low deck and the garden.',f:'Check: accessibility. Wheelchair users need a ramp or lift from street level down to the garden and the restrooms.'}
-];
-const TAGS=[{p:[124,9.5,-6],t:'486 ft · sidewalk',h:1},{p:[12,9.2,24],t:'486 ft · front terrace',h:1},{p:[66,1,50],t:'477.5 ft · patio',h:1},{p:[40,-.5,118],t:'476 ft · back lot',h:1},{p:[162,7,80],t:'483 ft · neighbor parking',h:1},{p:[92,7,3],t:'Retaining wall + bank',h:1},{p:[70,9.5,-26],t:'W 6th St'},{p:[-97,.5,60],t:'Pressler St'},{p:[-10,58,182],t:'Pressler Apartments'},{p:[-34,21,42],t:'Neighbor building'},{p:[33,31,62],t:'Bar Peached building'}];
-const VIEWS={overview:[[190,105,190],[72,0,55]],deck:[[54,17.5,90],[104,3,48]],bar:[[88,5.4,74],[122,4,28]],street:[[50,20,-28],[96,0,62]],up:[[112,5.5,80],[60,7,6]],plan:[[70,230,60.5],[70,0,60]]};
-const BX=100,BZ=60;
 const $=s=>document.querySelector(s);
 const wrap=$('#model'),pinsEl=$('#pins');
 const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-const init=()=>{
-  const T=THREE;
+const start=M=>{
+  const T=THREE,NOTES=M.notes,TAGS=M.tags,VIEWS=M.views;
   const renderer=new T.WebGLRenderer({antialias:true});
   renderer.setPixelRatio(Math.min(devicePixelRatio,2));
   renderer.setSize(wrap.clientWidth,wrap.clientHeight);
@@ -175,7 +198,7 @@ const init=()=>{
   const scene=new T.Scene();
   const cam=new T.PerspectiveCamera(45,wrap.clientWidth/wrap.clientHeight,1,1200);
   const ctl=new T.OrbitControls(cam,renderer.domElement);
-  ctl.enableDamping=true;ctl.dampingFactor=.08;ctl.maxPolarAngle=Math.PI/2-.03;ctl.minDistance=8;ctl.maxDistance=280;
+  ctl.enableDamping=true;ctl.dampingFactor=.08;ctl.maxPolarAngle=Math.PI/2-.03;ctl.minDistance=8;ctl.maxDistance=460;
   const fit=(pos,tgt)=>{const k=wrap.clientWidth/wrap.clientHeight<1?1.6:1;return pos.map((q,i)=>tgt[i]+(q-tgt[i])*k);};
   cam.position.set(...fit(...VIEWS.overview));ctl.target.set(...VIEWS.overview[1]);
 
@@ -193,118 +216,23 @@ const init=()=>{
     garden:mat(0xcdb994),rock:mat(0xb4aea2),wall:mat(0xe9e3d7),wood:mat(0x6b4a33),top:mat(0x4a3020),
     stool:mat(0x2f5d4a),chair:mat(0x5b3d2a),corten:mat(0x8a4a2a),agave:mat(0x6f8f86),shrub:mat(0x5c7a45),
     ctx:mat(0xc9ccd0),lot:mat(0xb9b5ab),trunk:mat(0x5a4330)};
-  const treeMat=mat(0x4d6a3b,{transparent:true,opacity:.35,depthWrite:false});
 
   const put=(g,m,x,y,z,parent)=>{const me=new T.Mesh(g,m);me.position.set(x,y,z);me.castShadow=true;me.receiveShadow=true;(parent||scene).add(me);return me;};
   const box=(x0,x1,y0,y1,z0,z1,m,parent)=>put(new T.BoxGeometry(x1-x0,y1-y0,z1-z0),m,(x0+x1)/2,(y0+y1)/2,(z0+z1)/2,parent);
   const cyl=(r,h,x,y,z,m,seg)=>put(new T.CylinderGeometry(r,r,h,seg||16),m,x,y+h/2,z);
   const deckMats=top=>[C.skirt,C.skirt,top,C.skirt,C.skirt,C.skirt];
-  const deck=(x0,x1,z0,z1,y,top)=>box(x0,x1,0,y,z0,z1,deckMats(top));
 
   const stairs=(x,z,yTop,yBot,dx,dz,w,m)=>{const n=Math.max(2,Math.round((yTop-yBot)/.6)),r=(yTop-yBot)/n;
     for(let i=1;i<n;i++){const top=yTop-r*i,h=top-yBot,cx=x+dx*(i-.5),cz=z+dz*(i-.5);
       put(new T.BoxGeometry(dx?1:w,h,dz?1:w),m,cx,yBot+h/2,cz);}};
-  // terrain. Heights are feet relative to the existing patio (about 477.5 ft above sea level, USGS lidar 2017).
-  // x runs west to east along W 6th, z runs from the sidewalk to the back of the lot.
-  const wedge=(x0,x1,z0,z1,yF,yB,m,base)=>{base=base==null?-3:base;const sh=new T.Shape();sh.moveTo(z0,base);sh.lineTo(z1,base);sh.lineTo(z1,yB);sh.lineTo(z0,yF);sh.lineTo(z0,base);
-    const geo=new T.ExtrudeGeometry(sh,{depth:x1-x0,bevelEnabled:false});geo.rotateY(-Math.PI/2);const me=new T.Mesh(geo,m);me.position.set(x1,0,0);me.castShadow=false;me.receiveShadow=true;scene.add(me);return me;};
-  const g=new T.Mesh(new T.PlaneGeometry(900,900),C.lot);g.rotation.x=-Math.PI/2;g.position.set(70,-3,80);g.receiveShadow=true;scene.add(g);
-  const road=mat(0x6d6f72),walk=mat(0xd9d4c8),asph=mat(0x55585c),stripe=mat(0xf2f2f2),cmu=mat(0xb3ada3),bank=mat(0x7f9a5c),gravel=mat(0xbdb7aa);
-  box(-130,320,-3,8.4,-42,-12,road);box(-130,320,-3,8.5,-12,0,walk);
-  wedge(-112,-80,0,320,8.4,-6,road);
-  wedge(-80,-1,0,140,8.5,-1.5,C.garden);box(-60,-8,5,27,15,70,C.ctx);
-  box(-85,70,-3,55,140,225,C.ctx);for(let f=1;f<6;f++)box(-84,69,f*9,f*9+4,139.8,140,mat(0x9aa3ad));
-  wedge(138,186,0,200,8.5,1,asph);for(let z=30;z<=190;z+=9){const y=8.5-7.5*z/200;box(140,156,y,y+.06,z,z+.4,stripe);}
-  box(186,262,-3,24,5,125,C.ctx);
-  // site: front terrace at street level, retaining wall and bank, sunken garden pad, sloping back lot
-  box(0,62,-3,8.5,0,40,C.garden);box(61.6,62.2,-3,8.6,0,40,cmu);
-  wedge(0,10,40,85,8.5,-.5,C.garden);
-  wedge(62,137,0,4,8.5,4.5,bank);box(62,137,-3,4.5,4,4.8,cmu);
-  box(56,137,-3,0,4.8,106,C.garden);
-  wedge(0,56,85,136,-.5,-1.9,gravel);wedge(56,137,106,136,-1.2,-1.9,gravel);
-  box(137,138,-3,9,0,107,C.wall);box(-1,0,-3,9,0,136,C.wall);
-  box(72,92,-1.4,7,118,126,mat(0xe6e0cf));box(104,124,-1.4,7,117,125,mat(0xe6e0cf));
-  // building: lower floor opens to the garden and back lot, upper floor sits near street level
-  box(10,56,-3,22,40,85,C.stucco);box(8.2,10,-1,26,52,57,mat(0x9a5a3c));box(10,56,-.5,7.5,85,85.25,mat(0x9c6a45));box(9.9,56.1,9.3,9.7,40,85.1,mat(0xd8d2c6));
-  box(33,39,-.5,7.5,85.2,85.5,C.dark);box(54,56.2,0,8,57,63,C.dark);box(30,36,8.5,16,39.7,40.1,C.dark);
-  box(22,56,9.4,10,85,94,C.upper);
-  [23,34,45,55].forEach(x=>box(x-.5,x+.5,-.5,9.4,93,94,C.post));
-  box(22,48,-.5,8,93.2,93.7,C.wood);box(50,51.6,-.5,7,92.4,95,C.teal);
-  const rail=(x0,z0,x1,z1,y)=>{const L=Math.hypot(x1-x0,z1-z0),alongX=z0===z1;
-    [1.3,2.5,3.5].forEach(h=>alongX?box(x0,x1,y+h-.1,y+h+.1,z0-.1,z0+.1,C.rail):box(x0-.1,x0+.1,y+h-.1,y+h+.1,z0,z1,C.rail));
-    const n=Math.max(1,Math.round(L/6));for(let i=0;i<=n;i++){const x=x0+(x1-x0)*i/n,z=z0+(z1-z0)*i/n;box(x-.15,x+.15,y,y+3.6,z-.15,z+.15,C.rail);}};
-  rail(22,94,56,94,10);rail(22,85,22,94,10);rail(56,85,56,87.5,10);rail(56,91.5,56,94,10);
-  // front terrace edge: guardrail, and steps down from street level to the low deck
-  rail(62,0,62,17,8.5);rail(62,21,62,40,8.5);
-  stairs(62,19,8.5,1.5,1,0,4,mat(0xa9a39a));
-
-  // decks: high (L-shape along the back wall), medium (east side), low (front)
-  deck(62,84,70,106,6,C.high);deck(84,137,96,106,6,C.high);
-  stairs(56,89.5,10,6,1,0,4,C.high);
-  deck(120,137,30,96,3.5,C.med);
-  stairs(128,96,6,3.5,0,-1,4,C.med);
-  deck(72,137,8,30,1.5,C.low);deck(62,72,8,30,1.5,C.low);
-  stairs(128,30,3.5,1.5,0,-1,4,C.low);
-  rail(62,70,62,87.5,6);rail(62,91.5,62,106,6);rail(62,70,71,70,6);rail(75,70,84,70,6);rail(84,96,98,96,6);rail(102,96,120,96,6);rail(120,96,126,96,6);rail(130,96,137,96,6);
-  rail(120,30,120,58,3.5);rail(120,62,120,96,3.5);
-
-  // paths and walkways
-  box(98,102,.12,.3,32,48.5,C.rock);box(98,102,.12,.3,71.5,87,C.rock);box(111.5,115,.12,.3,58,62,C.rock);box(57,88.5,.12,.3,58,62,C.rock);box(56,62,.12,.3,62,94,C.rock);
-  const ringG=new T.RingGeometry(7.2,11.5,64);ringG.rotateX(-Math.PI/2);put(ringG,C.rock,BX,.31,BZ);
-  stairs(73,70,6,0,0,-1,4,C.high);stairs(100,96,6,0,0,-1,4,C.high);stairs(120,60,3.5,0,-1,0,4,C.med);stairs(100,30,1.5,0,0,1,4,C.low);
-
-  // central bar
-  const ring=(ro,ri,d,m,y)=>{const sh=new T.Shape();sh.absarc(0,0,ro,0,Math.PI*2,false);const h=new T.Path();h.absarc(0,0,ri,0,Math.PI*2,true);sh.holes.push(h);
-    const geo=new T.ExtrudeGeometry(sh,{depth:d,bevelEnabled:false,curveSegments:56});geo.rotateX(-Math.PI/2);return put(geo,m,BX,y,BZ);};
-  ring(7,4.6,3.4,C.stucco,0);ring(7.6,4.3,.25,C.top,3.4);
-  cyl(2,5.5,BX,0,BZ,C.wood,24);cyl(2.6,.2,BX,3.2,BZ,C.top,24);cyl(.25,11.5,BX,5.5,BZ,C.rail,8);
-  for(let i=0;i<18;i++){const a=i/18*Math.PI*2;cyl(.65,2.5,BX+Math.cos(a)*8.6,.3,BZ+Math.sin(a)*8.6,C.stool,12);}
-
-  // furniture and planting
-  const table=(x,y,z,n,big)=>{const r=big?1.4:1;cyl(r,.15,x,y+2.4,z,C.top,18);cyl(.14,2.4,x,y,z,C.rail,6);
-    for(let i=0;i<n;i++){const a=i/n*Math.PI*2+.4,d=r+1;box(x+Math.cos(a)*d-.6,x+Math.cos(a)*d+.6,y,y+1.5,z+Math.sin(a)*d-.6,z+Math.sin(a)*d+.6,C.chair);}};
-  const agave=(x,y,z)=>{for(let i=0;i<7;i++){const c=put(new T.ConeGeometry(.22,2.2,5),C.agave,x,y+1,z);c.rotation.set(Math.cos(i)*.7,i,Math.sin(i*1.7)*.7);}};
-  const planter=(x0,x1,z0,z1)=>{box(x0,x1,0,2.2,z0,z1,C.corten);const cx=(x0+x1)/2,cz=(z0+z1)/2,L=Math.max(x1-x0,z1-z0),along=x1-x0>z1-z0;
-    for(let k=-1;k<=1;k+=2)agave(along?cx+k*L/4:cx,2.2,along?cz:cz+k*L/4);};
-  [[72,40],[82,46],[110,38],[114,46],[110,80],[116,88],[70,50]].forEach(([x,z])=>table(x,.12,z,4,true));
-  planter(90,96,36,38.5);planter(104,110,36,38.5);planter(90,96,82,84.5);planter(104,110,82,84.5);planter(66,72,63,65.5);planter(80,86,54,56.5);
-  [[66,34],[88,32],[116,32],[66,66],[108,92],[94,93],[116,68]].forEach(([x,z])=>{const sh=put(new T.SphereGeometry(1.6,10,8),C.shrub,x,1.1,z);sh.scale.y=.7;});
-  for(let x=68;x<=132;x+=8)table(x,1.5,18,2);
-  for(let z=38;z<=90;z+=8)table(129,3.5,z,2);
-  for(let z=78;z<=102;z+=8)table(73,6,z,2);
-  for(let x=92;x<=134;x+=8)table(x,6,101,2);
-  for(let x=27;x<=51;x+=8)table(x,10,89.5,2);
-  {const x0=85,x1=95,z0=76,z1=88;[[x0,z0],[x1,z0],[x0,z1],[x1,z1]].forEach(([x,z])=>box(x-.3,x+.3,0,9,z-.3,z+.3,C.post));
-   box(x0-.5,x1+.5,8.6,9.2,z0-.3,z0+.3,C.post);box(x0-.5,x1+.5,8.6,9.2,z1-.3,z1+.3,C.post);
-   for(let x=x0;x<=x1;x+=1.5)box(x-.12,x+.12,9.2,9.6,z0-1,z1+1,C.wood);table(90,.12,82,6,true);}
-  // front garden path from the entry steps to the building and the garden
-  box(41,47,8.5,8.7,0,40,C.rock);box(47,62,8.5,8.7,17,21,C.rock);
-
-  // back wall
-  const walls=new T.Group();scene.add(walls);
-  box(56,137,0,9,106,107,C.wall,walls);
-
-  // trees: heritage oak behind the building's back-west corner, a large oak on the front terrace, others traced from the satellite view
-  const trees=new T.Group();scene.add(trees);
-  const oak=(x,z,k,leaf,y0)=>{k=k||1;y0=y0||0;const t=put(new T.CylinderGeometry(.9*k,1.3*k,13,10),C.trunk,x,y0+6.5,z,trees);t.rotation.z=.06;
-    [[0,19,0,11],[6,17,3,8],[-6,18,-2,9],[2,21,-6,8],[-3,16,6,8]].forEach(([dx,y,dz,r])=>{const c=put(new T.IcosahedronGeometry(r*k,1),leaf||treeMat,x+dx*k,y0+y*(k>1?1.08:1),z+dz*k,trees);c.scale.y=.55;c.castShadow=true;});};
-  const fallMat=mat(0xb98a3e,{transparent:true,opacity:.35,depthWrite:false});
-  oak(28,20,1.3,null,8.5);oak(82,13,1,fallMat,1.5);oak(132,48,.9,fallMat);oak(6,92,1.7,null,-.6);oak(132,100,.8,fallMat);
-
-  // string lights radiating from the bar
-  const bulbMat=new T.MeshBasicMaterial({color:0xfff4d6});
-  const bulbG=new T.SphereGeometry(.28,8,6),lineMat=new T.LineBasicMaterial({color:0x2b2b2b});
-  const P0=new T.Vector3(BX,17,BZ),glow=[];
-  [[64,32],[100,28],[136,32],[136,62],[136,104],[100,104],[64,104],[60,62]].forEach(([x,z])=>{
-    const P1=new T.Vector3(x,13,z);cyl(.18,13,x,0,z,C.rail,6);const pts=[];
-    for(let i=0;i<=24;i++){const t=i/24,q=P0.clone().lerp(P1,t);q.y-=3*4*t*(1-t);pts.push(q);if(i%2===1){const b=new T.Mesh(bulbG,bulbMat);b.position.copy(q);scene.add(b);}}
-    scene.add(new T.Line(new T.BufferGeometry().setFromPoints(pts),lineMat));glow.push(pts[12]);});
-  const lamps=[new T.PointLight(0xffc678,0,50,1.4)];lamps[0].position.set(BX,10,BZ);
-  glow.forEach((q,i)=>{if(i%2===0){const l=new T.PointLight(0xffc678,0,34,1.4);l.position.copy(q);lamps.push(l);}});
-  lamps.forEach(l=>scene.add(l));
+  // the model version builds its own geometry with the helpers above
+  const R=M.build({T,scene,C,mat,put,box,cyl,deckMats,stairs});
+  const {fences,trees,bulbMat,lamps}=R,[treeMat,fallMat]=R.treeMats;
+  $('#levels').innerHTML=M.levels.map(l=>`<li><span class="sw" style="background:${l[0]}"></span>${l[1]}</li>`).join('');
+  if(M.lede)$('#lede').textContent=M.lede;
 
   // day / night
-  const setNight=on=>{const bg=new T.Color(on?0x0b1a2b:0xdfe8ec);scene.background=bg;scene.fog=new T.Fog(bg,on?90:160,on?300:420);
+  const setNight=on=>{const bg=new T.Color(on?0x0b1a2b:0xdfe8ec);scene.background=bg;scene.fog=new T.Fog(bg,on?110:240,on?380:680);
     hemi.intensity=on?.2:.78;hemi.color.set(on?0x6a7fa8:0xe4eef6);sun.intensity=on?.06:.85;
     bulbMat.color.set(on?0xffd27a:0xfff4d6);lamps.forEach((l,i)=>l.intensity=on?(i?.9:1.5):0);};
   setNight(false);
@@ -342,6 +270,7 @@ const init=()=>{
   const treeModes=['see-through','solid','hidden'];let tm=0;const treeBtn=$('#trees');
   treeBtn.addEventListener('click',()=>{tm=(tm+1)%3;treeBtn.textContent='Trees: '+treeModes[tm];
     trees.visible=tm!==2;const solid=tm===1;[treeMat,fallMat].forEach(m=>{m.transparent=!solid;m.opacity=solid?1:.35;m.depthWrite=solid;m.needsUpdate=true;});});
+  const fenceBtn=$('#fence');fenceBtn.addEventListener('click',()=>{const on=fenceBtn.getAttribute('aria-pressed')!=='true';fenceBtn.setAttribute('aria-pressed',String(on));fences.visible=on;});
   const labBtn=$('#labels');labBtn.addEventListener('click',()=>{const on=labBtn.getAttribute('aria-pressed')!=='true';labBtn.setAttribute('aria-pressed',String(on));pinsEl.style.display=on?'':'none';});
 
   const ro=new ResizeObserver(()=>{const w=wrap.clientWidth,h=wrap.clientHeight;renderer.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix();});
@@ -352,8 +281,69 @@ const init=()=>{
   requestAnimationFrame(loop);
 };
 
-try{if(!window.THREE||!THREE.OrbitControls)throw new Error('three.js missing');init();}
-catch(e){wrap.innerHTML='<p class="err">The 3D model could not load here. Try opening this page in a desktop or mobile browser.</p>';}
+// ---------- versions, suggestions and reverting ----------
+const store={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},del:k=>{try{localStorage.removeItem(k)}catch(e){}}};
+const sess={get:k=>{try{return sessionStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{sessionStorage.setItem(k,v)}catch(e){}}};
+const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const when=t=>{const d=new Date(t);return isNaN(d)?esc(t):d.toLocaleDateString(undefined,{month:'short',day:'numeric'})+', '+d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});};
+const STATUS={new:'Waiting for Claude',done:'Done',question:'Claude has a question',declined:'Not changed'};
+const PASS='bacari-patio-pass',NAME='bacari-patio-name';
+let CFG={api:''},VERS={live:1,versions:[{n:1}]},shown=1,live=1,pass=null,busy=false;
+const has=n=>VERS.versions.some(v=>v.n===n);
+const api=body=>fetch(CFG.api,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(body)}).then(r=>r.json());
+const say=t=>{$('#s-status').textContent=t||'';};
+const goTo=n=>{if(n===live)history.replaceState(null,'',location.pathname);else location.hash='v'+n;location.reload();};
+
+const drawBar=()=>{const el=$('#vbar');if(shown===live){el.hidden=true;return;}
+  el.hidden=false;el.innerHTML=`<p>You're looking at <strong>version ${shown}</strong>. Version ${live} is the live one.</p><button class="b" id="vb-live">Back to live</button>${CFG.api?'<button class="b solid" id="vb-make">Make this the live version</button>':''}`;
+  $('#vb-live').onclick=()=>goTo(live);if(CFG.api)$('#vb-make').onclick=()=>makeLive(shown);};
+const drawVersions=()=>{const list=VERS.versions.slice().sort((a,b)=>b.n-a.n);if(list.length<2&&shown===live){$('#versions').hidden=true;return;}
+  $('#versions').hidden=false;
+  $('#v-list').innerHTML=list.map(v=>`<li><div class="vrow"><div><p><strong>Version ${v.n}</strong> ${v.n===live?'<span class="chip">Live</span>':''} ${v.n===shown&&shown!==live?'<span class="chip new">Showing now</span>':''}</p><p class="meta">${esc(v.date||'')}${v.by?' · requested by '+esc(v.by):''}</p><p>${esc(v.summary||'')}</p></div><div class="row">${v.n!==shown?`<button class="b" data-view="${v.n}">View</button>`:''}${v.n!==live&&CFG.api?`<button class="b solid" data-make="${v.n}">Make live</button>`:''}</div></div></li>`).join('');};
+const makeLive=n=>{if(busy)return;if(!pass){$('#suggest').scrollIntoView();say('Enter the passcode first, then choose the version again.');$('#s-code').focus();return;}
+  busy=true;say('Switching the live version…');
+  api({action:'setlive',passcode:pass,version:n,from:store.get(NAME)||'Robert'}).then(r=>{busy=false;
+    if(r&&r.ok){sess.set('bacari-patio-live',JSON.stringify({n:n,t:Date.now()}));live=n;goTo(n);}
+    else if(!locked(r))say('Could not switch versions. Try again.');},()=>{busy=false;say('Could not reach the server. Try again in a moment.');});};
+const locked=r=>{if(r&&r.error==='passcode'){store.del(PASS);pass=null;showLock('That passcode is not right.');return true;}
+  if(r&&r.error==='locked'){showLock('Too many wrong tries. Wait 15 minutes and try again.');return true;}return false;};
+const showLock=msg=>{$('#s-lock').hidden=false;$('#s-form').hidden=true;$('#s-list').innerHTML='';$('#s-code').value='';say(msg||'Enter the passcode to send suggestions.');};
+const drawList=items=>{$('#s-list').innerHTML=(items||[]).map(s=>`<li><p class="meta">${when(s.time)} · ${esc(s.from)}${s.note?' · about '+esc(s.note):''}</p><p>${esc(s.text)}</p><span class="chip ${s.status==='new'?'new':''}">${esc(STATUS[s.status]||s.status)}</span>${s.reply?`<p class="reply"><strong>Claude:</strong> ${esc(s.reply)}</p>`:''}</li>`).join('');};
+const showForm=()=>{$('#s-lock').hidden=true;$('#s-form').hidden=false;say('');
+  api({action:'list',passcode:pass}).then(r=>{if(r&&r.ok)drawList(r.items);else locked(r);},()=>say('Could not load earlier suggestions. You can still send one.'));};
+const setupPanels=M=>{drawBar();drawVersions();
+  $('#v-list').addEventListener('click',e=>{const v=e.target.closest('[data-view]'),m=e.target.closest('[data-make]');if(v)goTo(+v.dataset.view);else if(m)makeLive(+m.dataset.make);});
+  if(!CFG.api)return;
+  $('#suggest').hidden=false;
+  $('#s-note').innerHTML='<option value="">The whole model</option>'+M.notes.map((n,i)=>`<option value="${i+1}. ${esc(n.t)}">${i+1}. ${esc(n.t)}</option>`).join('');
+  $('#s-from').value=store.get(NAME)||'Robert';
+  pass=store.get(PASS);if(pass)showForm();else showLock();
+  $('#s-lock').addEventListener('submit',e=>{e.preventDefault();const code=$('#s-code').value.trim();if(!code||busy)return;busy=true;say('Checking…');
+    api({action:'check',passcode:code}).then(r=>{busy=false;if(r&&r.ok){pass=code;store.set(PASS,code);$('#s-code').value='';showForm();}else if(!locked(r))say('Could not check the passcode. Try again.');},()=>{busy=false;say('Could not reach the server. Try again in a moment.');});});
+  $('#s-relock').addEventListener('click',()=>{store.del(PASS);pass=null;showLock('Locked on this device.');});
+  $('#s-form').addEventListener('submit',e=>{e.preventDefault();const text=$('#s-text').value.trim();if(busy)return;if(!text){say('Write what you would like changed first.');$('#s-text').focus();return;}
+    const from=$('#s-from').value.trim()||'Robert';store.set(NAME,from);busy=true;$('#s-send').disabled=true;say('Sending…');
+    api({action:'suggest',passcode:pass,from:from,note:$('#s-note').value,text:text,version:shown}).then(r=>{busy=false;$('#s-send').disabled=false;
+      if(r&&r.ok){$('#s-text').value='';drawList(r.items);say('Sent. Claude will update the model, usually within the hour.');}
+      else if(!locked(r))say('Could not send. Your text is still here; try again.');},()=>{busy=false;$('#s-send').disabled=false;say('Could not reach the server. Your text is still here; try again in a moment.');});});
+};
+
+const fail=()=>{wrap.innerHTML='<p class="err">The 3D model could not load here. Try again, or open this page in another browser.</p>';};
+(async()=>{
+  const j=u=>fetch(u,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
+  const [cfg,vers]=await Promise.all([j('config.json'),j('versions.json')]);
+  if(cfg)CFG=cfg;if(vers&&vers.versions&&vers.versions.length)VERS=vers;
+  live=has(VERS.live)?VERS.live:VERS.versions[VERS.versions.length-1].n;
+  let c=null;try{c=JSON.parse(sess.get('bacari-patio-live'));}catch(e){}
+  if(c&&has(c.n)&&Date.now()-c.t<6e5)live=c.n;
+  const h=+((location.hash.match(/^#v(\d+)$/)||[])[1]||0);shown=h&&has(h)?h:live;
+  const sc=document.createElement('script');sc.src='versions/v'+shown+'.js?'+(VERS.stamp||'');
+  sc.onload=()=>{try{if(!window.THREE||!THREE.OrbitControls||!window.PATIO_MODEL)throw 0;start(window.PATIO_MODEL);setupPanels(window.PATIO_MODEL);}catch(e){fail();}};
+  sc.onerror=fail;document.body.appendChild(sc);
+  // a version made live a moment ago is recorded by the suggestions service before the site catches up
+  if(CFG.api)fetch(CFG.api+'?action=live').then(r=>r.json()).then(d=>{if(!d||!d.ok||!d.live||!has(d.live))return;
+    sess.set('bacari-patio-live',JSON.stringify({n:d.live,t:Date.now()}));if(d.live!==live){if(h){live=d.live;drawBar();drawVersions();}else location.reload();}}).catch(()=>{});
+})();
 }
 </script>
 </body>
