@@ -16,7 +16,7 @@ node _tools/model.mjs check             # syntax check + headless render (PNGs i
 node _tools/model.mjs publish --by "Robert" --summary "One plain sentence."
 ```
 
-`publish` makes the next version number, updates `versions.json` (live = new) and `CHANGELOG.md`, render-checks, commits, pushes, and waits for bacariatx.com to show it. If someone published meanwhile, it merges your edits onto their version first; if the same lines changed it stops (exit code 3) and asks you to check out again. `make-live N` points the site at an existing version. `status` shows what changed in `_work/`.
+`publish` makes the next version number, updates `versions.json` (live = new) and `CHANGELOG.md`, render-checks, commits, pushes, and waits for bacariatx.com to show it. If someone published meanwhile, it merges your edits onto their version first; if the same lines changed it stops (exit code 3) and asks you to check out again. `make-live N` (when someone pressed Make live on the page) makes the next `checkout` start from version N and `publish` build on it, without merging the newer versions back in; it pushes nothing itself. `status` shows what changed in `_work/`.
 
 Do not read whole parts. Use `find`, then read the lines around the hit.
 
@@ -31,9 +31,9 @@ The parts are pieces of one function body, `build(kit)`, run in order in one sco
 | neighbors | title company house, back alley, Pressler Apartments and garage (`backB`, hideable), neighbor lot, salon |
 | site-fences-gates | terrace, retaining wall, grades; wooden fence (`fences`), ornate W 6th gate, sliding alley gate |
 | building | existing building (light blue), upper deck, service plan doors and corridor, upper-floor door, front steps |
-| decks-bar | high and medium decks (none past the back of the building, z 85), stairs, rails, river-rock cross paths, central bar |
+| decks-bar | high and medium decks (the medium deck runs down the east side to the back wall, z 88), stairs, rails, river-rock paths, central bar |
 | furniture | tables, chairs, banquettes, bar stools (instanced; `flush()` draws them at the end) |
-| landscaping | front path, existing landscaping, lawn, teal walls, screens, mulch beds, tall back wall |
+| landscaping | front path, existing landscaping, lawn, teal walls, screens, mulch beds, tall back wall (z 88), marble statue |
 | trees | live oaks (`liveOak`), `trees` group |
 | bar-string-lights | string lights radiating from the bar, `lamps` |
 | planters | corten planters with trees, troughs |
@@ -51,7 +51,7 @@ The return value must stay `{fences, walls, trees, treeMats:[treeMat, fallMat], 
 - z runs from the W 6th sidewalk (z=0) to the back property line at the alley (z=130).
 - y is height above the existing patio (y=0). Street and front terrace y=8.5; back of the lot about y=-1.9.
 - Existing building x 10..56, z 40..85, two floors (upper at street level, lower at patio level), taller block at its south-west corner; upper deck along the south face (x 24..64, z 85..94) wrapping the east face (x 56..64, z 62..85).
-- Concept (Robert): kitchen double door on the south wall under the deck, wall at the deck columns making a hidden service corridor; high deck along W 6th, medium deck at the NE corner and down the east side to the line of the back of the building (no deck further back, Patrick, v21), garden at patio level laid out like a formal garden around a fountain: the central bar (BX, BZ) is the fountain, with cross paths and four curved beds (planters part), seating around them and along the tall wall at the back.
+- Concept (Robert): kitchen double door on the south wall under the deck, wall at the deck columns making a hidden service corridor; high deck along W 6th, medium deck at the NE corner and down the east side, garden at patio level with the central bar (BX, BZ) in the middle. The courtyard ends at a tall wall at z 88 (x 56.5..137), in line with the back of the building (Patrick's Line A, v22); behind it is a parking lot (asphalt, stalls) reached from the alley gate. Nothing of the courtyard goes past z 88. A marble statue stands against the wall at (92, 86.4), at the end of the path from the bar.
 
 ## Helpers in `kit`
 

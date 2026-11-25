@@ -9,7 +9,8 @@
 //   node _tools/model.mjs publish --by "Robert" --summary "One plain sentence." [--details "longer text"]
 //                                           freeze the changed parts as a new version, update versions.json and
 //                                           CHANGELOG.md, render-check it, commit, push, and wait for the live site
-//   node _tools/model.mjs make-live N       point versions.json "live" at an existing version, commit and push
+//   node _tools/model.mjs make-live N       start the next change from version N (someone pressed Make live): the next
+//                                           checkout uses N and publish builds on it; nothing is pushed until publish
 //   node _tools/model.mjs status            live version, highest version, what _work/ is based on, changed parts
 //
 // _work/ (not committed) holds one file per part, in build order: NNN-name.js, plus meta.json (lede, levels,
@@ -27,6 +28,8 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const REPO = path.resolve(HERE, '..');
 const DESIGN = path.join(REPO, 'design');
 const WORK = path.join(REPO, '_work');
+const WANT = path.join(HERE, '.cache', 'start-from');   // set by make-live, used by the next checkout (not committed)
+const wanted = V => { try { const n = +fs.readFileSync(WANT, 'utf8'); return n && n !== V.live && entry(V, n) ? n : 0; } catch (e) { return 0; } };
 const SITE_URL = 'https://bacariatx.com/design/';
 
 const die = (msg, code) => { console.error('ERROR: ' + msg); process.exit(code || 1); };
@@ -71,14 +74,16 @@ const workParts = () => fs.readdirSync(WORK).filter(f => /^\d+-[a-z0-9-]+\.js$/.
 const baseInfo = () => { const f = path.join(WORK, '.base.json'); if (!fs.existsSync(f)) die('nothing checked out: run  node _tools/model.mjs checkout'); return readJ(f); };
 
 function checkout(n) {
-  const V = versionsJ(); n = n || V.live;
+  const V = versionsJ(), want = n ? 0 : wanted(V); n = n || want || V.live;
+  if (want) console.log(`Starting from version ${want}, the one made live on the page (versions.json still says ${V.live}).`);
   if (!entry(V, n)) die(`version ${n} is not in versions.json`);
   const v = loadVersion(n);
   fs.rmSync(WORK, {recursive: true, force: true}); fs.mkdirSync(WORK);
   const map = {};
   v.parts.forEach((p, i) => { const f = `${String((i + 1) * 10).padStart(3, '0')}-${p.name}.js`; fs.writeFileSync(path.join(WORK, f), p.src); map[f] = p.path; });
   writeJ(path.join(WORK, 'meta.json'), v.meta);
-  writeJ(path.join(WORK, '.base.json'), {base: n, parts: map, meta: v.metaPath});
+  // keepFrom: this checkout deliberately starts from an older version, so publish must not merge in the newer ones
+  writeJ(path.join(WORK, '.base.json'), want ? {base: n, parts: map, meta: v.metaPath, keepFrom: V.live} : {base: n, parts: map, meta: v.metaPath});
   // keep pristine copies to merge against if someone else publishes meanwhile
   fs.mkdirSync(path.join(WORK, '.orig'));
   v.parts.forEach((p, i) => fs.writeFileSync(path.join(WORK, '.orig', Object.keys(map)[i]), p.src));
@@ -269,7 +274,7 @@ async function publish() {
   for (let attempt = 1; attempt <= 5; attempt++) {
     syncMain();
     let V = versionsJ(), info = baseInfo();
-    if (V.live !== info.base) rebaseWork(V.live);
+    if (V.live !== info.base && V.live !== info.keepFrom) rebaseWork(V.live);
     info = baseInfo();
     const {parts, meta} = syntaxCheck();
     const N = highest(V) + 1;
@@ -285,6 +290,7 @@ async function publish() {
     git('commit', '-qm', `Design v${N}: ${summary}`);
     const p = gitTry('push', 'origin', 'HEAD:main');
     if (p.status === 0) {
+      fs.rmSync(WANT, {force: true});
       console.log(`Published version ${N} (${written.length} new files: ${written.join(', ')}).`);
       // the published version is the new base for any further edits
       const man = readJ(manifestPath(N)), map = {};
@@ -303,17 +309,14 @@ async function publish() {
 }
 
 async function makeLive(n) {
-  ensureIdentity(); syncMain();
+  // Nothing is committed here: the page already shows the version in Settings!B1. The next checkout starts from it,
+  // and publish turns it into the new live version.
   const V = versionsJ();
   if (!entry(V, n)) die(`version ${n} is not in versions.json`);
-  if (V.live === n) { console.log(`Version ${n} is already live.`); return; }
-  V.live = n; V.stamp = String(n) + '.' + Date.now().toString(36);
-  writeJ(path.join(DESIGN, 'versions.json'), V);
-  git('add', 'design/versions.json'); git('commit', '-qm', `Design: make version ${n} live`);
-  const p = gitTry('push', 'origin', 'HEAD:main');
-  if (p.status) { git('reset', '--hard', 'HEAD~1'); die('push failed: ' + p.stderr); }
-  console.log(`Version ${n} is live.`);
-  await waitLive(n);
+  fs.mkdirSync(path.dirname(WANT), {recursive: true});
+  if (V.live === n) { fs.rmSync(WANT, {force: true}); console.log(`Version ${n} is already live.`); return; }
+  fs.writeFileSync(WANT, String(n));
+  console.log(`The next checkout starts from version ${n}; publishing makes the new version live. Nothing was pushed.`);
 }
 
 function status() {
