@@ -114,8 +114,8 @@
    "n": 19,
    "date": "Nov 24, 2026",
    "by": "Patrick",
-   "summary": "The three boarded doors on the back wall of the building, onto the upper deck, are now glass doors.",
-   "parts": 1
+   "summary": "The building's back doors are now glass: steel-framed glass French doors onto the upper deck, glass kitchen doors under the deck, and a frosted glass restroom door, all glowing warm at night.",
+   "parts": true
   }
  ]
 }

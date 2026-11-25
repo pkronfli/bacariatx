@@ -17,7 +17,8 @@
   "parts/corner-garden.18.js",
   "parts/night-lighting.18.js",
   "parts/street-detail.18.js",
-  "parts/night-extras.18.js",
+  "parts/night-extras.19.js",
   "parts/finish.18.js"
- ]
+ ],
+ "note": "Version 19 (Patrick's suggestion S014): the building's back doors are glass. The three boarded doors onto the upper deck become steel-framed glass French doors, the kitchen double door under the deck becomes steel-framed glass doors with push bars, and the guest restroom door becomes frosted glass; they glow warm at night. Changed parts: building.19.js, night-extras.19.js, meta.19.json."
 }

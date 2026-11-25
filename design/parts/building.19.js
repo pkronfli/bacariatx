@@ -10,11 +10,16 @@
   // street face: windows, front door and the brick chimney
   [[14,18],[20,24],[44,48],[50,54]].forEach(([a,b])=>box(a,b,10.5,17.5,39.75,40,glass));box(35.5,39,8.5,16.5,39.75,40,C.dark);
   box(27,30.5,8.5,26,38.3,40.2,brick);
-  // back (south) face: upstairs windows, lower-floor windows
+  // back (south) face: upstairs windows and boarded doors onto the deck, lower-floor windows
   [[26,29],[32,35]].forEach(([a,b])=>box(a,b,12,18.5,85,85.25,glass));
-  // version 19 (Patrick, S014): the three boarded doors onto the upper deck become glass doors: white trim, dark steel frame, full glass, brass pull
-  [[40,43],[46,49],[52,55]].forEach(([a,b])=>{box(a-.25,b+.25,10,18,85,85.15,white);box(a,b,10,17.5,85.15,85.27,C.dark);
-    box(a+.25,b-.25,10.35,17.2,85.27,85.31,glass);box(a+.25,b-.25,13.65,13.85,85.27,85.33,C.dark);box(b-.55,b-.45,12.6,14.6,85.33,85.45,C.rail);});
+  // version 19 (S014): the back doors are glass. Black steel frames, clear glass (frosted on the restroom door), pull bars.
+  const steelF=mat(0x1e1f21),doorGlass=mat(0x86a9ba),frostGlass=mat(0xdbe6ea),DOORGLOW=[];
+  // one door leaf on the south face (z = face, opening outward toward +z); kick = height of the solid bottom rail
+  const leafS=(a,b,y0,y1,z,gm,kick)=>{box(a,b,y0,y1,z,z+.16,steelF);box(a+.22,b-.22,y0+kick,y1-.25,z+.16,z+.2,gm);DOORGLOW.push(['s',a+.22,b-.22,y0+kick,y1-.25,z+.21]);};
+  // the three boarded doors onto the upper deck become glass French doors, two leaves each, with a center pull bar pair
+  [[40,43],[46,49],[52,55]].forEach(([a,b])=>{const m=(a+b)/2;box(a-.2,b+.2,10,17.7,85,85.1,white);
+    leafS(a,m-.03,10,17.5,85.1,doorGlass,.6);leafS(m+.03,b,10,17.5,85.1,doorGlass,.6);
+    [m-.22,m+.22].forEach(x=>box(x-.04,x+.04,13,15.2,85.3,85.42,C.rail));});
   [[29,32],[48,51]].forEach(([a,b])=>box(a,b,3,6.6,85,85.25,glass));
   box(56,56.3,-.5,21,40,62,darkWood);
   // existing upper deck: wraps the south and east faces on round concrete columns, white steel pergola over its west half
@@ -29,11 +34,16 @@
 
   // ROBERT'S SERVICE PLAN
   // kitchen double door where the window is now, on the south wall under the deck
-  box(36.6,43.4,0,7.9,85,85.2,white);box(37,39.95,0,7.5,85.2,85.4,C.dark);box(40.05,43,0,7.5,85.2,85.4,C.dark);
+  box(36.6,43.4,0,7.9,85,85.2,white);
+  // version 19: now a pair of steel-framed glass doors with a kick plate and horizontal push bars
+  leafS(37,39.95,0,7.5,85.2,doorGlass,1);leafS(40.05,43,0,7.5,85.2,doorGlass,1);
+  [[37.4,39.6],[40.4,42.6]].forEach(([a,b])=>box(a,b,3.4,3.6,85.4,85.55,C.rail));
   // wall at the deck columns makes the hidden service corridor; staff door at its east end; partition keeps guests on the restroom side
   box(24,64,-.5,9.4,93,93.4,C.wood);box(63.6,64,0,8,85.2,93,clad);box(56.3,64,0,9.4,84.8,85.2,C.wood);
   // guest restroom door on the east wall, under the deck
-  box(56,56.3,0,7.5,65.5,69,C.teal);
+  // version 19: steel-framed door of frosted glass (obscured for privacy), with a pull bar
+  box(56,56.3,0,7.5,65.5,69,steelF);box(56.3,56.34,.8,7.25,65.72,68.78,frostGlass);box(56.34,56.46,2.6,5,65.95,66.05,C.rail);
+  DOORGLOW.push(['e',56.35,56.36,.8,7.25,65.72,68.78]);
   // version 5: glass double door on the upper floor's east wall, onto the upper deck beside the stairs down to the high deck
   box(56,56.2,9.6,18.2,65.4,72.6,white);
   [[65.8,69.15],[69.25,72.2]].forEach(([a,b])=>{box(56.2,56.32,10,17.8,a,b,C.dark);box(56.32,56.36,10.6,17.2,a+.3,b-.3,glass);});
