@@ -2,6 +2,9 @@
 
 Newest first. Each version is listed on the page under Versions. Versions 1-18 were written as single files (design/versions/vN.js); from version 19 a version is a list of part files (design/versions/vN.json).
 
+## Version 19 (Nov 24, 2026, Patrick)
+The three boarded doors on the back wall of the building, onto the upper deck, are now glass doors.
+
 ## Version 18 (Nov 24, 2026, Patrick)
 More Bacari-style night light: candles on every table (night only), fairy lights through all the oaks, a fire pit on the front terrace, Edison pendants over the bar and iron lanterns along the walls.
 
