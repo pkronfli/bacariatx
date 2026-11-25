@@ -956,10 +956,15 @@ const fail=e=>{const why=e&&(e.message||(typeof e==='string'?e:''))||'',gl=/webg
       if(!h){if(inUse()){offerUpdate(target);return;}update(target);return;}
       live=target;drawBar();drawVersions();}
     else if(vers)drawVersions();
-    if(pass&&!$('#s-form').hidden&&(Date.now()<fastUntil()||LAST.some(pendingS)))api({action:'list',passcode:pass}).then(r=>{if(r&&r.ok)drawList(r.items);}).catch(()=>{});};
+    // the list is re-read while something is waiting, and otherwise about once a minute (and when the tab comes back),
+    // so an open tab never shows old statuses; not while someone is typing an answer or a follow-up in the list
+    const typing=[...document.querySelectorAll('#s-list textarea')].some(t=>t.value.trim()||t===document.activeElement);
+    if(pass&&!$('#s-form').hidden&&(Date.now()<fastUntil()||LAST.some(pendingS)||(!typing&&Date.now()-listAt>55000))){listAt=Date.now();
+      api({action:'list',passcode:pass}).then(r=>{if(r&&r.ok)drawList(r.items);}).catch(()=>{});}};
+  let listAt=Date.now();
   const tick=()=>setTimeout(async()=>{if(!document.hidden)await poll().catch(()=>{});tick();},Date.now()<fastUntil()?8000:LAST.some(pendingS)?15000:30000);
   poll().catch(()=>{});tick();
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden)poll().catch(()=>{});});
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden){listAt=0;poll().catch(()=>{});}});
 })();
 }
 </script>

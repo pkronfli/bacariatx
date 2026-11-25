@@ -133,7 +133,7 @@ function pump() {
     fresh.sort(function (a, b) { return a.row - b.row; }).forEach(function (f) {
       if ((tries[f.id] || 0) >= MAX_TRIES) {
         sh.getRange(f.row, 6).setValue('question');
-        sh.getRange(f.row, 7).setValue('Claude tried ' + MAX_TRIES + ' times and could not finish this one. Please send it again, or split it into smaller changes.');
+        sh.getRange(f.row, 7).setValue('This one did not go through. Please send it again.');
       } else go.push(f);
     });
     if (!go.length) { pr.setProperty('TRIES', JSON.stringify(tries)); clearPumps_(); return; }
