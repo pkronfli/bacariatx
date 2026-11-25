@@ -2,6 +2,10 @@
 
 The page `design/index.html` shows one version at a time. Versions 1-18 are single files (`versions/vN.js`) and are never edited. From version 19 on, a version is a small list, `versions/vN.json`, of part files in `parts/` plus one data file (`parts/meta.N.json`: lede, levels, notes, tags, views). A new version writes new files only for the parts it changes; the rest are shared with earlier versions. Published files are never edited.
 
+## Runs that apply suggestions
+
+Two runs can overlap. A sheet row marked "working" that was not named to your run belongs to another run, however long ago it was submitted: leave it (the suggestions queue puts stalled rows back to "new" on its own). Write sheet cells one row at a time, finding the row by its ID just before each write. Publish only with `model.mjs publish`; never commit by hand or edit a published version, even to extend it: make a new version.
+
 ## Making a change (from the repo root)
 
 ```
