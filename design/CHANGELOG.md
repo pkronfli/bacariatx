@@ -2,6 +2,9 @@
 
 Newest first. Each version is listed on the page under Versions. Versions 1-18 were written as single files (design/versions/vN.js); from version 19 a version is a list of part files (design/versions/vN.json).
 
+## Version 30 (Nov 25, 2026, Patrick)
+About 15% fewer tables and chairs (about 162 seats instead of 186), taken from the busiest spots so each pocket has more room.
+
 ## Version 29 (Nov 25, 2026, Patrick)
 More tables and chairs, set the way Bacari's LA patios are: rows of four-tops in each garden pocket, two-tops along the edges and a second row on the east deck, about 186 seats, with nothing on beds, paths or deck edges.
 
