@@ -2,6 +2,11 @@
 
 Newest first. Each version is listed on the page under Versions. Versions 1-18 were written as single files (design/versions/vN.js); from version 19 a version is a list of part files (design/versions/vN.json).
 
+## Version 21 (Nov 24, 2026, Patrick)
+No deck past the back of the building: the low deck is gone and the courtyard is now a formal garden, with the bar as its fountain, four big curved planting beds between cross paths, and seating around them; the teal walls and wooden screens are removed.
+
+Patrick's S015 and S017. The low deck along the back is removed and the medium deck on the east side now stops at the line of the back of the building (z 85), with a railing across its end and its stairs moved onto the bar's cross path. The garden runs at patio level to the tall back wall; the back strip is paved for two rows of tables, the long banquette and its own string-light canopy. The bar moves 10 ft toward the back to the middle of the bigger garden. River-rock paths form a cross through the bar (north to the high deck stairs, east to the medium deck stairs, south to the back seating, west to the restroom and service doors), and four big curved beds with corten edges about 1.5 ft tall fill the quarters, each with an olive or mountain laurel, lavender, sage, boxwood, grasses and flowers. The teal block walls, the turf lawn beside the building and the cedar slat screens are taken out. Tables sit around the beds: under the pergola, the north-east and south-east corners, the south-west corner and the rows along the back.
+
 ## Version 20 (Nov 24, 2026, Robert)
 The three glass doors onto the upper deck are now one big glass door: a 16 ft opening with four folding glass panels.
 
