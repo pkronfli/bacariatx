@@ -73,7 +73,7 @@ h1{font-size:clamp(28px,4.6vw,46px);line-height:1.08;margin:0;text-wrap:balance;
 .walkhint[hidden]{display:none}
 .walking .hint{display:none}
 @media(max-width:600px){.walkhint{right:12px;top:auto;bottom:118px}.walkpad{grid-template-columns:repeat(3,50px);grid-template-rows:repeat(3,50px)}}
-.err{position:absolute;inset:0;display:grid;place-items:center;margin:0;padding:24px;text-align:center;color:#08223b}
+.err{position:absolute;inset:0;display:grid;place-items:center;align-content:center;gap:14px;margin:0;padding:24px;text-align:center;color:#08223b}.err small{color:#5b6b7b;font-size:12px}.err button{font:inherit;padding:8px 18px;border-radius:999px;border:1px solid #08223b;background:#fff;color:#08223b}
 .controls{display:flex;flex-wrap:wrap;gap:10px 18px;justify-content:space-between;align-items:center;padding:14px max(5vw,16px);border-bottom:1px solid var(--rule)}
 .seg{display:flex;flex-wrap:wrap;gap:8px}
 button.b{min-height:44px;padding:0 16px;border-radius:999px;border:1px solid var(--btn);background:transparent;color:var(--ink);font:600 14.5px "Public Sans",sans-serif;cursor:pointer}
@@ -380,6 +380,9 @@ const batchScene=(T,scene,exact)=>{
 const start=M=>{
   const T=THREE,NOTES=M.notes,TAGS=M.tags,VIEWS=M.views;
   const renderer=new T.WebGLRenderer({antialias:true});
+  // phones keep only a few 3D views alive at once: give this one back when the page goes away, and start fresh if it comes back
+  addEventListener('pagehide',()=>{try{renderer.forceContextLoss();}catch(e){}});
+  addEventListener('pageshow',e=>{if(e.persisted)location.reload();});
   renderer.setPixelRatio(Math.min(devicePixelRatio,2));
   renderer.setSize(wrap.clientWidth,wrap.clientHeight);
   renderer.shadowMap.enabled=true;renderer.shadowMap.type=T.PCFSoftShadowMap;
@@ -918,7 +921,10 @@ const offerUpdate=n=>{if(offered===n)return;offered=n;let el=$('#newv');
 // whenever the page is about to go away (update, viewing another version), keep any half-typed text for when it comes back
 addEventListener('pagehide',()=>{try{saveDraft();}catch(e){}});
 
-const fail=()=>{wrap.innerHTML='<p class="err">The 3D model could not load here. Try again, or open this page in another browser.</p>';};
+const fail=e=>{const why=e&&(e.message||(typeof e==='string'?e:''))||'',gl=/webgl|context/i.test(why);
+  wrap.innerHTML='<div class="err"><p style="margin:0">The 3D model could not load here.'+(gl?' Your browser ran out of room for 3D: close other tabs with this page, then try again.':' Try again, or open this page in another browser.')+
+    '</p><button type="button" onclick="location.reload()">Try again</button>'+(why?'<small></small>':'')+'</div>';
+  const sm=wrap.querySelector('.err small');if(sm)sm.textContent='Details: '+why.slice(0,160);};
 (async()=>{
   const j=u=>fetch(u,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
   const [cfg,vers]=await Promise.all([j('config.json'),j('versions.json')]);
@@ -927,16 +933,19 @@ const fail=()=>{wrap.innerHTML='<p class="err">The 3D model could not load here.
   let c=null;try{c=JSON.parse(sess.get('bacari-patio-live'));}catch(e){}
   if(c&&has(c.n)&&Date.now()-c.t<6e5)live=c.n;
   h=+((location.hash.match(/^#v(\d+)$/)||[])[1]||0);shown=h&&has(h)?h:live;
-  const begin=()=>{try{if(!window.THREE||!THREE.OrbitControls||!window.PATIO_MODEL)throw 0;start(window.PATIO_MODEL);setupPanels(window.PATIO_MODEL);restoreDraft();}catch(e){console.error(e);fail();}};
+  const begin=()=>{try{if(!window.THREE||!THREE.OrbitControls||!window.PATIO_MODEL)throw new Error(!window.THREE||!THREE.OrbitControls?"3D library did not load":"model did not load");start(window.PATIO_MODEL);setupPanels(window.PATIO_MODEL);restoreDraft();}catch(e){console.error(e);fail(e);}};
   // versions 1-18 are one script each. Later versions are a short list of part files (versions/vN.json): the parts are pieces of
   // one build() function, joined here in order. Published parts never change, so they are cached and shared between versions.
   if((VERS.versions.find(v=>v.n===shown)||{}).parts){
-    try{const man=await fetch('versions/v'+shown+'.json',{cache:'no-cache'}).then(r=>{if(!r.ok)throw 0;return r.json();});
-      const [meta,...src]=await Promise.all([fetch(man.meta).then(r=>{if(!r.ok)throw 0;return r.json();}),...man.parts.map(u=>fetch(u).then(r=>{if(!r.ok)throw 0;return r.text();}))]);
+    // each file is tried up to 4 times, so a weak phone connection doesn't stop the model
+    const get=(u,how,opt)=>{const go=k=>fetch(u,opt).then(r=>{if(!r.ok)throw new Error(u+': '+r.status);return r[how]();})
+      .catch(e=>k<3?new Promise(ok=>setTimeout(ok,600*(k+1))).then(()=>go(k+1)):Promise.reject(new Error((e&&e.message||'failed')+' ('+u+')')));return go(0);};
+    try{const man=await get('versions/v'+shown+'.json','json',{cache:'no-cache'});
+      const [meta,...src]=await Promise.all([get(man.meta,'json'),...man.parts.map(u=>get(u,'text'))]);
       const body=src.join('\n')+'\n//# sourceURL=bacari-build.js';
-      window.PATIO_MODEL=Object.assign({version:shown,batchAll:true},meta,{build:new Function('kit',body)});begin();}catch(e){console.error(e);fail();}
+      window.PATIO_MODEL=Object.assign({version:shown,batchAll:true},meta,{build:new Function('kit',body)});begin();}catch(e){console.error(e);fail(e);}
   }else{const sc=document.createElement('script');sc.src='versions/v'+shown+'.js?'+(VERS.stamp||'');
-    sc.onload=begin;sc.onerror=fail;document.body.appendChild(sc);}
+    sc.onload=begin;sc.onerror=()=>fail(new Error("model file did not load"));document.body.appendChild(sc);}
   // keep checking for new versions: the suggestions service's live number (set the moment a version is made live)
   // wins once the site lists that version; otherwise versions.json decides. Viewers of the live model get the new one in place.
   const poll=async()=>{
