@@ -121,7 +121,7 @@ function pump() {
     if (wait > 5000) { schedule_(wait); return; }                  // more may be coming: wait out the 2 minutes
     fresh.sort(function (a, b) { return a.row - b.row; });
     var ids = fresh.map(function (f) { return f.id; });
-    if (fire_('The suggestion queue started this run for ' + ids.join(', ') + '. Those rows are marked "working" for you. Apply them together now.')) {
+    if (fire_('The suggestion queue started this run for ' + ids.join(', ') + '. Those rows are marked "working" for you. Apply them together now. A row whose text ends with "<name> followed up: ..." was already done in an earlier version: keep that work and apply only the follow-up.')) {
       fresh.forEach(function (f) { sh.getRange(f.row, 6).setValue('working'); });
       pr.setProperty('WORKING_KEY', ids.join(',')); pr.setProperty('WORKING_SINCE', String(now)); pr.deleteProperty('FIRE_FAILS');
       schedule_(POLL_MS * 2);
@@ -232,7 +232,8 @@ function doPost(e) {
     return out_({ ok: true, id: id, name: who, items: list_() });
   }
   if (b.action === 'reply') {
-    // someone answers a question Claude asked: the answer is added to that suggestion and it goes back in line
+    // someone answers a question Claude asked, or follows up on a finished suggestion: what they wrote is added to that
+    // suggestion (after what Claude said) and it goes back in line, so Claude changes that same suggestion again
     var rid = String(b.id || '').slice(0, 10), rtext = String(b.text || '').trim().slice(0, 2000);
     var hasPh = Array.isArray(b.photos) && b.photos.length;
     if (!rid || (!rtext && !hasPh)) return out_({ ok: false, error: 'empty' });
@@ -243,8 +244,12 @@ function doPost(e) {
       for (var i = 1; i < vals.length; i++) if (String(vals[i][0]) === rid) { row2 = i + 1; break; }
       if (!row2) return out_({ ok: false, error: 'not_found' });
       var cur = String(sr.getRange(row2, 5).getValue());
-      var prevQ = String(sr.getRange(row2, 7).getValue());
-      sr.getRange(row2, 5).setValue(safe_(cur + '\n\n[Claude asked: ' + prevQ + ']\n' + who + ' answered: ' + rtext));
+      var prevQ = String(sr.getRange(row2, 7).getValue()).replace(/\]/g, ')');
+      var st = String(sr.getRange(row2, 6).getValue()).trim().toLowerCase(), ver = String(sr.getRange(row2, 8).getValue()).trim();
+      if (st === 'new' || st === 'working') return out_({ ok: false, error: 'busy' });
+      var said = st === 'question' ? '[Claude asked: ' + prevQ + ']\n' + who + ' answered: '
+        : '[Claude replied' + (/^\d+$/.test(ver) ? ' in version ' + ver : '') + ': ' + prevQ + ']\n' + who + ' followed up: ';
+      sr.getRange(row2, 5).setValue(safe_(cur + '\n\n' + said + rtext));
       sr.getRange(row2, 6).setValue('new'); sr.getRange(row2, 7).setValue('');
     } finally { lr.releaseLock(); }
     var rl = savePhotos_(rid, b.photos);
