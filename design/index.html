@@ -167,6 +167,25 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
 .att button{all:unset;cursor:pointer;width:32px;height:32px;display:grid;place-items:center;border-radius:50%;font-size:18px;color:var(--muted)}
 .att button:hover{background:var(--bg)}.att button:focus-visible{outline:3px solid var(--accent)}
 .chip.att-n{background:transparent;color:var(--muted);border:1px solid var(--rule);margin-left:6px}
+button.chip.lbtn{cursor:pointer;font:600 13px "Public Sans",sans-serif;color:var(--ink);border-color:var(--accent)}button.chip.lbtn:hover{background:var(--panel)}button.chip.lbtn:focus-visible{outline:3px solid var(--accent)}
+/* drawing lines on the model */
+.mapmic #mm-draw{padding:0 18px 0 14px}
+.mapmic #mm-draw[aria-pressed=true]{background:#08223b;color:#f3efe5}
+.dlabs{position:absolute;inset:0;pointer-events:none;z-index:2}
+.dlab{position:absolute;left:0;top:0;transform:translate(-50%,-140%);white-space:nowrap;background:var(--c);color:#fff;font:700 13px "Public Sans",sans-serif;padding:3px 9px;border-radius:999px;box-shadow:0 2px 8px rgba(0,0,0,.35);border:2px solid #fff}
+.drawbar{position:absolute;left:12px;top:12px;z-index:3;max-width:min(430px,calc(100% - 84px));background:rgba(243,239,229,.96);color:#08223b;border:2px solid #08223b;border-radius:16px;padding:10px 12px;box-shadow:0 3px 12px rgba(0,0,0,.25);display:grid;gap:8px}
+.drawbar p{margin:0;font-size:14px;line-height:1.35}
+.drawbar .row{gap:6px;align-items:center}
+.drawbar button{min-height:40px;padding:0 13px;border-radius:999px;border:1px solid #08223b;background:transparent;color:#08223b;font:600 14px "Public Sans",sans-serif;cursor:pointer}
+.drawbar button.solid{background:#08223b;color:#f3efe5}
+.drawbar button:disabled{opacity:.45;cursor:default}
+.drawbar button:focus-visible{outline:3px solid #d3c29a;outline-offset:2px}
+.drawbar .sw{display:inline-block;width:12px;height:12px;border-radius:50%;background:var(--c);vertical-align:-1px;margin-right:4px;border:1px solid #fff}
+.fig.drawing canvas{cursor:crosshair}
+.lnote{margin:0;display:flex;flex-wrap:wrap;align-items:center;gap:8px;font-size:14.5px;background:var(--panel);border:1px solid var(--rule);border-radius:10px;padding:8px 12px}
+.lnote button{all:unset;cursor:pointer;font-weight:600;text-decoration:underline;text-underline-offset:3px}
+.lnote button:focus-visible{outline:3px solid var(--accent)}
+@media(max-width:600px){.drawbar{left:8px;right:64px;max-width:none;padding:8px 10px}.drawbar button{min-height:38px;padding:0 11px;font-size:13.5px}}
 </style>
 </head>
 <body>
@@ -178,7 +197,7 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
 
 <section aria-label="3D model">
   <div id="vbar" class="vbar" hidden></div>
-  <div id="model" class="fig"><div id="pins" style="display:none"></div><p class="hint">Drag to turn · + and − to zoom (pinch on a phone) · Numbers shows the notes</p><div class="mapmic" id="mapmic" hidden><button type="button" id="mm-rec" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 15a3.5 3.5 0 0 0 3.5-3.5v-6a3.5 3.5 0 1 0-7 0v6A3.5 3.5 0 0 0 12 15Z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5"/></svg><span id="mm-lab">Record a suggestion</span></button><button type="button" id="mm-cancel" hidden>Cancel</button></div><div class="zoom"><button class="zb" id="z-in" type="button" aria-label="Zoom in">+</button><button class="zb" id="z-out" type="button" aria-label="Zoom out">−</button></div></div>
+  <div id="model" class="fig"><div id="pins" style="display:none"></div><p class="hint">Drag to turn · + and − to zoom (pinch on a phone) · Numbers shows the notes</p><div class="mapmic" id="mapmic" hidden><button type="button" id="mm-rec" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 15a3.5 3.5 0 0 0 3.5-3.5v-6a3.5 3.5 0 1 0-7 0v6A3.5 3.5 0 0 0 12 15Z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M5.5 11.5a6.5 6.5 0 0 0 13 0M12 18v3.5"/></svg><span id="mm-lab">Record a suggestion</span></button><button type="button" id="mm-cancel" hidden>Cancel</button><button type="button" id="mm-draw" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M4 20l1.2-4.6L16.5 4.1a2 2 0 0 1 2.8 0l.6.6a2 2 0 0 1 0 2.8L8.6 18.8 4 20z"/></svg><span>Draw</span></button></div><div class="dlabs" id="dlabs"></div><div class="drawbar" id="drawbar" hidden></div><div class="zoom"><button class="zb" id="z-in" type="button" aria-label="Zoom in">+</button><button class="zb" id="z-out" type="button" aria-label="Zoom out">−</button></div></div>
   <h2 class="vohead" id="vo-h">View options</h2>
   <div class="controls" role="group" aria-labelledby="vo-h">
     <div class="seg" role="group" aria-label="Camera views">
@@ -211,8 +230,9 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
       <div id="s-fromw"><label for="s-from">Your name</label><input id="s-from" maxlength="60"></div>
       <div><label for="s-note">About</label><select id="s-note"></select></div>
     </div>
-    <div><label for="s-text">What should change?</label><textarea id="s-text" rows="4" maxlength="4000" placeholder="Example: make the bar square and move it 10 feet toward the back wall."></textarea><p class="kbd">Type or press Record voice and talk. Add photos, drawings or PDFs with + Photo or file. Press Enter to send · Shift + Enter for a new line</p></div>
+    <div><label for="s-text">What should change?</label><textarea id="s-text" rows="4" maxlength="4000" placeholder="Example: make the bar square and move it 10 feet toward the back wall."></textarea><p class="kbd">Type or press Record voice and talk. Add photos, drawings or PDFs with + Photo or file. To show a spot, press Draw on the model, tap to draw a line, then write something like "move the deck to line A". Press Enter to send · Shift + Enter for a new line</p></div>
     <ul class="att" id="s-att" aria-label="Attached photos and files"></ul>
+    <p class="lnote" id="s-lines" hidden></p>
     <input type="file" id="s-file" multiple accept="image/*" hidden>
     <div class="row"><button class="b mic" type="button" data-for="s-text" aria-pressed="false">● Record voice</button><button class="b" type="button" id="s-addf">+ Photo or file</button><button class="b solid" type="submit" id="s-send">Send suggestion</button><button class="b signout" type="button" id="s-relock">Sign out</button></div>
   </form>
@@ -446,12 +466,110 @@ const start=M=>{
       TAGS.forEach((g,i)=>{if(bt.includes(g.t))tagEls[i].classList.toggle('gone',!on);});});}
   const labBtn=$('#labels');labBtn.addEventListener('click',()=>{const on=labBtn.getAttribute('aria-pressed')!=='true';labBtn.setAttribute('aria-pressed',String(on));pinsEl.style.display=on?'':'none';redraw();});
 
+  // ---------- drawing lines on the model ----------
+  // Draw (next to Record) turns drawing on: each tap on the model adds a point to the current line; a drag still turns the view
+  // and two fingers still zoom. Lines are lettered A, B, C... They go with the next suggestion, voice note, answer or follow-up,
+  // as points in model feet plus two pictures (this view and the plan view), so Claude can apply "move the deck to line A".
+  DRAW=(()=>{
+    const COLORS=['#e4572e','#1f7ae0','#d99a00','#8e44ad','#139a74','#d81b60'],MAXL=6,MAXP=30,LIFT=.25;
+    let lines=[],cur=-1,on=false,ref='',msg='';
+    const grp=new T.Group();scene.add(grp);
+    const labs=$('#dlabs'),bar=$('#drawbar'),btn=$('#mm-draw'),note=$('#s-lines');
+    const letter=i=>String.fromCharCode(65+i),col=i=>COLORS[i%COLORS.length];
+    const len=pts=>{let L=0;for(let i=1;i<pts.length;i++){const a=pts[i-1],b=pts[i];L+=Math.hypot(b[0]-a[0],b[1]-a[1],b[2]-a[2]);}return L;};
+    const tag=i=>{const p=lines[i].pts;return (p.length===1?'Point ':'Line ')+letter(i)+(p.length>1?' · '+Math.round(len(p))+' ft':'');};
+    const mats=COLORS.map(c=>new T.MeshBasicMaterial({color:c,depthTest:false,depthWrite:false,transparent:true,opacity:.92}));
+    const ball=new T.SphereGeometry(.8,14,10),rod=new T.CylinderGeometry(.38,.38,1,10,1),Y=new T.Vector3(0,1,0);
+    const rebuild=()=>{while(grp.children.length)grp.remove(grp.children[0]);
+      lines.forEach((l,i)=>{const m=mats[i%mats.length];
+        l.pts.forEach(p=>{const b=new T.Mesh(ball,m);b.position.set(p[0],p[1]+LIFT,p[2]);b.renderOrder=999;grp.add(b);});
+        for(let k=1;k<l.pts.length;k++){const a=new T.Vector3(...l.pts[k-1]),c=new T.Vector3(...l.pts[k]);a.y+=LIFT;c.y+=LIFT;
+          const d=c.clone().sub(a),L=d.length();if(L<.01)continue;
+          const r=new T.Mesh(rod,m);r.position.copy(a).addScaledVector(d,.5);r.scale.set(1,L,1);
+          r.quaternion.setFromUnitVectors(Y,d.normalize());r.renderOrder=999;grp.add(r);}});
+      labs.innerHTML=lines.map((l,i)=>`<span class="dlab" style="--c:${col(i)}">${tag(i)}</span>`).join('');
+      panel();changed();redraw();};
+    const lv=new T.Vector3();
+    const place=()=>{const w=wrap.clientWidth,h=wrap.clientHeight,els=labs.children;
+      lines.forEach((l,i)=>{const el=els[i];if(!el)return;const p=l.pts[0];lv.set(p[0],p[1]+LIFT,p[2]).project(cam);
+        if(lv.z>1||Math.abs(lv.x)>1.05||Math.abs(lv.y)>1.05){el.style.display='none';return;}
+        el.style.display='';el.style.transform=`translate(${(lv.x+1)/2*w}px,${(1-lv.y)/2*h}px) translate(-50%,-145%)`;});};
+    // what a tap lands on: the nearest solid, visible surface (see-through tree canopies are skipped), else the patio level
+    const ray=new T.Raycaster(),ndc=new T.Vector2(),ground=new T.Plane(new T.Vector3(0,1,0),0);
+    const seen=o=>{for(let q=o;q;q=q.parent)if(!q.visible)return false;return true;};
+    const solid=h=>{const m=Array.isArray(h.object.material)?h.object.material[0]:h.object.material;return !(m&&m.transparent&&m.opacity<.9);};
+    const hit=(cx,cy)=>{const r=renderer.domElement.getBoundingClientRect();ndc.set((cx-r.left)/r.width*2-1,-(cy-r.top)/r.height*2+1);
+      ray.setFromCamera(ndc,cam);
+      const h=ray.intersectObjects(scene.children.filter(o=>o!==grp),true).find(h=>h.object.isMesh&&seen(h.object)&&solid(h));
+      if(h)return h.point;const p=new T.Vector3();return ray.ray.intersectPlane(ground,p)?p:null;};
+    const r1=v=>(Math.round(v*10)/10)||0;
+    const add=(cx,cy)=>{const p=hit(cx,cy);if(!p)return;
+      if(cur<0||!lines[cur]){if(lines.length>=MAXL){msg='Up to '+MAXL+' lines. Clear them to draw more.';panel();return;}lines.push({pts:[]});cur=lines.length-1;}
+      const l=lines[cur];if(l.pts.length>=MAXP){msg='Up to '+MAXP+' points in a line. Press New line.';panel();return;}
+      l.pts.push([r1(p.x),r1(p.y),r1(p.z)]);rebuild();};
+    // a tap is a short press that hardly moves, with one finger or the main mouse button
+    const el=renderer.domElement,downs=new Map();let multi=false;
+    el.addEventListener('pointerdown',e=>{if(!on)return;downs.set(e.pointerId,{x:e.clientX,y:e.clientY,t:e.timeStamp,b:e.button});if(downs.size>1)multi=true;});
+    el.addEventListener('pointerup',e=>{const d=downs.get(e.pointerId);downs.delete(e.pointerId);const m=multi;if(!downs.size)multi=false;
+      if(!on||!d||m||d.b!==0||Math.hypot(e.clientX-d.x,e.clientY-d.y)>8||e.timeStamp-d.t>700)return;add(e.clientX,e.clientY);});
+    el.addEventListener('pointercancel',e=>{downs.delete(e.pointerId);if(!downs.size)multi=false;});
+    const last=()=>cur>=0&&lines[cur]?cur:lines.length-1;
+    const panel=()=>{btn.setAttribute('aria-pressed',String(on));wrap.classList.toggle('drawing',on);
+      if(!on&&!lines.length){bar.hidden=true;msg='';return;}bar.hidden=false;
+      const key=lines.map((l,i)=>`<span><span class="sw" style="--c:${col(i)}"></span>${tag(i)}</span>`).join(' &nbsp; '),L=lines[cur];
+      if(on)bar.innerHTML=`<p>${msg||(L?`Tap to add to <strong>line ${letter(cur)}</strong>, or press New line.`:`Tap the model to start <strong>${letter(lines.length)}</strong>. One tap marks a spot; more taps make a line.`)} Drag still turns the view.</p>`+
+        (lines.length?`<p>${key}</p>`:'')+
+        `<div class="row"><button type="button" data-d="undo"${lines.length?'':' disabled'}>Undo</button><button type="button" data-d="new"${L&&lines.length<MAXL?'':' disabled'}>New line</button><button type="button" data-d="clear"${lines.length?'':' disabled'}>Clear</button><button type="button" class="solid" data-d="done">Done</button></div>`;
+      else bar.innerHTML=`<p>${ref?`Lines sent with ${esc(ref)}: `:''}${key}</p><p>${ref?'Press Edit to change them and send them again with a follow-up.':'These go with your next suggestion, voice note or follow-up.'}</p><div class="row"><button type="button" data-d="edit">Edit</button><button type="button" data-d="clear">${ref?'Hide':'Clear'}</button></div>`;
+      msg='';};
+    const changed=()=>{const k=ref?0:lines.length;note.hidden=!k;if(!k){note.innerHTML='';return;}
+      note.innerHTML=`<span>✎ ${k===1?tag(0).split(' · ')[0]+' goes':'Lines '+lines.map((_,i)=>letter(i)).join(', ')+' go'} with what you send, with two pictures of the model.</span><button type="button" data-d="clear">Remove</button>`;};
+    const setOn=v=>{on=v;if(v){ref='';cur=-1;}rebuild();};
+    const clear=()=>{lines=[];cur=-1;ref='';rebuild();};
+    bar.addEventListener('click',e=>{const b=e.target.closest('[data-d]');if(!b)return;const d=b.dataset.d;
+      if(d==='undo'){const i=last();const l=lines[i];if(l){l.pts.pop();if(l.pts.length)cur=i;else{lines.splice(i,1);cur=-1;}}rebuild();}
+      else if(d==='new'){cur=-1;rebuild();}
+      else if(d==='clear'){if(!ref&&lines.length>1&&!confirm('Clear all the lines?'))return;clear();}
+      else if(d==='done')setOn(false);
+      else if(d==='edit')setOn(true);});
+    note.addEventListener('click',e=>{if(e.target.closest('[data-d=clear]'))clear();});
+    btn.addEventListener('click',()=>setOn(!on));
+    const fmt=p=>'['+p.join(',')+']';
+    const block=()=>!lines.length||ref?'':'\n\n(Drawn on the model, version '+shown+'. Points are [x, height, z] in model feet: x runs west to east along W 6th, z from the W 6th sidewalk toward the alley, height above the patio. '+
+      lines.map((l,i)=>l.pts.length===1?'Point '+letter(i)+': '+fmt(l.pts[0]):'Line '+letter(i)+', '+Math.round(len(l.pts))+' ft: '+l.pts.map(fmt).join(' ')).join('; ')+'.)';
+    // a picture of the model with the lines and their letters, from this view or from another camera view (put back afterwards)
+    const snap=view=>{const c=renderer.domElement,P=cam.position.clone(),Q=cam.quaternion.clone();
+      if(view){cam.position.set(...view[0]);cam.lookAt(new T.Vector3(...view[1]));}cam.updateMatrixWorld();
+      if(sorters.length)sorters.forEach(f=>f(cam));renderer.render(scene,cam);
+      const k=Math.min(1,1600/Math.max(c.width,c.height)),o=document.createElement('canvas');o.width=Math.round(c.width*k);o.height=Math.round(c.height*k);
+      const g=o.getContext('2d');g.drawImage(c,0,0,o.width,o.height);const s=o.width/wrap.clientWidth;
+      g.font='700 '+Math.round(14*s)+'px "Public Sans",sans-serif';g.textAlign='center';g.textBaseline='middle';
+      lines.forEach((l,i)=>{const p=l.pts[0];lv.set(p[0],p[1]+LIFT,p[2]).project(cam);if(lv.z>1)return;
+        const x=(lv.x+1)/2*o.width,y=(1-lv.y)/2*o.height-18*s,t=tag(i),w=g.measureText(t).width+18*s,h=22*s;
+        g.fillStyle='#fff';g.beginPath();g.roundRect?g.roundRect(x-w/2-2*s,y-h/2-2*s,w+4*s,h+4*s,h):g.rect(x-w/2-2*s,y-h/2-2*s,w+4*s,h+4*s);g.fill();
+        g.fillStyle=col(i);g.beginPath();g.roundRect?g.roundRect(x-w/2,y-h/2,w,h,h/2):g.rect(x-w/2,y-h/2,w,h);g.fill();g.fillStyle='#fff';g.fillText(t,x,y+s);});
+      cam.position.copy(P);cam.quaternion.copy(Q);cam.updateMatrixWorld();redraw();
+      return o.toDataURL('image/jpeg',.85);};
+    const snaps=()=>{if(!lines.length||ref)return[];const out=[];
+      try{out.push({type:'image/jpeg',data:snap(null),name:'drawn-lines-view.jpg'});}catch(e){}
+      try{if(VIEWS.plan)out.push({type:'image/jpeg',data:snap([fit(VIEWS.plan[0],VIEWS.plan[1]),VIEWS.plan[1]]),name:'drawn-lines-plan.jpg'});}catch(e){}
+      return out;};
+    // lines sent with an earlier suggestion are kept in its text; show them again on the model
+    const parse=t=>{const out={},re=/\(Drawn on the model, version \d+\.[^)]*\)/g;let m;
+      while((m=re.exec(String(t||'')))){const r2=/(?:Line|Point) ([A-Z])(?:, [\d.]+ ft)?: ((?:\[-?[\d.]+,-?[\d.]+,-?[\d.]+\] ?)+)/g;let q;
+        while((q=r2.exec(m[0])))out[q[1]]=q[2].trim().split(/\s+/).map(x=>JSON.parse(x));}
+      return Object.keys(out).sort().map(k=>({pts:out[k]}));};
+    return {place,block,snaps,clear,count:()=>ref?0:lines.length,active:()=>on,
+      show:(id,t)=>{const ls=parse(t);if(!ls.length)return false;lines=ls;cur=-1;on=false;ref=id;rebuild();return true;},
+      state:()=>ref||!lines.length?null:lines,restore:ls=>{if(Array.isArray(ls)&&ls.length&&!lines.length){lines=ls;cur=-1;rebuild();}}};
+  })();
+
   const ro=new ResizeObserver(()=>{const w=wrap.clientWidth,h=wrap.clientHeight;renderer.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix();redraw();});
   ro.observe(wrap);
   const loop=now=>{if(tw){let k=Math.min(1,(now-tw.t0)/tw.ms);k=k<.5?2*k*k:1-((-2*k+2)**2)/2;
       cam.position.lerpVectors(tw.a,tw.b,k);ctl.target.lerpVectors(tw.c,tw.d,k);if(k>=1)tw=null;dirty=Math.max(dirty,2);}
     if(ctl.update())dirty=Math.max(dirty,2);
-    if(dirty>0){dirty--;if(sorters.length){cam.updateMatrixWorld();sorters.forEach(f=>f(cam));}renderer.render(scene,cam);drawPins();}
+    if(dirty>0){dirty--;if(sorters.length){cam.updateMatrixWorld();sorters.forEach(f=>f(cam));}renderer.render(scene,cam);drawPins();if(DRAW)DRAW.place();}
     requestAnimationFrame(loop);};
   requestAnimationFrame(loop);
 };
@@ -463,7 +581,7 @@ const esc=s=>String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;',
 const when=t=>{const d=new Date(t);return isNaN(d)?esc(t):d.toLocaleDateString(undefined,{month:'short',day:'numeric'})+', '+d.toLocaleTimeString(undefined,{hour:'numeric',minute:'2-digit'});};
 const STATUS={new:'Waiting for Claude',working:'Claude is working on it',done:'Done',question:'Claude has a question',declined:'Not changed'};
 const PASS='bacari-patio-pass',NAME='bacari-patio-name';
-let CFG={api:''},VERS={live:1,versions:[{n:1}]},shown=1,live=1,pass=null,busy=false,saveCam=()=>{},getView=null,h=0,me='';
+let CFG={api:''},VERS={live:1,versions:[{n:1}]},shown=1,live=1,pass=null,busy=false,saveCam=()=>{},getView=null,h=0,me='',DRAW=null;
 const fastUntil=()=>+(sess.get('bacari-fast')||0);
 const has=n=>VERS.versions.some(v=>v.n===n);
 const api=body=>fetch(CFG.api,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(body)}).then(r=>r.json());
@@ -492,7 +610,7 @@ const locked=r=>{if(r&&r.error==='passcode'){store.del(PASS);pass=null;showLock(
 const showLock=msg=>{clearMe();$('#s-lock').hidden=false;$('#s-form').hidden=true;$('#s-list').innerHTML='';$('#s-q').innerHTML='';$('#s-hist').hidden=true;$('#s-code').value='';say(msg||'Sign in with your passcode to send suggestions.');};
 // voice notes keep the camera position in the sheet for Claude, but the list on the page leaves it out
 const shownText=t=>{const u=String(t==null?'':t).match(/^Undo (S\d+): [^\n]*\nOriginal suggestion from [^:\n]+: "([\s\S]*?)"\n/);if(u)return 'Undo '+u[1]+': take back "'+u[2]+'"';return shownText0(t);};
-const shownText0=t=>String(t==null?'':t).replace(/\n*\(Recorded on version \d+ while looking at the model[^)]*\)/g,'').replace('(voice note: listen to the audio link in column I)','(voice note)').trim();
+const shownText0=t=>String(t==null?'':t).replace(/\n*\(Recorded on version \d+ while looking at the model[^)]*\)/g,'').replace(/\n*\(Drawn on the model, version \d+\.[^)]*\)/g,'').replace('(voice note: listen to the audio link in column I)','(voice note)').trim();
 // a suggestion that went back and forth keeps the earlier rounds in its text (the server adds them):
 //   [Claude asked: ...] or [Claude replied in version N: ...], then "<name> answered: ..." or "<name> followed up: ..."
 const thread=t=>{const x=shownText(t),re=/\n\n\[Claude (asked|replied(?: in version (\d+))?): ([\s\S]*?)\]\n([^\n:]{1,40}) (answered|followed up): /g;
@@ -502,7 +620,7 @@ const thread=t=>{const x=shownText(t),re=/\n\n\[Claude (asked|replied(?: in vers
   return out.map((o,i)=>i===0?`<p>${esc(o.text)}</p>`:o.claude?`<p class="reply"><strong>Claude:</strong> ${esc(o.text)}</p>`:`<p class="said"><strong>${esc(o.who)}:</strong> ${esc(o.text)}</p>`);};
 const card=s=>{const t=thread(s.text),voiceNote=s.note==='Voice note from the model';
   return `<p class="meta">${when(s.time)} · ${esc(s.from)}${s.note&&!voiceNote?' · about '+esc(s.note):''}</p>${t[0]}`+
-   `<div class="chips"><span class="chip ${s.status==='new'||s.status==='working'?'new':''}">${esc(STATUS[s.status]||s.status)}</span>${s.photos?`<span class="chip att-n">${s.photos} attached</span>`:''}${s.voice?'<span class="chip att-n">voice note</span>':''}</div>`+
+   `<div class="chips"><span class="chip ${s.status==='new'||s.status==='working'?'new':''}">${esc(STATUS[s.status]||s.status)}</span>${s.photos?`<span class="chip att-n">${s.photos} attached</span>`:''}${s.voice?'<span class="chip att-n">voice note</span>':''}${/\(Drawn on the model, version \d+\./.test(String(s.text||''))?`<button type="button" class="chip att-n lbtn" data-lines="${esc(s.id)}">Show its lines</button>`:''}</div>`+
    t.slice(1).join('')+(s.reply?`<p class="reply"><strong>Claude:</strong> ${esc(s.reply)}</p>`:'');};
 const drawList=items=>{items=items||[];LAST=items;const qs=items.filter(s=>s.status==='question'),rest=items.filter(s=>s.status!=='question');
   // questions from Claude stay in view with a reply box; don't redraw them while someone is typing an answer
@@ -573,10 +691,11 @@ const micSend=async()=>{
   const blob=new Blob(mic.chunks,{type:(mic.rec&&mic.rec.mimeType)||'audio/webm'});
   if(Date.now()-mic.t0<1500||!blob.size){mmIdle();toast('That was too short. Tap, talk, then tap again to send.');return;}
   let data='';try{data=await blobData(blob);}catch(e){}
-  const words=mic.words.trim(),text=(words||'(voice note: listen to the audio link in column I)')+viewText();
+  const lt=DRAW?DRAW.block():'',tail=viewText()+lt,words=mic.words.trim().slice(0,3990-tail.length),text=(words||'(voice note: listen to the audio link in column I)')+tail;
+  const snaps=lt?DRAW.snaps():[];
   const from=me||store.get(NAME)||'Robert';
-  api({action:'suggest',passcode:pass,from:from,note:'Voice note from the model',text:text,version:shown,audio:data?{type:blob.type,data:data}:null}).then(r=>{
-    if(r&&r.ok){mmIdle();drawList(r.items);sess.set('bacari-fast',String(Date.now()+20*60e3));
+  api({action:'suggest',passcode:pass,from:from,note:'Voice note from the model',text:text,version:shown,photos:snaps,audio:data?{type:blob.type,data:data}:null}).then(r=>{
+    if(r&&r.ok){mmIdle();if(lt)DRAW.clear();drawList(r.items);sess.set('bacari-fast',String(Date.now()+20*60e3));
       toast('Sent. Claude is starting on it; scroll down to see it.',6000);}
     else{mmIdle();if(!locked(r))toast('Could not send the recording. Try again.');}},
     ()=>{mmIdle();toast('Could not reach the server. Try again in a moment.');});};
@@ -624,9 +743,10 @@ const setupPanels=M=>{drawBar();drawVersions();
   // answering a question from Claude
   $('#s-q').addEventListener('keydown',e=>{if(e.target.tagName==='TEXTAREA'&&e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();e.target.form.requestSubmit();}});
   const sendReply=e=>{e.preventDefault();stopRec();const f=e.target,t=f.querySelector('textarea'),text=t.value.trim(),btn=f.querySelector('button[type=submit]'),fu=f.classList.contains('fu');
-    if(!text){t.focus();return;}if(busy)return;busy=true;btn.disabled=true;say(fu?'Sending your follow-up…':'Sending your answer…');
-    api({action:'reply',passcode:pass,id:f.dataset.id,from:me||$('#s-from').value.trim()||'Robert',text:text}).then(r=>{busy=false;btn.disabled=false;
-      if(r&&r.ok){t.value='';t.blur();drawList(r.items);sess.set('bacari-fast',String(Date.now()+20*60e3));say((fu?'Follow-up sent. Claude will change '+f.dataset.id+' again':'Answer sent. Claude is picking it up')+' in a few minutes; the model will update on this page by itself.');}
+    if(!text){t.focus();return;}if(busy)return;const lt=DRAW?DRAW.block():'';
+    if(text.length+lt.length>2000){say('That is too long to send with the lines. Shorten the text a little.');return;}busy=true;btn.disabled=true;say(fu?'Sending your follow-up…':'Sending your answer…');
+    api({action:'reply',passcode:pass,id:f.dataset.id,from:me||$('#s-from').value.trim()||'Robert',text:text+lt,photos:lt?DRAW.snaps():[]}).then(r=>{busy=false;btn.disabled=false;
+      if(r&&r.ok){t.value='';if(lt)DRAW.clear();t.blur();drawList(r.items);sess.set('bacari-fast',String(Date.now()+20*60e3));say((fu?'Follow-up sent. Claude will change '+f.dataset.id+' again':'Answer sent. Claude is picking it up')+' in a few minutes; the model will update on this page by itself.');}
       else if(r&&r.error==='busy')say('Claude is still working on '+f.dataset.id+'. Send this once it shows Done.');
       else if(!locked(r))say(fu?'Could not send your follow-up. Try again.':'Could not send your answer. Try again.');},()=>{busy=false;btn.disabled=false;say('Could not reach the server. Try again in a moment.');});};
   $('#s-q').addEventListener('submit',sendReply);
@@ -634,6 +754,8 @@ const setupPanels=M=>{drawBar();drawVersions();
   $('#s-list').addEventListener('keydown',e=>{if(e.target.tagName==='TEXTAREA'&&e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();e.target.form.requestSubmit();}});
   $('#s-list').addEventListener('click',e=>{const b=e.target.closest('[data-fu]');if(!b)return;const f=b.closest('li').querySelector('form.fu');if(!f)return;
     const open=f.hidden;f.hidden=!open;b.setAttribute('aria-expanded',String(open));if(open)f.querySelector('textarea').focus();});
+  document.addEventListener('click',e=>{const b=e.target.closest('[data-lines]');if(!b||!DRAW)return;const s=LAST.find(o=>String(o.id)===b.dataset.lines);
+    if(s&&DRAW.show(s.id,s.text))wrap.scrollIntoView({behavior:reduce?'auto':'smooth',block:'center'});});
   $('#s-addf').addEventListener('click',()=>$('#s-file').click());
   $('#s-file').addEventListener('change',e=>{addFiles([...e.target.files]);e.target.value='';});
   $('#s-att').addEventListener('click',e=>{const b=e.target.closest('[data-rm]');if(b){ATT.splice(+b.dataset.rm,1);drawAtt();}});
@@ -643,11 +765,14 @@ const setupPanels=M=>{drawBar();drawVersions();
   $('#s-text').addEventListener('paste',e=>{const fs=[...(e.clipboardData&&e.clipboardData.files)||[]];if(fs.length){e.preventDefault();addFiles(fs);}});
   $('#s-relock').addEventListener('click',()=>{store.del(PASS);store.del(NAME);pass=null;showLock('Signed out on this device.');});
   $('#s-form').addEventListener('submit',e=>{e.preventDefault();stopRec();const text=$('#s-text').value.trim();if(busy)return;if(!text&&!ATT.length){say('Write what you would like changed first, or add a photo.');$('#s-text').focus();return;}
+    const lt=DRAW?DRAW.block():'';if(lt&&!text){say('Write what should change, for example "move the deck to line A".');$('#s-text').focus();return;}
+    if(text.length+lt.length>4000){say('That is too long to send with the lines. Shorten the text a little.');return;}
     const from=me||$('#s-from').value.trim()||'Robert';store.set(NAME,from);busy=true;$('#s-send').disabled=true;say('Sending…');
-    const photos=ATT.filter(a=>a.img).map(a=>({type:a.type,data:a.data,name:a.name})),files=ATT.filter(a=>!a.img).map(a=>({type:a.type,data:a.data,name:a.name}));
+    const own=ATT.filter(a=>a.img).map(a=>({type:a.type,data:a.data,name:a.name})),files=ATT.filter(a=>!a.img).map(a=>({type:a.type,data:a.data,name:a.name}));
+    const photos=own.concat((lt?DRAW.snaps():[]).slice(0,Math.max(0,6-own.length)));
     if(ATT.length)say('Sending… (uploading '+ATT.length+' attachment'+(ATT.length>1?'s':'')+')');
-    api({action:'suggest',passcode:pass,from:from,note:$('#s-note').value,text:text,version:shown,photos:photos,files:files}).then(r=>{busy=false;$('#s-send').disabled=false;
-      if(r&&r.ok){$('#s-text').value='';ATT=[];drawAtt();drawList(r.items);sess.set('bacari-fast',String(Date.now()+20*60e3));say('Sent. Claude is starting on it now; the model will update on this page by itself in a few minutes.');}
+    api({action:'suggest',passcode:pass,from:from,note:$('#s-note').value,text:text+lt,version:shown,photos:photos,files:files}).then(r=>{busy=false;$('#s-send').disabled=false;
+      if(r&&r.ok){$('#s-text').value='';ATT=[];drawAtt();if(lt)DRAW.clear();drawList(r.items);sess.set('bacari-fast',String(Date.now()+20*60e3));say('Sent. Claude is starting on it now; the model will update on this page by itself in a few minutes.');}
       else if(!locked(r))say('Could not send. Your text is still here; try again.');},()=>{busy=false;$('#s-send').disabled=false;say('Could not reach the server. Your text is still here; try again in a moment.');});});
 };
 
@@ -655,15 +780,15 @@ const setupPanels=M=>{drawBar();drawVersions();
 // typing, recording, attaching files or sending, it waits and shows "New version ready, tap to update" instead.
 const DRAFT='bacari-draft';
 const inUse=()=>{const a=document.activeElement,tag=a&&a.tagName;
-  return busy||!!rec||mic.on||mmBtn().disabled||ATT.length>0||tag==='TEXTAREA'||(tag==='INPUT'&&a.type!=='button')||tag==='SELECT'||
+  return busy||!!rec||mic.on||mmBtn().disabled||ATT.length>0||(DRAW&&(DRAW.active()||DRAW.count()>0))||tag==='TEXTAREA'||(tag==='INPUT'&&a.type!=='button')||tag==='SELECT'||
     [...document.querySelectorAll('#s-text,#s-q textarea,#s-list textarea,#s-code')].some(t=>t.value.trim());};
 const saveDraft=()=>{const q={};document.querySelectorAll('#s-q textarea,#s-list textarea').forEach(t=>{if(t.value.trim())q[t.id]=t.value;});
-  const d={t:$('#s-text').value,n:$('#s-note').value,q:q,ts:Date.now()};
-  if(d.t.trim()||Object.keys(q).length)sess.set(DRAFT,JSON.stringify(d));else sess.set(DRAFT,'');};
+  const d={t:$('#s-text').value,n:$('#s-note').value,q:q,l:DRAW?DRAW.state():null,ts:Date.now()};
+  if(d.t.trim()||Object.keys(q).length||d.l)sess.set(DRAFT,JSON.stringify(d));else sess.set(DRAFT,'');};
 let draftQ=null;
 const fillQ=()=>{if(!draftQ)return;Object.keys(draftQ).forEach(id=>{const t=document.getElementById(id);if(t&&!t.value){t.value=draftQ[id];delete draftQ[id];const f=t.closest('form.fu');if(f){f.hidden=false;$('#s-hist').open=true;}}});};
 const restoreDraft=()=>{let d=null;try{d=JSON.parse(sess.get(DRAFT));}catch(e){}sess.set(DRAFT,'');if(!d||Date.now()-d.ts>30*60e3)return;
-  if(d.t&&!$('#s-text').value)$('#s-text').value=d.t;if(d.n&&[...$('#s-note').options].some(o=>o.value===d.n))$('#s-note').value=d.n;draftQ=d.q||null;fillQ();};
+  if(d.l&&DRAW)DRAW.restore(d.l);if(d.t&&!$('#s-text').value)$('#s-text').value=d.t;if(d.n&&[...$('#s-note').options].some(o=>o.value===d.n))$('#s-note').value=d.n;draftQ=d.q||null;fillQ();};
 const update=n=>{saveCam();saveDraft();sess.set('bacari-updated',String(n));location.reload();};
 let offered=0;
 const offerUpdate=n=>{if(offered===n)return;offered=n;let el=$('#newv');

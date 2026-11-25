@@ -57,6 +57,19 @@ The return value must stay `{fences, walls, trees, treeMats:[treeMat, fallMat], 
 
 `box(x0,x1,y0,y1,z0,z1,material,parent?)`, `cyl(radius,height,x,yBase,z,material,segments?)`, `stairs(x,z,yTop,yBot,dx,dz,width,material)` (starts at the edge (x,z), descends toward (dx,dz)), `put(geometry,material,x,y,z,parent?)`, `mat(hexColor,options?)`, `deckMats(topMaterial)`, `C` (shared materials), `T` (three.js r128), `scene`.
 
+## Drawn lines and points
+
+People can draw on the model before they send a suggestion, voice note, answer or follow-up. The text then ends with a block like this (also added to the text of a follow-up or answer):
+
+```
+(Drawn on the model, version 21. Points are [x, height, z] in model feet: ... Line A, 67 ft: [108.8,0,47.4] [79.1,5,24.8] [55.3,11.2,40]; Point B: [80.3,9,67.1].)
+```
+
+- Points use the coordinates above, in feet, measured on whatever surface was tapped (deck top, ground, roof); height tells you which. A line is the path through its points in order; a point is a single spot.
+- "Line A", "point B", "this line", "here" in the text refer to these. "Move the deck to line A" means put that deck's edge on the line; "put a fire pit at point B" means centered there. Snap to the line within about a foot; drawn by finger, it is approximate, so keep edges straight and square where the design is clearly meant to be.
+- Two pictures come with it in the Files column: `drawn-lines-view.jpg` (what they were looking at) and `drawn-lines-plan.jpg` (plan view), each with the lines and letters drawn on. Use them to check what the line touches.
+- Use `node _tools/model.mjs find` near the coordinates to find what to change. If a line is ambiguous (which deck, which edge), do the most likely reading and say so in the reply, or ask (Status "question").
+
 In `meta.json`, `notes[].p` and `tags[].p` are [x,y,z] positions of the numbered pins and labels; `views` are [cameraPosition, lookAt].
 
 ## Performance

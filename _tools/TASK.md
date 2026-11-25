@@ -5,6 +5,7 @@ TOOLS: git and the scripts in the repo; the Google Sheets connector for the shee
 WHERE THINGS LIVE
 - Sheet 1CrlZjkfNs-Mmti4LAzOy-5Or8weLbdgnk6GfuB6a9Jk. First tab ("Untitled"), columns A..I = ID, Submitted, From, About note, Suggestion, Status, Claude's reply, Version, Files (Drive links, one per line). Status: new / working / done / question / declined. Tab "Settings" B1 = live version. Ignore "Archive".
 - Voice notes have About note "Voice note from the model": the text is the browser's transcript (may have small mishearings) plus the version and camera view (x, height, z of camera and target, in model feet), which tells you what "this" or "here" means. No usable transcript: Status "question", ask them to type it.
+- Drawn lines: a Suggestion (or a follow-up or answer in it) can end with "(Drawn on the model, version N. ... Line A, 67 ft: [x,height,z] [x,height,z]; Point B: [x,height,z].)", points in model feet. "Line A", "point B", "here" refer to these; two pictures (drawn-lines-view.jpg, drawn-lines-plan.jpg) in column I show them on the model. See "Drawn lines and points" in design/MODEL.md.
 - Repo pkronfli/bacariatx, branch main. Read design/MODEL.md first (short): parts, coordinates, helpers, commands.
 
 STEPS
