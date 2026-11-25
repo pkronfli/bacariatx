@@ -1,0 +1,23 @@
+{
+ "version": 26,
+ "base": 25,
+ "meta": "parts/meta.26.json",
+ "parts": [
+  "parts/helpers.25.js",
+  "parts/streets.18.js",
+  "parts/neighbors.18.js",
+  "parts/site-fences-gates.22.js",
+  "parts/building.20.js",
+  "parts/decks-bar.26.js",
+  "parts/furniture.26.js",
+  "parts/landscaping.26.js",
+  "parts/trees.22.js",
+  "parts/bar-string-lights.25.js",
+  "parts/planters.25.js",
+  "parts/corner-garden.18.js",
+  "parts/night-lighting.26.js",
+  "parts/street-detail.18.js",
+  "parts/night-extras.26.js",
+  "parts/finish.18.js"
+ ]
+}

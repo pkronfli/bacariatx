@@ -2,6 +2,9 @@
 
 Newest first. Each version is listed on the page under Versions. Versions 1-18 were written as single files (design/versions/vN.js); from version 19 a version is a list of part files (design/versions/vN.json).
 
+## Version 26 (Nov 25, 2026, Patrick)
+The existing raised bed along the east fence is in, about 4 ft wide behind a low block wall and planted with bamboo; the east deck now stops at it.
+
 ## Version 25 (Nov 25, 2026, Patrick)
 The high deck along W 6th is now 18 ft deep, the same as the east deck, and the bar is back in the middle of the courtyard with four seating pockets around it, split by river-rock cross paths and edged with planting, as in Robert's walkthrough.
 
