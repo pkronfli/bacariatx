@@ -9,7 +9,7 @@ WHERE THINGS LIVE
 - Repo pkronfli/bacariatx, branch main. Read design/MODEL.md first (short): parts, coordinates, helpers, commands.
 
 STEPS
-1. Get the repo: if it is not already checked out, attach it (add_repo with owner pkronfli, repo bacariatx, push access) and clone it as that tool says. If you cannot get push access, set only the rows this run itself marked "working" back to "new" (find each by ID), tell Patrick "the Bacari task cannot push to GitHub", and stop. Never touch other rows.
+1. Get the repo: if it is not already checked out, attach it (add_repo with owner pkronfli, repo bacariatx, push access) and clone it as that tool says. If you cannot get push access, set only the rows this run itself marked "working" back to "new" (find each by ID), say "the Bacari task cannot push to GitHub", and stop. Never touch other rows.
 2. Read the sheet (A1:I200) and Settings!B1. Your rows: the IDs named in the run message, plus any row with Status "sent" or "new" whose Suggestion does not start with "Made version". A row already "working" that was not named to you belongs to another run: always leave it alone, however old it is (the queue itself puts stalled rows back in line). Set your rows to "working" one row at a time, reading column A just before each write and writing only that row's Status cell.
    HEARTBEAT: as soon as your rows are "working", write the current time as an ISO timestamp with offset (for example 2026-11-24T22:31:00-08:00) into Settings!B3. Write it again after checkout, after each check, right before publish, and at least every 10 minutes while you work. The queue restarts a run whose heartbeat is more than 15 minutes old, so never let it go stale.
    LIVE VERSION: if Settings!B1 is a version listed in design/versions.json but differs from its "live" (someone pressed Make live), run `node _tools/model.mjs make-live <B1>` before checkout, so you start from the version people see.
@@ -19,6 +19,6 @@ STEPS
 5. `node _tools/model.mjs check` (add `--views bar,deck` or `--night` to see the area you changed; look at the PNG when the change is visual). Fix and repeat until it passes.
 6. `node _tools/model.mjs publish --by "<From names>" --summary "<one plain sentence>"`. It numbers the version, merges with anything published meanwhile, render-checks, commits, pushes and waits for the live site; it prints VERSION=N. Exit code 3 means someone else changed the same lines: checkout again and redo your change. Publish only with this command: never commit or push by hand, and never edit design/versions.json, design/CHANGELOG.md, design/versions or design/parts yourself, even to fix or extend a version that is already published (make a new version instead).
 7. Set Settings!B1 to N (your version is now the live one). Re-read column A, then for each of your rows (found by ID, one row per write): Status, Claude's reply (one or two plain sentences, e.g. "Done in version 21: the bar is now a 16 ft square, moved 10 ft toward the back wall."), Version = N. Leave any rows that arrived meanwhile as "new"; the queue starts the next run.
-8. Send Patrick a short summary and the link https://bacariatx.com/design/.
+8. Finish with a short summary of what changed and the link https://bacariatx.com/design/.
 
 Keep replies short and plain. Never edit or delete published files in design/versions or design/parts.
