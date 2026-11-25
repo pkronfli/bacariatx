@@ -2,6 +2,9 @@
 
 Newest first. Each version is listed on the page under Versions. Versions 1-18 were written as single files (design/versions/vN.js); from version 19 a version is a list of part files (design/versions/vN.json).
 
+## Version 25 (Nov 25, 2026, Patrick)
+The high deck along W 6th is now 18 ft deep, the same as the east deck, and the bar is back in the middle of the courtyard with four seating pockets around it, split by river-rock cross paths and edged with planting, as in Robert's walkthrough.
+
 ## Version 24 (Nov 25, 2026, Patrick)
 The statue is now Michelangelo's David, from a real 3D scan, about 7 ft tall on the plinth at the back fence, facing the bar.
 

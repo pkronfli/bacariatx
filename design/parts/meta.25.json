@@ -1,0 +1,517 @@
+{
+ "lede": "A 3D concept model of the ideas in Robert's walkthrough video, set on the real lot. Decks step down from the upper deck in two levels around a garden, with a big bar in the middle as \"the nucleus of the energy of the patio.\" The lot is about 137 ft along W 6th by 130 ft deep, from Travis County records checked against Google satellite and 3D imagery, with a wooden fence on the property line. The courtyard ends at a wooden fence in line with the back of the building; behind it is a parking lot on the alley. Ground heights come from USGS lidar: the front terrace is level with the street, and the patio sits about 9 ft lower. Deck heights and exact positions are still estimates.",
+ "levels": [
+  [
+   "#cdb994",
+   "Street + front terrace +8½ ft"
+  ],
+  [
+   "#8f6342",
+   "Upper deck ~+9½ ft (existing)"
+  ],
+  [
+   "#a8744a",
+   "High deck ~5 ft"
+  ],
+  [
+   "#c08d5c",
+   "Medium deck ~3 ft"
+  ],
+  [
+   "#cdb994",
+   "Garden at patio level (0)"
+  ],
+  [
+   "#6e4f35",
+   "Corner garden terraces ~3–8½ ft"
+  ],
+  [
+   "#6f9b4a",
+   "Turf lawn (existing)"
+  ],
+  [
+   "#b4aea2",
+   "River-rock paths"
+  ]
+ ],
+ "notes": [
+  {
+   "p": [
+    40,
+    5,
+    95
+   ],
+   "t": "Kitchen double door + hidden service corridor",
+   "d": "The kitchen door goes where the window is now, on the back wall under the upper deck: \"a double door or whatever.\" A wall at the deck's concrete columns turns the space under the deck into a hidden staff corridor. Staff come in with dirty dishes, drop them at the dish pit, go on to the line, pick up plates, and come back out to the patio through a service door at the east end.",
+   "f": "Check: one double door or separate in and out doors, and whether a serving window is wanted. Corridor width and the dish route set where the wall goes."
+  },
+  {
+   "p": [
+    57.5,
+    4,
+    67
+   ],
+   "t": "Guest route to the restrooms",
+   "d": "Guests reach the restrooms through their own door on the east side of the building. A partition under the deck closes that side off from the service corridor, so the corridor stays staff-only."
+  },
+  {
+   "p": [
+    60,
+    13.5,
+    76
+   ],
+   "t": "Upper deck, railing opened",
+   "d": "The existing upper deck wraps the back and east sides of the building, level with the street and about 9–10 ft above the patio. At its north end a section of railing opens to stairs that lead down to the high deck."
+  },
+  {
+   "p": [
+    84,
+    7.5,
+    22
+   ],
+   "t": "High deck (about 5 ft, half a level down)",
+   "d": "Runs along the W 6th side, where the barrel-roof pavilion is now. It sits about 3½ ft below the sidewalk, behind the retaining wall, so it is not at street level. Guests can also step down to it from the front terrace. Like the treehouse feel at Silver Lake: different decks, different paths. Version 25 makes it 18 ft deep, the same width as the medium deck along the east side.",
+   "f": "Check: a drop this high needs guardrails, and how much street noise the wall blocks."
+  },
+  {
+   "p": [
+    128,
+    5.5,
+    62
+   ],
+   "t": "Medium deck (about 3 ft, hip height)",
+   "d": "Starts just south of the corner garden, a step down from the high deck, and runs along the east side where the leaf-covered yard is now. The neighbor's parking lot beyond the fence is about 5½ ft higher than the patio.",
+   "f": "Check: how tall the east fence needs to be to screen the parking lot."
+  },
+  {
+   "p": [
+    100,
+    2,
+    104
+   ],
+   "t": "Parking lot behind the courtyard",
+   "d": "Version 22 (Patrick, Line A): the courtyard ends at the back fence in line with the back of the building, because the lot behind it will be parking. The low deck along the back is gone; the model draws the parking as asphalt with nose-in stalls along the fence, reached from the alley gate."
+  },
+  {
+   "p": [
+    92,
+    7,
+    56.5
+   ],
+   "t": "Central bar",
+   "d": "A big round or square bar in the middle of the whole space. \"Think of this as the field in a stadium,\" with everyone looking down at it from the decks. Version 25 moves it back to the middle of the courtyard, now that the courtyard ends at the back fence.",
+   "f": "Check: water, drains, power and ice all have to run under the garden."
+  },
+  {
+   "p": [
+    109,
+    3,
+    40
+   ],
+   "t": "Seating pockets",
+   "d": "Small seating areas set into the planting around the bar, each one its own zone. Version 25 makes them the four quadrants around the bar, split by the two cross paths and edged with planting: the pergola pocket (north-west), a gravel pocket among the plants (north-east), a pocket on the lawn (south-west) and one on the stamped concrete (south-east)."
+  },
+  {
+   "p": [
+    75,
+    10.5,
+    36.5
+   ],
+   "t": "Pergola pocket",
+   "d": "A pergola over one of the pockets, reached by its own path."
+  },
+  {
+   "p": [
+    108,
+    1.5,
+    56.5
+   ],
+   "t": "River-rock paths",
+   "d": "Solid paths running from each deck, the restroom door and the service door to the bar and the pockets. Version 25: two cross paths through the bar, north-south from the high-deck stairs to the statue and east-west from the building to the medium-deck stairs."
+  },
+  {
+   "p": [
+    110,
+    8,
+    88.4
+   ],
+   "t": "Back fence where the courtyard ends",
+   "d": "Runs from the back corner of the building to the east fence, in line with the back of the building (version 22, Patrick's Line A). Version 23 makes it the same wooden fence as the rest of the property line. It closes the courtyard off from the parking lot behind it.",
+   "f": "Check: Austin's height limit for walls."
+  },
+  {
+   "p": [
+    17,
+    36,
+    108
+   ],
+   "t": "Heritage oak and the live oaks",
+   "d": "Two large live oaks stand on the property: one behind the building, which Patrick pointed out as the heritage tree, and one over the front terrace. Smaller oaks stand on the high deck and along the east side, and five more lean out over the corner garden on W 6th. Version 13 draws all of them as Texas live oaks: short, thick dark trunks that fork low into long, twisting limbs reaching out more than up, under a broad, dense, dark-green canopy much wider than it is tall. Positions and sizes are traced from the satellite view.",
+   "f": "Check: an arborist and Austin's rules on digging near protected trees."
+  },
+  {
+   "p": [
+    37,
+    6,
+    129.7
+   ],
+   "t": "Back alley + sliding gate",
+   "d": "The alley runs from Pressler St past the apartments to the parking garage. Version 14 gives the back lot behind the building a 20 ft automated sliding gate on the alley: a steel frame with cedar slats like the fence, rolling on a ground track and sliding west behind the fence, with guide rollers, an operator motor on a concrete pad, photo-eye safety posts and a keypad on the alley side. It is drawn partly open. Robert didn't say how deliveries and trash should work.",
+   "f": "Check: how much of the back lot is parking, the opening width cars and trucks need, remote or keypad access for staff, and the city's rules for gates on an alley."
+  },
+  {
+   "p": [
+    66,
+    8,
+    19
+   ],
+   "t": "Grade change: street down to the garden",
+   "d": "The site falls about 9 ft from W 6th to the patio. In the concept, guests come off the sidewalk onto the front terrace under the oak, go down a short flight to the high deck, and on down to the garden.",
+   "f": "Check: accessibility. Wheelchair users need a ramp or lift from street level down to the garden and the restrooms."
+  },
+  {
+   "p": [
+    137.4,
+    12,
+    84
+   ],
+   "t": "Wooden fence around the property",
+   "d": "A wooden fence about 6½ ft tall follows the whole property line: 137 ft along W 6th, 130 ft down each side, and along the back alley. It has a guest gate on W 6th and a wider service gate on the alley. On the east side it stands on the retaining edge of the neighbor's higher parking lot.",
+   "f": "Check: Austin's fence height limits, and whether a solid fence on W 6th should have openings so the patio shows from the street."
+  },
+  {
+   "p": [
+    73,
+    3.5,
+    79
+   ],
+   "t": "Existing landscaping, kept",
+   "d": "Landscaping that shows in the site videos, worked into the garden: the turf lawn, steel planters with agaves and yuccas, the stamped concrete patio, mulch beds, bamboo along the west edge, and the lawn under the front oak. Version 23 takes out the teal block walls and the cedar slat screens, as Patrick asked.",
+   "f": "Check: which of these Robert wants to keep. They are placed where they fit the concept, not exactly where they stand today."
+  },
+  {
+   "p": [
+    102,
+    3,
+    80
+   ],
+   "t": "Tables and chairs like Bacari LA",
+   "d": "Furniture follows Bacari's Los Angeles patios: 30-inch square walnut tables on black iron bases, pushed together for four or six; French rattan bistro chairs with woven seats; navy built-in banquettes with striped cushions and bright pillows along the east fence; rattan bistro bar stools with woven seats, footrest rings and hoop backs at the bar. Version 4 adds two-tops on the front terrace lawn, and more on the medium deck and the garden paving, keeping aisles of about 3½ ft or more so staff can get through. Version 8 turns eleven of the two-tops into four-tops (on the high deck, medium deck, front terrace lawn and garden paving). Version 22 ends the courtyard at the back wall, which takes out the low deck and the back of the garden, leaving about 110 seats with the bar. Two-tops stay along the banquettes and on the narrow upper deck.",
+   "f": "Check: which areas should get more four-tops or stay two-tops, seat count per deck against the occupant load, and the exact bar stool, chair and table models used at the other restaurants."
+  },
+  {
+   "p": [
+    100,
+    6,
+    30
+   ],
+   "t": "Wooden decks",
+   "d": "Version 7 draws every deck as real wood: separate deck boards about 6 in wide with small gaps, staggered joints and natural color variation, running along each deck's length, with wood fascia boards on the edges and wooden stair treads. Each level keeps its own tone, darker up high and lighter toward the garden.",
+   "f": "Check: wood species or composite, board color, and which way the boards should run."
+  },
+  {
+   "p": [
+    44,
+    19.5,
+    0
+   ],
+   "t": "Ornate street gate",
+   "d": "Version 7 dresses up the W 6th gate: two pillars with lanterns, an iron arch with a scroll ring over the opening, and gate leaves with a wood lower panel, iron pickets with finials and a center ring, rising toward the middle.",
+   "f": "Check: send a photo of the Silver Lake door so the gate can match it."
+  },
+  {
+   "p": [
+    121,
+    7,
+    43
+   ],
+   "t": "Big planters with trees",
+   "d": "Version 10 makes the deck and terrace planters much bigger: corten boxes about 3½ ft square and 3 ft tall, each with a small tree about 10-12 ft tall (multi-trunk olives and dark-green Texas mountain laurels) and boxwood around the trunk. Version 9 had first added planters throughout, kept to corners, stair landings and edges so the staff aisles stay open: tall corten planters at the corners of the high, medium, low and upper decks; a pair framing the W 6th gate and a pair at the top of the steps from the front terrace down to the high deck; cedar troughs with trailing greenery hung outside the upper deck railing; and a low planted trough along the top of the retaining wall facing W 6th, so the patio reads green from the street.",
+   "f": "Check: plant choices (olives, boxwood, rosemary, trailing jasmine are placeholders), watering and drainage on the decks, and whether planters should replace any tables instead. Trees this size in planters need deep soil, irrigation and a check that the decks can carry the weight (a wet 3½ ft planter with a tree is roughly a ton)."
+  },
+  {
+   "p": [
+    123,
+    13,
+    8
+   ],
+   "t": "Corner garden on W 6th",
+   "d": "Version 11 turns the grassy bank in the north-east corner, where W 6th meets the neighbor's driveway, into the garden guests see first from the street. Three curved, dry-stacked limestone walls step it down from sidewalk level to the medium deck. The leaning live oaks from Patrick's Nov 23 video stay, with up-lights on their trunks at night (try the Night button). The terraces are planted with Texas natives: pink Gulf muhly, Turk's cap with red flowers along the fences, salvia, agaves, sotol and a few big limestone boulders. A winding flagstone path with steps climbs from the medium deck to a stone bench under the trees, and a stone runnel spills into a bubbling basin by the deck. Along the garden the solid wood fence on W 6th becomes an open iron fence on a limestone curb, so people on the sidewalk see in. The medium-deck tables that sat on the bank move down onto the deck.",
+   "f": "Check: whether the open fence is wanted there, an arborist on the leaning trees and on building walls near their roots, exact tree positions and kinds, the real grades on the bank, and a water line and pump for the basin."
+  },
+  {
+   "p": [
+    56.5,
+    19,
+    69
+   ],
+   "t": "Upper-floor door to the deck",
+   "d": "Version 5 adds a glass double door on the east wall of the upper (street-level) floor. It opens onto the upper deck right beside the opened railing and the stairs down to the high deck, so guests upstairs can walk straight out and down into the patio.",
+   "f": "Check: whether this is the spot Robert has in mind, and whether the existing boarded doors on the back wall should open up too (version 19 makes them glass doors)."
+  },
+  {
+   "p": [
+    33,
+    23,
+    40
+   ],
+   "t": "Building painted light blue",
+   "d": "Version 12 paints the existing building a light blue: the stucco walls on both floors, the band at the upper floor line and the taller block at the south-west corner. The white trim and roof edge, cedar cladding, brick chimney, doors and windows keep their colors.",
+   "f": "Check: the exact paint color (the model uses a soft sky blue as a placeholder), whether the trim should stay white, and any landlord or city approval for repainting."
+  },
+  {
+   "p": [
+    85,
+    14.5,
+    22
+   ],
+   "t": "Bacari-style night lighting",
+   "d": "Version 14 lights the whole property the way the Bacari patios in LA glow at night (press Night): zigzag canopies of warm bistro string lights on black poles over the front terrace and the high and medium decks, bulbs looped along the upper-deck pergola, rattan globe pendants under the pergola pocket, a glass votive candle on every table, brass wall sconces on the building, and low path lights along the river-rock paths and the front walk. The strands from the bar pole and the up-lit oaks in the corner garden stay.",
+   "f": "Check: bulb style and color temperature (2200-2700K is the Bacari look), pole footings on the decks, dimming and timers, and keeping light off the neighbors' windows."
+  },
+  {
+   "p": [
+    100,
+    9,
+    18
+   ],
+   "t": "Tree up-lights",
+   "d": "Version 15 adds up-lights for the trees at night (press Night), as Patrick asked. Each of the four big live oaks (over the front terrace, the heritage oak behind the building, the one on the high deck and the one on the east side) gets flush in-grade well lights around its trunk, set into the deck boards where the tree grows through a deck, washing warm light up the trunk and into the canopy. Every corten planter tree gets a small brass spike light tucked in the open corner of its box. The five leaning oaks in the corner garden keep their own up-lights.",
+   "f": "Check: warm 2700K or lower to match the string lights, narrow or wide beams per tree, low-voltage wiring under the decks, and one timer for all the tree lights."
+  },
+  {
+   "p": [
+    70,
+    9,
+    -32
+   ],
+   "t": "W 6th Street and Pressler St",
+   "d": "Checked against OpenStreetMap and aerial imagery: W 6th is one-way westbound here, about 40 ft curb to curb with three travel lanes and parking along the north curb, so every car in the model heads west. Pressler is one-way northbound up to W 6th and two-way north of it, with crosswalks across Pressler on both sides of W 6th (none across W 6th itself). There are sidewalks on both sides of both streets. Curb cuts are drawn where the imagery shows driveways: the neighbor's parking-lot driveway right at the lot's east line, and across the street a parking-lot driveway, Winflo Dr and a second lot entrance. The lot itself has no driveway on W 6th; the back lot is reached from the alley. Street lights glow with the Night button.",
+   "f": "Check: parking rules on this block (hours, meters), and whether the city would allow a valet or loading zone out front."
+  },
+  {
+   "p": [
+    92,
+    13,
+    72
+   ],
+   "t": "Candles, fairy lights and fire",
+   "d": "Version 18 adds the things that make the Bacari patios in LA glow at night (press Night): a candle in an amber glass hurricane on every table and tea lights around the bar top, warm fairy lights wrapped along the limbs of every live oak and hanging through their canopies, a stone fire pit on the front terrace lawn, Edison-bulb pendants on a steel ring over the bar with a glow strip under the counter, and iron lanterns along the back wall and the east fence. By day the candles are put away.",
+   "f": "Check: real flame or LED candles (fire code), fire pit fuel (gas is simpler to permit), and how the fairy lights are hung in the oaks without harming them."
+  },
+  {
+   "p": [
+    47,
+    19,
+    87
+   ],
+   "t": "Glass back doors",
+   "d": "Version 19 makes the back doors of the building glass, as Patrick asked. On the back wall the three boarded-up doors onto the upper deck become one big glass door (version 20, as Robert asked): a 16 ft opening with four black steel-framed folding glass panels, so the upstairs room opens wide onto the deck and the patio. Under the deck the kitchen double door becomes a pair of steel-framed glass doors with kick plates and push bars, and the guest restroom door on the east wall becomes frosted glass so it lets light through but stays private. At night (press Night) the doors glow warm from inside.",
+   "f": "Check: whether the kitchen door should stay solid (glass shows the kitchen and may need a fire rating), tempered safety glass throughout, and whether the big upper door should fold, slide or swing (it is drawn as four folding panels)."
+  },
+  {
+   "p": [
+    92,
+    10,
+    86.4
+   ],
+   "t": "Michelangelo's David",
+   "d": "Robert asked for a statue (version 22). Version 24 puts in Michelangelo's David itself, from a real 3D scan: the Scan the World scan of a cast of the statue, shared on Wikimedia Commons as \"David (Michelangelo).stl\", simplified so it loads quickly on phones. He stands about 7 ft tall on a stone plinth against the back fence at the end of the path from the bar, facing the bar, and a warm spotlight washes up him at night.",
+   "f": "Check: size (the real one is 17 ft) and whether Robert wants him here."
+  }
+ ],
+ "tags": [
+  {
+   "p": [
+    124,
+    9.5,
+    -6
+   ],
+   "t": "486 ft · sidewalk",
+   "h": 1
+  },
+  {
+   "p": [
+    22,
+    9.2,
+    8
+   ],
+   "t": "486 ft · front terrace",
+   "h": 1
+  },
+  {
+   "p": [
+    104,
+    1,
+    62
+   ],
+   "t": "477.5 ft · patio",
+   "h": 1
+  },
+  {
+   "p": [
+    104,
+    -0.8,
+    141
+   ],
+   "t": "476 ft · alley",
+   "h": 1
+  },
+  {
+   "p": [
+    164,
+    7,
+    80
+   ],
+   "t": "483 ft · neighbor parking",
+   "h": 1
+  },
+  {
+   "p": [
+    92,
+    7,
+    3
+   ],
+   "t": "Retaining wall + bank",
+   "h": 1
+  },
+  {
+   "p": [
+    70,
+    9.5,
+    -26
+   ],
+   "t": "W 6th St"
+  },
+  {
+   "p": [
+    -88,
+    3,
+    70
+   ],
+   "t": "Pressler St"
+  },
+  {
+   "p": [
+    30,
+    60,
+    170
+   ],
+   "t": "Pressler Apartments"
+  },
+  {
+   "p": [
+    160,
+    42,
+    196
+   ],
+   "t": "Parking garage"
+  },
+  {
+   "p": [
+    -30,
+    31,
+    32
+   ],
+   "t": "Title company"
+  },
+  {
+   "p": [
+    8,
+    -0.8,
+    141
+   ],
+   "t": "Back alley"
+  },
+  {
+   "p": [
+    226,
+    35,
+    66
+   ],
+   "t": "Salon + print shop"
+  },
+  {
+   "p": [
+    33,
+    26,
+    58
+   ],
+   "t": "Bar Peached building"
+  }
+ ],
+ "views": {
+  "overview": [
+   [
+    250,
+    125,
+    165
+   ],
+   [
+    72,
+    0,
+    66
+   ]
+  ],
+  "deck": [
+   [
+    61,
+    16,
+    90
+   ],
+   [
+    102,
+    2,
+    58
+   ]
+  ],
+  "bar": [
+   [
+    80,
+    5.4,
+    80
+   ],
+   [
+    110,
+    5,
+    28
+   ]
+  ],
+  "street": [
+   [
+    64,
+    24,
+    -32
+   ],
+   [
+    92,
+    0,
+    72
+   ]
+  ],
+  "up": [
+   [
+    104,
+    5.5,
+    86
+   ],
+   [
+    74,
+    7,
+    8
+   ]
+  ],
+  "plan": [
+   [
+    70,
+    240,
+    65.5
+   ],
+   [
+    70,
+    0,
+    65
+   ]
+  ]
+ }
+}

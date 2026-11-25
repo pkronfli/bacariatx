@@ -1,6 +1,6 @@
 {
- "live": 24,
- "stamp": "24",
+ "live": 25,
+ "stamp": "25",
  "versions": [
   {
    "n": 1,
@@ -150,6 +150,13 @@
    "date": "Nov 25, 2026",
    "by": "Patrick",
    "summary": "The statue is now Michelangelo's David, from a real 3D scan, about 7 ft tall on the plinth at the back fence, facing the bar.",
+   "parts": 1
+  },
+  {
+   "n": 25,
+   "date": "Nov 25, 2026",
+   "by": "Patrick",
+   "summary": "The high deck along W 6th is now 18 ft deep, the same as the east deck, and the bar is back in the middle of the courtyard with four seating pockets around it, split by river-rock cross paths and edged with planting, as in Robert's walkthrough.",
    "parts": 1
   }
  ]
