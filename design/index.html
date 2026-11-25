@@ -431,7 +431,7 @@ const start=M=>{
   // the model version builds its own geometry with the helpers above
   const R=M.build({T,scene,C,mat,put,box,cyl,deckMats,stairs});
   const {fences,trees,bulbMat,lamps}=R,[treeMat,fallMat]=R.treeMats;
-  let sorters=[];try{sorters=batchScene(T,scene,!M.batchAll);}catch(e){console.warn('batching skipped',e);}
+  let sorters=[];try{if(!/[?&]nobatch\b/.test(location.search))sorters=batchScene(T,scene,!M.batchAll);}catch(e){console.warn('batching skipped',e);}
   const lvEl=$('#levels');if(lvEl&&M.levels)lvEl.innerHTML=M.levels.map(l=>`<li><span class="sw" style="background:${l[0]}"></span>${l[1]}</li>`).join('');
   if(M.lede)$('#lede').textContent=M.lede;
 

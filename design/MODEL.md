@@ -77,3 +77,7 @@ In `meta.json`, `notes[].p` and `tags[].p` are [x,y,z] positions of the numbered
 The page merges meshes that share a material after `build()` (one draw call per material per group), so many small boxes are fine. Keep things that switch on and off at night in their own `T.Group` and toggle the group, not single meshes; don't keep references to single meshes to change them later (they are merged away). Change materials instead.
 
 The full history of changes is in `CHANGELOG.md`.
+
+## Furniture layout check
+
+`node _tools/layout.mjs` loads the version in `_work/` (or `--v N`) and checks every table, chair and banquette: nothing solid inside its footprint, floor under every corner, not standing on a planting bed, river-rock path or grasses, and no two pieces overlapping. Furniture helpers in the furniture part (`two`, `four`, `G2`, `G4`, `banq`) record their footprints in `window.__bacariFurn` for it. Spacing used from v29: centers 6.5 ft apart between rows of tables (about 4 ft between table edges, chairs back to back), 7.5 ft between four-tops in a row, aisles 3 ft or more.
