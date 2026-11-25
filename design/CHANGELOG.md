@@ -2,6 +2,9 @@
 
 Newest first. Each version is listed on the page under Versions. Versions 1-18 were written as single files (design/versions/vN.js); from version 19 a version is a list of part files (design/versions/vN.json).
 
+## Version 27 (Nov 25, 2026, Patrick)
+The bamboo along the east fence fills in to a solid green wall, about 17-21 ft tall, from the corner garden to the alley.
+
 ## Version 26 (Nov 25, 2026, Patrick)
 The existing raised bed along the east fence is in, about 4 ft wide behind a low block wall and planted with bamboo; the east deck now stops at it.
 

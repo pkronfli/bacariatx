@@ -1,6 +1,6 @@
 {
- "live": 26,
- "stamp": "26",
+ "live": 27,
+ "stamp": "27",
  "versions": [
   {
    "n": 1,
@@ -164,6 +164,13 @@
    "date": "Nov 25, 2026",
    "by": "Patrick",
    "summary": "The existing raised bed along the east fence is in, about 4 ft wide behind a low block wall and planted with bamboo; the east deck now stops at it.",
+   "parts": 1
+  },
+  {
+   "n": 27,
+   "date": "Nov 25, 2026",
+   "by": "Patrick",
+   "summary": "The bamboo along the east fence fills in to a solid green wall, about 17-21 ft tall, from the corner garden to the alley.",
    "parts": 1
   }
  ]
