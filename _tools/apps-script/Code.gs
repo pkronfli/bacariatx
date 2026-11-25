@@ -4,10 +4,8 @@
 // comes from the passcode, so suggestions are always labeled with the right person.
 // 15 wrong tries lock it for 15 minutes.
 //
-// QUEUE: a suggestion is saved as "new". About 2 minutes after the last one arrives, the queue starts ONE Claude run for
-// everything that is waiting and marks those rows "working". While a run is working, later suggestions wait; when it
-// finishes (no row is "working" any more) the queue starts the next run. A run that has not finished after 45 minutes is
-// treated as stalled and its suggestions go back in line (twice at most, then they are marked as a question).
+// QUEUE: see "the queue" below. One Claude run at a time; a run that does not start, or stops sending its heartbeat,
+// is retried within minutes (each suggestion at most 3 times).
 const SHEET_ID = '1CrlZjkfNs-Mmti4LAzOy-5Or8weLbdgnk6GfuB6a9Jk';
 const USERS = {
   'd09c67a849a06a27b495e82d26e76b582d52c602f7826c7eb371707d0e733fc8': 'Robert',
@@ -73,7 +71,14 @@ function fire_(text) {
   } catch (x) { return false; }
 }
 // ---------- the queue ----------
-var WAIT_MS = 120000, POLL_MS = 60000, STALL_MS = 45 * 60000;
+// A suggestion is saved as "new". About 2 minutes after the last one arrives, the queue starts ONE Claude run for everything
+// waiting and marks those rows "sent". The run marks them "working" when it starts and writes the time into Settings!B3
+// (its heartbeat) every few minutes. The queue checks every minute:
+//  - rows still "sent" 8 minutes after the start: the run never got going; start a new one;
+//  - rows "working" with no heartbeat for 15 minutes: the run died; put them back in line and start a new one
+//    (a run that never writes a heartbeat gets 45 minutes, as before);
+//  - each suggestion is tried at most 3 times; after that it is marked as a question so someone sees it.
+var WAIT_MS = 120000, POLL_MS = 60000, START_MS = 8 * 60000, HB_MS = 15 * 60000, STALL_MS = 45 * 60000, MAX_TRIES = 3;
 function clearPumps_() {
   ScriptApp.getProjectTriggers().forEach(function (t) { if (t.getHandlerFunction() === 'pump') ScriptApp.deleteTrigger(t); });
 }
@@ -86,44 +91,58 @@ function enqueue_() {
     return fire_('New suggestions are waiting in the sheet. Apply them now.');
   }
 }
-// runs on a timer: decides whether to wait, start a run, or stop checking
+// the last time a run said it is alive (Settings!B3), in ms; 0 if never
+function heartbeat_() {
+  var sh = SpreadsheetApp.openById(SHEET_ID).getSheetByName('Settings'); if (!sh) return 0;
+  var v = sh.getRange('B3').getValue();
+  var t = v instanceof Date ? v.getTime() : Date.parse(String(v || ''));
+  return isNaN(t) ? 0 : t;
+}
+// runs on a timer: decides whether to wait, start a run, retry one, or stop checking
 function pump() {
   var lock = LockService.getScriptLock();
   if (!lock.tryLock(20000)) { schedule_(POLL_MS); return; }
   try {
     var pr = PropertiesService.getScriptProperties(), sh = sheet_(), last = sh.getLastRow(), now = Date.now();
     if (last < 2) { clearPumps_(); return; }
-    var v = sh.getRange(2, 1, last - 1, 6).getValues(), working = [], fresh = [];
+    var v = sh.getRange(2, 1, last - 1, 6).getValues(), sent = [], working = [], fresh = [];
     v.forEach(function (r, i) {
-      var st = String(r[5]).trim().toLowerCase();
-      if (!r[0]) return;
-      if (st === 'working') working.push({ row: i + 2, id: String(r[0]) });
-      else if (st === 'new' && !/^Made version/.test(String(r[4]))) fresh.push({ row: i + 2, id: String(r[0]) });
+      var st = String(r[5]).trim().toLowerCase(), row = { row: i + 2, id: String(r[0]) };
+      if (!r[0] || /^Made version/.test(String(r[4]))) return;
+      if (st === 'sent') sent.push(row); else if (st === 'working') working.push(row); else if (st === 'new') fresh.push(row);
     });
-    if (working.length) {
-      var key = working.map(function (w) { return w.id; }).join(','), since = Number(pr.getProperty('WORKING_SINCE') || 0);
-      if (pr.getProperty('WORKING_KEY') !== key || !since) { pr.setProperty('WORKING_KEY', key); pr.setProperty('WORKING_SINCE', String(now)); since = now; }
-      if (now - since < STALL_MS) { schedule_(POLL_MS); return; }   // a run is working: check again in a minute
-      // stalled run: put its suggestions back in line, or give up on them after two tries
-      var tries = {}; try { tries = JSON.parse(pr.getProperty('TRIES') || '{}'); } catch (x) {}
-      working.forEach(function (w) {
-        tries[w.id] = (tries[w.id] || 0) + 1;
-        if (tries[w.id] > 2) {
-          sh.getRange(w.row, 6).setValue('question');
-          sh.getRange(w.row, 7).setValue('Claude could not finish this one. Please send it again, or word it another way.');
-        } else { sh.getRange(w.row, 6).setValue('new'); fresh.push(w); }
-      });
-      pr.setProperty('TRIES', JSON.stringify(tries));
+    var tries = {}; try { tries = JSON.parse(pr.getProperty('TRIES') || '{}'); } catch (x) {}
+    if (sent.length || working.length) {
+      var since = Number(pr.getProperty('FIRED_AT') || pr.getProperty('WORKING_SINCE') || 0);
+      if (!since) { since = now; pr.setProperty('FIRED_AT', String(now)); }
+      var hb = heartbeat_(), alive, why;
+      if (hb > since) { alive = now - hb < HB_MS; why = 'Claude stopped sending updates'; }          // the run is talking to us
+      else if (working.length) { alive = now - since < STALL_MS; why = 'Claude did not finish'; }    // started, no heartbeat (older instructions)
+      else { alive = now - since < START_MS; why = 'Claude did not start'; }                        // never started
+      if (alive) { schedule_(POLL_MS); return; }
+      // the run is gone: these rows go back in line (the try count below decides whether they are started again)
+      sent.concat(working).forEach(function (w) { sh.getRange(w.row, 6).setValue('new'); fresh.push(w); });
+      pr.setProperty('LAST_RETRY', why + ' (' + new Date().toISOString() + ')');
     }
-    pr.deleteProperty('WORKING_KEY'); pr.deleteProperty('WORKING_SINCE');
+    pr.deleteProperty('FIRED_AT'); pr.deleteProperty('WORKING_KEY'); pr.deleteProperty('WORKING_SINCE');
     if (!fresh.length) { pr.deleteProperty('TRIES'); clearPumps_(); return; }
     var wait = WAIT_MS - (now - Number(pr.getProperty('LAST_INPUT') || 0));
     if (wait > 5000) { schedule_(wait); return; }                  // more may be coming: wait out the 2 minutes
-    fresh.sort(function (a, b) { return a.row - b.row; });
-    var ids = fresh.map(function (f) { return f.id; });
-    if (fire_('The suggestion queue started this run for ' + ids.join(', ') + '. Those rows are marked "working" for you. Apply them together now. A row whose text ends with "<name> followed up: ..." was already done in an earlier version: keep that work and apply only the follow-up.')) {
-      fresh.forEach(function (f) { sh.getRange(f.row, 6).setValue('working'); });
-      pr.setProperty('WORKING_KEY', ids.join(',')); pr.setProperty('WORKING_SINCE', String(now)); pr.deleteProperty('FIRE_FAILS');
+    // a suggestion that has already been tried MAX_TRIES times is not started again: someone needs to look at it
+    var go = [];
+    fresh.sort(function (a, b) { return a.row - b.row; }).forEach(function (f) {
+      if ((tries[f.id] || 0) >= MAX_TRIES) {
+        sh.getRange(f.row, 6).setValue('question');
+        sh.getRange(f.row, 7).setValue('Claude tried ' + MAX_TRIES + ' times and could not finish this one. Please send it again, or split it into smaller changes.');
+      } else go.push(f);
+    });
+    if (!go.length) { pr.setProperty('TRIES', JSON.stringify(tries)); clearPumps_(); return; }
+    var ids = go.map(function (f) { return f.id; });
+    var retry = go.some(function (f) { return tries[f.id]; });
+    if (fire_('The suggestion queue started this run for ' + ids.join(', ') + '. Those rows are marked "sent": set them to "working" now and keep the heartbeat in Settings!B3 fresh (see your instructions). Apply them together. A row whose text ends with "<name> followed up: ..." was already done in an earlier version: keep that work and apply only the follow-up.' +
+        (retry ? ' An earlier run on some of these stopped before finishing: check design/versions.json for a version that already has them before redoing work.' : ''))) {
+      go.forEach(function (f) { sh.getRange(f.row, 6).setValue('sent'); tries[f.id] = (tries[f.id] || 0) + 1; });
+      pr.setProperty('TRIES', JSON.stringify(tries)); pr.setProperty('FIRED_AT', String(now)); pr.deleteProperty('FIRE_FAILS');
       schedule_(POLL_MS * 2);
     } else {
       var fails = Number(pr.getProperty('FIRE_FAILS') || 0) + 1; pr.setProperty('FIRE_FAILS', String(fails));
@@ -246,7 +265,7 @@ function doPost(e) {
       var cur = String(sr.getRange(row2, 5).getValue());
       var prevQ = String(sr.getRange(row2, 7).getValue()).replace(/\]/g, ')');
       var st = String(sr.getRange(row2, 6).getValue()).trim().toLowerCase(), ver = String(sr.getRange(row2, 8).getValue()).trim();
-      if (st === 'new' || st === 'working') return out_({ ok: false, error: 'busy' });
+      if (st === 'new' || st === 'sent' || st === 'working') return out_({ ok: false, error: 'busy' });
       var said = st === 'question' ? '[Claude asked: ' + prevQ + ']\n' + who + ' answered: '
         : '[Claude replied' + (/^\d+$/.test(ver) ? ' in version ' + ver : '') + ': ' + prevQ + ']\n' + who + ' followed up: ';
       sr.getRange(row2, 5).setValue(safe_(cur + '\n\n' + said + rtext));
