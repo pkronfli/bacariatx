@@ -2,6 +2,9 @@
 
 Newest first. Each version is listed on the page under Versions. Versions 1-18 were written as single files (design/versions/vN.js); from version 19 a version is a list of part files (design/versions/vN.json).
 
+## Version 23 (Nov 25, 2026, Patrick)
+The back of the courtyard is now the same wooden fence as the rest of the property line, the statue is sculpted as a life-size man, and the teal walls and wooden slat screens are gone.
+
 ## Version 22 (Nov 25, 2026, Patrick, Robert)
 The courtyard now ends at a tall wall in line with the back of the building, with a parking lot behind it; the fountain-garden changes from version 21 are undone, and a classical marble statue stands against the back wall at the end of the path from the bar.
 

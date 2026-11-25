@@ -1,6 +1,6 @@
 {
- "live": 22,
- "stamp": "22",
+ "live": 23,
+ "stamp": "23",
  "versions": [
   {
    "n": 1,
@@ -136,6 +136,13 @@
    "date": "Nov 25, 2026",
    "by": "Patrick, Robert",
    "summary": "The courtyard now ends at a tall wall in line with the back of the building, with a parking lot behind it; the fountain-garden changes from version 21 are undone, and a classical marble statue stands against the back wall at the end of the path from the bar.",
+   "parts": 1
+  },
+  {
+   "n": 23,
+   "date": "Nov 25, 2026",
+   "by": "Patrick",
+   "summary": "The back of the courtyard is now the same wooden fence as the rest of the property line, the statue is sculpted as a life-size man, and the teal walls and wooden slat screens are gone.",
    "parts": 1
   }
  ]
