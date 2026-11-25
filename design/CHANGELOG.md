@@ -2,6 +2,9 @@
 
 Newest first. Each version is listed on the page under Versions. Versions 1-18 were written as single files (design/versions/vN.js); from version 19 a version is a list of part files (design/versions/vN.json).
 
+## Version 20 (Nov 24, 2026, Robert)
+The three glass doors onto the upper deck are now one big glass door: a 16 ft opening with four folding glass panels.
+
 ## Version 19 (Nov 24, 2026, Patrick)
 The three boarded doors on the back wall of the building, onto the upper deck, are now glass doors.
 
