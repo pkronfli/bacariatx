@@ -1,6 +1,6 @@
 {
- "live": 23,
- "stamp": "23",
+ "live": 24,
+ "stamp": "24",
  "versions": [
   {
    "n": 1,
@@ -143,6 +143,13 @@
    "date": "Nov 25, 2026",
    "by": "Patrick",
    "summary": "The back of the courtyard is now the same wooden fence as the rest of the property line, the statue is sculpted as a life-size man, and the teal walls and wooden slat screens are gone.",
+   "parts": 1
+  },
+  {
+   "n": 24,
+   "date": "Nov 25, 2026",
+   "by": "Patrick",
+   "summary": "The statue is now Michelangelo's David, from a real 3D scan, about 7 ft tall on the plinth at the back fence, facing the bar.",
    "parts": 1
   }
  ]

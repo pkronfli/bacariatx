@@ -2,6 +2,9 @@
 
 Newest first. Each version is listed on the page under Versions. Versions 1-18 were written as single files (design/versions/vN.js); from version 19 a version is a list of part files (design/versions/vN.json).
 
+## Version 24 (Nov 25, 2026, Patrick)
+The statue is now Michelangelo's David, from a real 3D scan, about 7 ft tall on the plinth at the back fence, facing the bar.
+
 ## Version 23 (Nov 25, 2026, Patrick)
 The back of the courtyard is now the same wooden fence as the rest of the property line, the statue is sculpted as a life-size man, and the teal walls and wooden slat screens are gone.
 
