@@ -1,6 +1,6 @@
 {
- "live": 27,
- "stamp": "27",
+ "live": 28,
+ "stamp": "28",
  "versions": [
   {
    "n": 1,
@@ -171,6 +171,13 @@
    "date": "Nov 25, 2026",
    "by": "Patrick",
    "summary": "The bamboo along the east fence fills in to a solid green wall, about 17-21 ft tall, from the corner garden to the alley.",
+   "parts": 1
+  },
+  {
+   "n": 28,
+   "date": "Nov 25, 2026",
+   "by": "Patrick",
+   "summary": "The back (south) part of the upper deck, with its pergola, tables, planters and lights, is removed; the big glass door upstairs gets a steel Juliet railing and the east part of the deck stays.",
    "parts": 1
   }
  ]

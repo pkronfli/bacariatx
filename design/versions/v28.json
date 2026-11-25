@@ -1,0 +1,23 @@
+{
+ "version": 28,
+ "base": 27,
+ "meta": "parts/meta.28.json",
+ "parts": [
+  "parts/helpers.25.js",
+  "parts/streets.18.js",
+  "parts/neighbors.18.js",
+  "parts/site-fences-gates.22.js",
+  "parts/building.28.js",
+  "parts/decks-bar.26.js",
+  "parts/furniture.28.js",
+  "parts/landscaping.27.js",
+  "parts/trees.22.js",
+  "parts/bar-string-lights.25.js",
+  "parts/planters.28.js",
+  "parts/corner-garden.18.js",
+  "parts/night-lighting.28.js",
+  "parts/street-detail.18.js",
+  "parts/night-extras.26.js",
+  "parts/finish.18.js"
+ ]
+}
