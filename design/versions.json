@@ -1,6 +1,6 @@
 {
- "live": 28,
- "stamp": "28",
+ "live": 29,
+ "stamp": "29",
  "versions": [
   {
    "n": 1,
@@ -178,6 +178,13 @@
    "date": "Nov 25, 2026",
    "by": "Patrick",
    "summary": "The back (south) part of the upper deck, with its pergola, tables, planters and lights, is removed; the big glass door upstairs gets a steel Juliet railing and the east part of the deck stays.",
+   "parts": 1
+  },
+  {
+   "n": 29,
+   "date": "Nov 25, 2026",
+   "by": "Patrick",
+   "summary": "More tables and chairs, set the way Bacari's LA patios are: rows of four-tops in each garden pocket, two-tops along the edges and a second row on the east deck, about 186 seats, with nothing on beds, paths or deck edges.",
    "parts": 1
   }
  ]

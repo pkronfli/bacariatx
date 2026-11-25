@@ -2,6 +2,9 @@
 
 Newest first. Each version is listed on the page under Versions. Versions 1-18 were written as single files (design/versions/vN.js); from version 19 a version is a list of part files (design/versions/vN.json).
 
+## Version 29 (Nov 25, 2026, Patrick)
+More tables and chairs, set the way Bacari's LA patios are: rows of four-tops in each garden pocket, two-tops along the edges and a second row on the east deck, about 186 seats, with nothing on beds, paths or deck edges.
+
 ## Version 28 (Nov 25, 2026, Patrick)
 The back (south) part of the upper deck, with its pergola, tables, planters and lights, is removed; the big glass door upstairs gets a steel Juliet railing and the east part of the deck stays.
 
