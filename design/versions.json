@@ -1,6 +1,6 @@
 {
- "live": 21,
- "stamp": "21",
+ "live": 22,
+ "stamp": "22",
  "versions": [
   {
    "n": 1,
@@ -129,6 +129,13 @@
    "date": "Nov 24, 2026",
    "by": "Patrick",
    "summary": "No deck past the back of the building: the low deck is gone and the courtyard is now a formal garden, with the bar as its fountain, four big curved planting beds between cross paths, and seating around them; the teal walls and wooden screens are removed.",
+   "parts": 1
+  },
+  {
+   "n": 22,
+   "date": "Nov 25, 2026",
+   "by": "Patrick, Robert",
+   "summary": "The courtyard now ends at a tall wall in line with the back of the building, with a parking lot behind it; the fountain-garden changes from version 21 are undone, and a classical marble statue stands against the back wall at the end of the path from the bar.",
    "parts": 1
   }
  ]
