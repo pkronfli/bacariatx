@@ -117,7 +117,7 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
 .row>div{flex:1 1 200px}
 #s-status{margin:14px 0 0;font-size:15px;color:var(--accent);min-height:1.5em}
 .log{list-style:none;margin:18px 0 0;padding:0;display:grid;gap:10px;max-width:860px}
-.log li{background:var(--panel);border-radius:10px;padding:12px 16px}
+.log li{background:var(--panel);border-radius:12px;padding:14px 16px 16px}
 .log .meta{font-size:13.5px;color:var(--muted);margin:0 0 4px}
 .log p{margin:0 0 6px;overflow-wrap:anywhere}
 .chip{display:inline-block;font-size:13px;font-weight:600;border-radius:999px;padding:2px 10px;background:var(--btn);color:var(--btn-ink)}
@@ -125,10 +125,25 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
 .hist{margin:12px 0 0}.hist summary{cursor:pointer;font-weight:600;font-size:15px;color:var(--muted);padding:6px 0}
 .log .reply{font-size:15px;margin:8px 0 0;padding-left:10px;border-left:3px solid var(--accent)}
 .log .said{font-size:15px;margin:8px 0 0;padding-left:10px;border-left:3px solid var(--muted)}
+.log li>p:not(.meta){margin:6px 0 0;line-height:1.45}.log li>p.meta+p{margin-top:2px}
+.log .chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0 2px}
+.log li>.row{margin-top:14px;gap:8px}.log li>.rep{margin-top:14px;padding-top:14px;border-top:1px solid var(--rule)}
+.log li>p.meta+.row,.log li>p.meta:last-child{margin-bottom:0}
+#s-status:empty,.log:empty{display:none}
+.hist{margin:20px 0 0}
 .log .fu[hidden]{display:none}
 .vrow{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
 .vrow>div{flex:1 1 260px}.vrow strong{font-weight:700}
-@media(max-width:600px){.row2{grid-template-columns:1fr}}
+@media(max-width:600px){.row2{grid-template-columns:1fr}
+  /* phone: the form's buttons in an even grid, Send full width, Sign out as a quiet link */
+  #s-form>.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  #s-form>.row>button{width:100%;padding:0 10px}
+  #s-form>.row>#s-send{grid-column:1/-1;min-height:48px;font-size:15.5px}
+  #s-form>.row>.signout{grid-column:1/-1;justify-self:center;width:auto;border:0;box-shadow:none;background:none;color:var(--muted);text-decoration:underline;min-height:40px}
+  .log li{padding:14px 14px 16px}
+  .log li>.row>button{flex:1 1 0;padding:0 10px}
+  .log .rep .row>button{flex:1 1 0;padding:0 10px}
+}
 .vohead{margin:0;padding:14px max(5vw,16px) 0;font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .vohead+.controls{padding-top:10px}
 .mapmic{position:absolute;left:50%;bottom:44px;transform:translateX(-50%);z-index:3;display:flex;gap:8px;align-items:center}
@@ -199,7 +214,7 @@ button.b.solid{background:var(--btn);color:var(--btn-ink)}
     <div><label for="s-text">What should change?</label><textarea id="s-text" rows="4" maxlength="4000" placeholder="Example: make the bar square and move it 10 feet toward the back wall."></textarea><p class="kbd">Type or press Record voice and talk. Add photos, drawings or PDFs with + Photo or file. Press Enter to send · Shift + Enter for a new line</p></div>
     <ul class="att" id="s-att" aria-label="Attached photos and files"></ul>
     <input type="file" id="s-file" multiple accept="image/*" hidden>
-    <div class="row"><button class="b mic" type="button" data-for="s-text" aria-pressed="false">● Record voice</button><button class="b" type="button" id="s-addf">+ Photo or file</button><button class="b solid" type="submit" id="s-send">Send suggestion</button><button class="b" type="button" id="s-relock">Sign out</button></div>
+    <div class="row"><button class="b mic" type="button" data-for="s-text" aria-pressed="false">● Record voice</button><button class="b" type="button" id="s-addf">+ Photo or file</button><button class="b solid" type="submit" id="s-send">Send suggestion</button><button class="b signout" type="button" id="s-relock">Sign out</button></div>
   </form>
   <p id="s-status" role="status" aria-live="polite"></p>
   <ol id="s-q" class="log" aria-label="Questions from Claude"></ol>
@@ -484,8 +499,11 @@ const thread=t=>{const x=shownText(t),re=/\n\n\[Claude (asked|replied(?: in vers
   const out=[];let m,last=0,head=null;
   while((m=re.exec(x))){out.push({who:head,text:x.slice(last,m.index)});out.push({claude:1,text:m[3]});head=m[4];last=re.lastIndex;}
   out.push({who:head,text:x.slice(last)});
-  return out.map((o,i)=>i===0?`<p>${esc(o.text)}</p>`:o.claude?`<p class="reply"><strong>Claude:</strong> ${esc(o.text)}</p>`:`<p class="said"><strong>${esc(o.who)}:</strong> ${esc(o.text)}</p>`).join('');};
-const card=s=>`<p class="meta">${when(s.time)} · ${esc(s.from)}${s.note?' · about '+esc(s.note):''}</p>${thread(s.text)}<span class="chip ${s.status==='new'||s.status==='working'?'new':''}">${esc(STATUS[s.status]||s.status)}</span>${s.photos?`<span class="chip att-n">${s.photos} attached</span>`:''}${s.voice?'<span class="chip att-n">voice note</span>':''}${s.reply?`<p class="reply"><strong>Claude:</strong> ${esc(s.reply)}</p>`:''}`;
+  return out.map((o,i)=>i===0?`<p>${esc(o.text)}</p>`:o.claude?`<p class="reply"><strong>Claude:</strong> ${esc(o.text)}</p>`:`<p class="said"><strong>${esc(o.who)}:</strong> ${esc(o.text)}</p>`);};
+const card=s=>{const t=thread(s.text),voiceNote=s.note==='Voice note from the model';
+  return `<p class="meta">${when(s.time)} · ${esc(s.from)}${s.note&&!voiceNote?' · about '+esc(s.note):''}</p>${t[0]}`+
+   `<div class="chips"><span class="chip ${s.status==='new'||s.status==='working'?'new':''}">${esc(STATUS[s.status]||s.status)}</span>${s.photos?`<span class="chip att-n">${s.photos} attached</span>`:''}${s.voice?'<span class="chip att-n">voice note</span>':''}</div>`+
+   t.slice(1).join('')+(s.reply?`<p class="reply"><strong>Claude:</strong> ${esc(s.reply)}</p>`:'');};
 const drawList=items=>{items=items||[];LAST=items;const qs=items.filter(s=>s.status==='question'),rest=items.filter(s=>s.status!=='question');
   // questions from Claude stay in view with a reply box; don't redraw them while someone is typing an answer
   const typing=[...document.querySelectorAll('#s-q textarea')].some(t=>t.value.trim()||t===document.activeElement);
